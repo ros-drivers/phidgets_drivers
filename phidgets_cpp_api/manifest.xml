@@ -1,0 +1,14 @@
+<package>
+<description brief="A C++ Wrapper for the Phidgets C API">
+
+This is an object oriented C++ wrapper for the Phidgets C API
+
+</description>
+<author>Tully Foote</author>
+<license>BSD</license>
+<export>
+  <cpp lflags="-L${prefix}/lib " cflags="-I${prefix}/include "/>
+</export>
+<depend package="phidgetspp_c_api"/>
+</package>
+

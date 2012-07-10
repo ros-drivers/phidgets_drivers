@@ -1,0 +1,26 @@
+<package>
+  <description brief="Driver for the Phidgets Spatial 3/3/3 device">
+
+     Driver for the Phidgets Spatial 3/3/3 device.
+
+  </description>
+  <author>Ivan Dryanovski</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/phidgets_imu</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="std_srvs"/>
+  <depend package="std_msgs"/>
+  <depend package="phidgets_api"/>
+  <depend package="nodelet"/>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_imu_nodelet.xml" />
+  </export>
+
+</package>
+
+
