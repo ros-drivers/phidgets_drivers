@@ -12,5 +12,5 @@ void PhidgetsImuNodelet::onInit()
   ros::NodeHandle nh         = getMTNodeHandle();
   ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-  imu_ = new PhidgetsImu(nh, nh_private);
+  imu_ = new ImuRosI(nh, nh_private);
 }

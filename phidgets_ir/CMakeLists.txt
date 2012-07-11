@@ -14,13 +14,13 @@ rosbuild_init()
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-# create phidgets_imu library
-rosbuild_add_library (phidgets_imu src/imu_ros_i.cpp)
+# create phidgets_ir library
+rosbuild_add_library (phidgets_ir src/ir_ros_i.cpp)
 
-# create phidgets_imu_nodelet library
-rosbuild_add_library (phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
-target_link_libraries (phidgets_imu_nodelet phidgets_imu)
+# create phidgets_ir_nodelet library
+#rosbuild_add_library (phidgets_ir_nodelet src/phidgets_ir_nodelet.cpp)
+#target_link_libraries (phidgets_ir_nodelet phidgets_ir)
 
-# create phidgets_imu_node executable
-rosbuild_add_executable(phidgets_imu_node src/phidgets_imu_node.cpp)
-target_link_libraries (phidgets_imu_node phidgets_imu)
+# create phidgets_ir_node executable
+rosbuild_add_executable(phidgets_ir_node src/phidgets_ir_node.cpp)
+target_link_libraries (phidgets_ir_node phidgets_ir)

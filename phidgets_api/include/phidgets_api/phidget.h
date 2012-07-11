@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, Tully Foote
+ * Copyright (c) 2011, Ivan Dryanovski
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,14 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_CPP_API_PHIDGET_H
-#define PHIDGETS_CPP_API_PHIDGET_H
+#ifndef PHIDGETS_API_PHIDGET_H
+#define PHIDGETS_API_PHIDGET_H
 
-#include <phidget21.h>
+#include <phidgets_c_api/phidget21.h>
+
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <stdio.h>
 
 namespace phidgets {
 
@@ -42,7 +45,7 @@ class Phidget
 {
   public:
 
-    Phidget(CPhidgetHandle * handle);
+    Phidget();
     ~Phidget();
 
     /**@brief Open a connection to a Phidget
@@ -50,7 +53,7 @@ class Phidget
     int open(int serial_number);
     
     /**@brief Close the connection to the phidget */
-    int close(int serial_number);
+    int close();
     
     /** @brief Block until the unit is attached or timeout occurs
      * @param timeout Milliseconds to wait before timing out */
@@ -66,7 +69,7 @@ class Phidget
     std::string getDeviceLabel();
 
     /** @brief Get the library version string */ 
-    std::string getLibraryVersion();;
+    std::string getLibraryVersion();
 
     /** @brief Get the Phidget's serial number */
     int getDeviceSerialNumber();
@@ -80,15 +83,23 @@ class Phidget
     
   protected:
 
-    CPhidgetHandle* mHandle;
+    CPhidgetHandle handle_;
     
-    int attachHandler();
+    void init(CPhidgetHandle handle);
+
+    virtual void registerHandlers();
+    virtual void attachHandler();
+    virtual void detachHandler();
+    virtual void errorHandler(int error);
 
   private:
-  
+
+    static int AttachHandler(CPhidgetHandle handle, void *userptr);
+    static int DetachHandler(CPhidgetHandle handle, void *userptr);
+    static int ErrorHandler (CPhidgetHandle handle, void *userptr, int ErrorCode, const char *unknown);
 };
 
 } // namespace phidgets
 
-#endif // PHIDGETS_CPP_API_PHIDGET_H
+#endif // PHIDGETS_API_PHIDGET_H
 

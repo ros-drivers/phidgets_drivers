@@ -4,7 +4,7 @@
 #include <nodelet/nodelet.h>
 #include <pluginlib/class_list_macros.h>
 
-#include "phidgets_imu/phidgets_imu.h"
+#include "phidgets_imu/imu_ros_i.h"
 
 namespace phidgets {
 
@@ -14,7 +14,7 @@ class PhidgetsImuNodelet : public nodelet::Nodelet
     virtual void onInit();
 
   private:
-    PhidgetsImu * imu_;  // FIXME: change to smart pointer
+    Imu * imu_;  // FIXME: change to smart pointer
 };
 
 } // namespace phidgets
