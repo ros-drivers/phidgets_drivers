@@ -1,0 +1,18 @@
+<package>
+  <description brief="Metapackage to download and install the Phidgets C API">
+
+  This package contains the Official Phidgets C API.
+
+  </description>
+
+  <author>Phidgets, Inc.</author>
+  <license>LGPL</license>
+  <url>http://www.phidgets.com/downloads.php?example_id=30</url>
+
+  <export>
+    <cpp lflags="-L${prefix}/lib -lphidget21" cflags="-I${prefix}/include "/>
+    <doxymaker external="http://www.phidgets.com/downloads.php?example_id=30" />
+  </export>
+
+</package>
+
