@@ -6,7 +6,7 @@ Drivers for the Phidgets devices. The stack includes:
    from phidgets.com and installs it locally within the package's directory.
 
  * phidgets_api: a C++ wrapper of the C API which provides a base Phidget
-   class and various inherited classes for teh different phidget devices.
+   class and various inherited classes for the different phidget devices.
 
  * various packages exposing the functionality of specific phidgets using
    the ROS API.
