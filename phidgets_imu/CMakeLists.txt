@@ -16,6 +16,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 # create phidgets_imu library
 rosbuild_add_library (phidgets_imu src/imu_ros_i.cpp)
+target_link_libraries (phidgets_imu phidgets_api)
 
 # create phidgets_imu_nodelet library
 rosbuild_add_library (phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
