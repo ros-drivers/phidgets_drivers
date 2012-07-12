@@ -1,1 +1,17 @@
+1. OVERVIEW:
+
 Drivers for the Phidgets devices.
+
+2. INSTALLING
+
+To compile, simply run:
+
+rosmake phidgets_api
+
+Tos set up your udev rules for the phidgets USB devices, exectute
+
+phidgets_c_api/setup-udev.sh
+
+You will be prompted for a sudo password.
+
+
