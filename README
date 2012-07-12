@@ -17,7 +17,7 @@ To compile, simply run:
 
 rosmake phidgets_api
 
-To set up your udev rules for the phidgets USB devices, exectute
+To set up your udev rules for the phidgets USB devices, execute
 
 phidgets_c_api/setup-udev.sh
 
