@@ -16,6 +16,7 @@ build: configured
 	cp $(SOURCE_DIR)/include/phidget21.h include/phidgets_c_api
 	mkdir -p lib
 	cp $(SOURCE_DIR)/lib/libphidget21.so.0.0.0 lib/libphidget21.so
+	cp $(SOURCE_DIR)/lib/libphidget21.so.0.0.0 lib/libphidget21.so.0
 	cp $(SOURCE_DIR)/lib/libphidget21.a        lib/libphidget21.a
 	cp $(SOURCE_DIR)/lib/libphidget21.la       lib/libphidget21.la
 

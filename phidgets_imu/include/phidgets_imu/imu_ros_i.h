@@ -43,6 +43,8 @@ class ImuRosI : public Imu
 
     ImuMsg imu_msg_;
 
+    ros::Time time_zero_;
+
     // params
 
     std::string frame_id_;
@@ -53,7 +55,8 @@ class ImuRosI : public Imu
 
     void calibrate();
     void initDevice();
-    void dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count);
+    void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);
+    void processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i);
 };
 
 } //namespace phidgets

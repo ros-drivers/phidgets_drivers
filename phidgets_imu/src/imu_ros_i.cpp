@@ -80,11 +80,11 @@ void ImuRosI::initDevice()
 		ROS_FATAL("Problem waiting for IMU attachment: %s", err);
 	}
 
-	//Set the data rate for the spatial events
+	// set the data rate for the spatial events
   setDataRate(rate_);
 
-  // zero out
-  zero();
+  // calibrate on startup
+  calibrate();
 }
 
 bool ImuRosI::calibrateService(std_srvs::Empty::Request  &req,
@@ -100,15 +100,26 @@ void ImuRosI::calibrate()
   zero();
   ROS_INFO("Calibrating IMU done.");
 
+  time_zero_ = ros::Time::now();
+
   // publish message
   std_msgs::Bool is_calibrated_msg;
   is_calibrated_msg.data = true;
   cal_publisher_.publish(is_calibrated_msg);
 }
 
-void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
+void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i)
 {
-  ros::Time time_now = ros::Time::now();
+  // **** calculate time from timestamp
+
+  //ros::Time time_now = ros::Time::now();
+
+  ros::Duration time_imu(data[i]->timestamp.seconds + 
+                         data[i]->timestamp.microseconds * 1e-6);
+
+  ros::Time time_now = time_zero_ + time_imu;
+
+  // **** initialize if needed
 
   if (!initialized_)
   { 
@@ -116,63 +127,66 @@ void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int coun
     initialized_ = true;
   }
 
+  // **** create and publish imu message
+
+  boost::shared_ptr<ImuMsg> imu_msg = 
+    boost::make_shared<ImuMsg>(imu_msg_);
+
+  imu_msg->header.stamp = time_now;
+
+  // set linear acceleration
+  imu_msg->linear_acceleration.x = - data[i]->acceleration[0] * G;
+  imu_msg->linear_acceleration.y = - data[i]->acceleration[1] * G;
+  imu_msg->linear_acceleration.z = - data[i]->acceleration[2] * G;
+
+  // set angular velocities
+  imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
+  imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
+  imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
+
+  // integrate the angular velocities
+  float dt = (time_now - last_imu_time_).toSec();
+  last_imu_time_ = time_now;
+
+  tf::Quaternion dq;
+  dq.setRPY(data[i]->angularRate[0]*dt,
+            data[i]->angularRate[1]*dt,
+            data[i]->angularRate[2]*dt);
+
+  orientation_ = dq * orientation_;
+
+  imu_publisher_.publish(imu_msg);
+
+  // **** create and publish magnetic field message
+
+  boost::shared_ptr<MagMsg> mag_msg = 
+    boost::make_shared<MagMsg>();
+  
+  mag_msg->header.frame_id = frame_id_;
+  mag_msg->header.stamp = time_now;
+
+  if (data[i]->magneticField[0] != PUNK_DBL)
+  {
+    mag_msg->vector.x = data[i]->magneticField[0];
+    mag_msg->vector.y = data[i]->magneticField[1];
+    mag_msg->vector.z = data[i]->magneticField[2];
+  }
+  else
+  {
+    double nan = std::numeric_limits<double>::quiet_NaN();
+
+    mag_msg->vector.x = nan;
+    mag_msg->vector.y = nan;
+    mag_msg->vector.z = nan;
+  }
+   
+  mag_publisher_.publish(mag_msg);
+}
+
+void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
+{
   for(int i = 0; i < count; i++)
-	{
-    // **** create and publish imu message
-
-    boost::shared_ptr<ImuMsg> imu_msg = 
-      boost::make_shared<ImuMsg>(imu_msg_);
-
-    imu_msg->header.stamp = time_now;
-
-    // set linear acceleration
-    imu_msg->linear_acceleration.x = - data[i]->acceleration[0] * G;
-    imu_msg->linear_acceleration.y = - data[i]->acceleration[1] * G;
-    imu_msg->linear_acceleration.z = - data[i]->acceleration[2] * G;
-
-    // set angular velocities
-    imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
-    imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
-    imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
-
-    // integrate the angular velocities
-    float dt = (time_now - last_imu_time_).toSec();
-    last_imu_time_ = time_now;
-
-    tf::Quaternion dq;
-    dq.setRPY(data[i]->angularRate[0]*dt,
-              data[i]->angularRate[1]*dt,
-              data[i]->angularRate[2]*dt);
-
-    orientation_ = dq * orientation_;
-
-    imu_publisher_.publish(imu_msg);
-
-    // **** create and publish magnetic field message
-
-    boost::shared_ptr<MagMsg> mag_msg = 
-      boost::make_shared<MagMsg>();
-    
-    mag_msg->header.frame_id = frame_id_;
-    mag_msg->header.stamp = time_now;
-
-    if (data[i]->magneticField[0] != PUNK_DBL)
-    {
-      mag_msg->vector.x = data[i]->magneticField[0];
-      mag_msg->vector.y = data[i]->magneticField[1];
-      mag_msg->vector.z = data[i]->magneticField[2];
-    }
-    else
-    {
-      double nan = std::numeric_limits<double>::quiet_NaN();
-
-      mag_msg->vector.x = nan;
-      mag_msg->vector.y = nan;
-      mag_msg->vector.z = nan;
-    }
-     
-    mag_publisher_.publish(mag_msg);
-	}
+    processImuData(data, i);
 }
 
 } // namespace phidgets
