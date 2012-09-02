@@ -1,6 +1,6 @@
 <stack>
   <description brief="Drivers for Phidgets devices">
-  Driver for the Phidgets Spatial 3/3/3 circuit.
+  Drivers and API for Phidgets devices.
   </description>
   <author>Maintained by Ivan Dryanovski</author>
   <license>BSD, LGPL</license>  
