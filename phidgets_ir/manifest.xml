@@ -1,13 +1,13 @@
 <package>
-  <description brief="Driver for the Phidgets Spatial 3/3/3 device">
+  <description brief="Driver for the Phidgets IR device">
 
-     Driver for the Phidgets Spatial 3/3/3 device.
+     Driver for the Phidgets IR.
 
   </description>
   <author>Ivan Dryanovski</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/phidgets_imu</url>
+  <url>http://ros.org/wiki/phidgets_ir</url>
   <depend package="roscpp"/>
   <depend package="tf"/>
   <depend package="sensor_msgs"/>
