@@ -47,4 +47,8 @@ To set up your udev rules for the phidgets USB devices, run this script:
 
 You will be prompted for a sudo password.
 
+More info
+---------------------------------------------
+
+http://ros.org/wiki/phidgets_drivers
 
