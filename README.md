@@ -31,7 +31,7 @@ Download the stack from our repository:
 
     git clone https://github.com/ccny-ros-pkg/phidgets_drivers.git
 
-Install any dependencies using [[rosdep]].
+Install any dependencies using rosdep.
 
     rosdep install phidgets_drivers
 
