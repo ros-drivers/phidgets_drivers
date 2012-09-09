@@ -13,8 +13,8 @@
     args="load phidgets_imu/PhidgetsImuNodelet imu_manager" 
     output="screen">
 
-    # supported rates: 4 8 16 24 32 40 ... 1000
-    <param name="rate" value="4"/>
+    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
+    <param name="period" value="4"/>
 
   </node>
 

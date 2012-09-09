@@ -12,8 +12,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   // **** get parameters
 
-  if (!nh_private_.getParam ("rate", rate_))
-    rate_ = 8; // 8 ms
+  if (!nh_private_.getParam ("period", period_))
+    period_ = 8; // 8 ms
   if (!nh_private_.getParam ("frame_id", frame_id_))
     frame_id_ = "imu";
   if (!nh_private_.getParam ("angular_velocity_stdev", angular_velocity_stdev_))
@@ -36,8 +36,6 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     "imu/calibrate", &ImuRosI::calibrateService, this);
 
   // **** initialize variables and device
-
-  orientation_.setRPY(0.0, 0.0, 0.0);
   
   imu_msg_.header.frame_id = frame_id_;
 
@@ -81,7 +79,7 @@ void ImuRosI::initDevice()
 	}
 
 	// set the data rate for the spatial events
-  setDataRate(rate_);
+  setDataRate(period_);
 
   // calibrate on startup
   calibrate();
@@ -143,17 +141,6 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
   imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
   imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
-
-  // integrate the angular velocities
-  float dt = (time_now - last_imu_time_).toSec();
-  last_imu_time_ = time_now;
-
-  tf::Quaternion dq;
-  dq.setRPY(data[i]->angularRate[0]*dt,
-            data[i]->angularRate[1]*dt,
-            data[i]->angularRate[2]*dt);
-
-  orientation_ = dq * orientation_;
 
   imu_publisher_.publish(imu_msg);
 

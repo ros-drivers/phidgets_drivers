@@ -38,7 +38,6 @@ class ImuRosI : public Imu
 
     bool initialized_;
     boost::mutex mutex_;
-    tf::Quaternion orientation_;
     ros::Time last_imu_time_;
 
     ImuMsg imu_msg_;
@@ -48,7 +47,7 @@ class ImuRosI : public Imu
     // params
 
     std::string frame_id_;
-    int rate_;  // rate in ms
+    int period_;  // rate in ms
 
     double angular_velocity_stdev_;
     double linear_acceleration_stdev_;
