@@ -117,6 +117,10 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   ros::Time time_now = time_zero_ + time_imu;
 
+  double timediff = time_now.toSec() - ros::Time::now().toSec();
+  if (fabs(timediff) > 0.1)
+    ROS_WARN("IMU time lags behind by %f seconds!", timediff);
+
   // **** initialize if needed
 
   if (!initialized_)
