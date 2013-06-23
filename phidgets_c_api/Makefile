@@ -1,10 +1,10 @@
 all:build
 
-TARBALL      = build/libphidget_2.1.8.20120514.tar.gz
-TARBALL_URL  = http://www.phidgets.com/downloads/libraries/libphidget_2.1.8.20120514.tar.gz
-MD5SUM_FILE  = libphidget_2.1.8.20120514.md5sum
+TARBALL      = build/libphidget_2.1.8.20130618.tar.gz
+TARBALL_URL  = http://www.phidgets.com/downloads/libraries/libphidget_2.1.8.20130618.tar.gz
+MD5SUM_FILE  = libphidget_2.1.8.20130618.md5sum
 UNPACK_CMD   = tar xzf
-SOURCE_DIR   = build/libphidget-2.1.8.20120514
+SOURCE_DIR   = build/libphidget-2.1.8.20130618
 SOURCE_DIR_G = $(shell rospack find phidgets_c_api)/$(SOURCE_DIR)
 
 include $(shell rospack find mk)/download_unpack_build.mk
