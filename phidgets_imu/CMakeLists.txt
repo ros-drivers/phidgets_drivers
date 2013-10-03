@@ -16,7 +16,7 @@ add_library(phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
 
 add_executable(phidgets_imu_node src/phidgets_imu_node.cpp)
 
-add_dependencies(phidgets_imu phidgets_api phidget21)
+add_dependencies(phidgets_imu phidgets_api)
 
 target_link_libraries(phidgets_imu ${catkin_LIBRARIES})
 target_link_libraries(phidgets_imu_nodelet ${catkin_LIBRARIES} phidgets_imu)
