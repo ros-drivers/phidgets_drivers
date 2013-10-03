@@ -15,6 +15,8 @@ add_library(phidgets_ir src/ir_ros_i.cpp)
 
 add_executable(phidgets_ir_node src/phidgets_ir_node.cpp)
 
+add_dependencies(phidgets_ir phidgets_api)
+
 target_link_libraries(phidgets_ir ${catkin_LIBRARIES})
 target_link_libraries(phidgets_ir_node ${catkin_LIBRARIES} phidgets_ir)
 
