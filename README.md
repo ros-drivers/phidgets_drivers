@@ -1,54 +1,63 @@
-Phidgets drivers for ROS
+Phidgets drivers for ROS Groovy (catkinised)
 =============================================
 
 Overview
 ---------------------------------------------
 
-Drivers for the Phidgets devices. The stack includes:
+Drivers for the Phidgets devices. The metapackage includes:
 
- * `phidgets_c_api`: a meta-package which downloads the Phidgets C API 
-   from phidgets.com and installs it locally within the package's directory.
+ * `phidgets_c_api`: a package which downloads the Phidgets C API from phidgets.com,
+   configures, builds and installs it within the current catkin workspace.
 
- * `phidgets_api`: a C++ wrapper of the C API which provides a base Phidget
-   class and various inherited classes for the different phidget devices.
+ * `phidgets_api`: a package which implements a C++ wrapper of the C API, providing
+   a base Phidget class and various inherited classes for the different phidget devices.
 
- * various packages exposing the functionality of specific phidgets using
-   the ROS API.
+ * Two packages exposing the functionality of specific phidgets using
+   the ROS API : `phidgets_imu` and `phidgets_ir`.
+
 
 Installing
 ---------------------------------------------
 
 ### From source ###
 
-Create a directory where you want the package downloaded (ex. `~/ros`), 
-and add it to `$ROS_PACKAGE_PATH`.
+Make sure you have a working catkin workspace, as described at:
+http://www.ros.org/wiki/catkin/Tutorials/create_a_workspace
 
-Make sure you have git installed:
+Also make sure you have git installed:
 
     sudo apt-get install git-core
 
-Download the stack from our repository:
+Change directory to the source folder of your catkin workspace.
+If, for instance, your workspace is `~/catkin_ws`, make sure there is
+a `src/` folder within it, then execute:
 
-    git clone https://github.com/ccny-ros-pkg/phidgets_drivers.git
+    cd ~/catkin_ws/src
 
-Install any dependencies using rosdep.
+Download the metapackage from the github repository:
+
+    git clone -b groovy-devel https://github.com/muhrix/phidgets_drivers.git
+
+Install any dependencies using rosdep:
 
     rosdep install phidgets_drivers
 
-Compile the stack:
+Compile the catkin workspace:
 
-    rosmake phidgets_drivers
+    cd ~/catkin_ws
+    catkin_make
 
-### Rules set up: ###
+### Udev rules setup: ###
 
-To set up your udev rules for the phidgets USB devices, run this script:
+To set up the udev rules for the Phidgets USB devices, run the following commands:
 
-    phidgets_c_api/setup-udev.sh
+    cd ~/catkin_ws
+    sh src/phidgets_drivers/phidgets_c_api/setup-udev.sh
 
-You will be prompted for a sudo password.
+You will be prompted to type in your password.
 
-More info
+
+For documentation regarding nodes, topics and services:
 ---------------------------------------------
 
 http://ros.org/wiki/phidgets_drivers
-
