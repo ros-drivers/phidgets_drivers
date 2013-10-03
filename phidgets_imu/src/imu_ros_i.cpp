@@ -75,7 +75,7 @@ void ImuRosI::initDevice()
 	{
 	  const char *err;
 		CPhidget_getErrorDescription(result, &err);
-		ROS_FATAL("Problem waiting for IMU attachment: %s", err);
+		ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.", err);
 	}
 
 	// set the data rate for the spatial events
@@ -109,13 +109,17 @@ void ImuRosI::calibrate()
 void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i)
 {
   // **** calculate time from timestamp
-
-  //ros::Time time_now = ros::Time::now();
-
   ros::Duration time_imu(data[i]->timestamp.seconds + 
                          data[i]->timestamp.microseconds * 1e-6);
 
   ros::Time time_now = time_zero_ + time_imu;
+
+  double timediff = time_now.toSec() - ros::Time::now().toSec();
+  if (fabs(timediff) > 0.1) {
+    ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
+    time_zero_ = ros::Time::now() - time_imu;
+    time_now = ros::Time::now();
+  }
 
   // **** initialize if needed
 
