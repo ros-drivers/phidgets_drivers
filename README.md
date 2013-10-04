@@ -1,4 +1,4 @@
-Phidgets drivers for ROS Groovy (catkinised)
+Phidgets drivers Catkin metapackage for ROS Groovy
 =============================================
 
 Overview
@@ -36,19 +36,24 @@ a `src/` folder within it, then execute:
 
 Download the metapackage from the github repository:
 
-    git clone -b groovy-devel https://github.com/muhrix/phidgets_drivers.git
+    git clone -b groovy https://github.com/muhrix/phidgets_drivers.git
 
-Install any dependencies using rosdep:
+Install dependencies using rosdep:
 
     rosdep install phidgets_drivers
 
-Compile the catkin workspace:
+Alternatively, if rosdep does not work, install the following packages:
+
+    sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev
+
+Compile your catkin workspace:
 
     cd ~/catkin_ws
     catkin_make
 
 ### Udev rules setup: ###
 
+Make sure your catkin workspace has been successfully compiled.
 To set up the udev rules for the Phidgets USB devices, run the following commands:
 
     cd ~/catkin_ws
