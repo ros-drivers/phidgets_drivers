@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_imu</name>
-  <version>0.1.1</version>
-  <description>Driver for the Phidgets Spatial 3/3/3 device</description>
+  <version>0.2.0</version>
+  <description>Driver for the Phidgets Spatial 3/3/3 devices</description>
 
   <maintainer email="muhrix@gmail.com">Murilo F. M.</maintainer>
+  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
 
   <license>BSD</license>
 

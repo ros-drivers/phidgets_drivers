@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_ir</name>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
   <description>Driver for the Phidgets IR device</description>
 
   <maintainer email="muhrix@gmail.com">Murilo F. M.</maintainer>
+  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
 
   <license>BSD</license>
 
