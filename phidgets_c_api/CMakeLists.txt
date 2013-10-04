@@ -33,7 +33,7 @@ ExternalProject_Add(libphidget21
 --disable-ldconfig 
 --prefix=${CMAKE_CURRENT_BINARY_DIR} --exec-prefix=${CMAKE_CURRENT_BINARY_DIR}
 --libdir=${CATKIN_DEVEL_PREFIX}/lib
---includedir=${CMAKE_CURRENT_SOURCE_DIR}/include/phidgets_c_api
+#--includedir=${CMAKE_CURRENT_SOURCE_DIR}/include/phidgets_c_api
   BUILD_COMMAND make -j${PROCESSOR_COUNT}
   INSTALL_COMMAND make install
 )
@@ -49,10 +49,11 @@ catkin_package(
   LIBRARIES phidget21
 )
 
-include_directories(${install_dir}/include)
+#include_directories(${install_dir}/include)
 
 add_library(phidget21 UNKNOWN IMPORTED)
 set_target_properties(phidget21 PROPERTIES IMPORTED_LOCATION "${install_dir}/lib/libphidget21.so")
+add_dependencies(phidget21 libphidget21)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
