@@ -27,8 +27,8 @@ include(ExternalProject)
 ExternalProject_Add(libphidget21
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}
   DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/download
-  URL http://www.phidgets.com/downloads/libraries/libphidget_2.1.8.20130618.tar.gz
-  URL_MD5 97c7834e4eb8ae04dd177ab3f4829472
+  URL http://www.phidgets.com/downloads/libraries/libphidget_2.1.8.20130723.tar.gz
+  URL_MD5 04b4c3a58cf69ecd09431b01471bcd1d
   CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/src/libphidget21/configure CFLAGS=-O3 --disable-jni
 --disable-ldconfig 
 --prefix=${CMAKE_CURRENT_BINARY_DIR} --exec-prefix=${CMAKE_CURRENT_BINARY_DIR}
