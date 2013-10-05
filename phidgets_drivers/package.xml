@@ -19,7 +19,6 @@
   <run_depend>phidgets_api</run_depend>
   <run_depend>phidgets_imu</run_depend>
   <run_depend>phidgets_ir</run_depend>
-  <run_depend>phidgets_c_api</run_depend>
 
   <export>
     <metapackage />
