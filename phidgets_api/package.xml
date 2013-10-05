@@ -13,9 +13,8 @@
 
   <author>Tully Foote</author>
   <author>Ivan Dryanovski</author>
+  <author>Murilo F. M.</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>phidgets_c_api</build_depend>
-  <run_depend>phidgets_c_api</run_depend>
 
 </package>
