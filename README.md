@@ -1,19 +1,18 @@
-Phidgets drivers Catkin metapackage for ROS Groovy
+Phidgets drivers for ROS Groovy
 =============================================
 
 Overview
 ---------------------------------------------
 
-Drivers for the Phidgets devices. The metapackage includes:
+Drivers for the Phidgets devices. This Catkin metapackage includes:
 
- * `phidgets_c_api`: a package which downloads the Phidgets C API from phidgets.com,
-   configures, builds and installs it within the current catkin workspace.
+ * `phidgets_api`: a package which downloads and builds the Phidgets C API from
+   phidgets.com (as an external project). It also implements a C++ wrapper
+   for the C API, providing a base Phidget class and various inherited classes
+   for different phidget devices.
 
- * `phidgets_api`: a package which implements a C++ wrapper of the C API, providing
-   a base Phidget class and various inherited classes for the different phidget devices.
-
- * Two packages exposing the functionality of specific phidgets using
-   the ROS API : `phidgets_imu` and `phidgets_ir`.
+ * Two packages exposing the functionality of specific phidgets devices using
+   the ROS API: `phidgets_imu` and `phidgets_ir`.
 
 
 Installing
@@ -57,12 +56,12 @@ Make sure your catkin workspace has been successfully compiled.
 To set up the udev rules for the Phidgets USB devices, run the following commands:
 
     cd ~/catkin_ws
-    sh src/phidgets_drivers/phidgets_c_api/setup-udev.sh
+    sh src/phidgets_drivers/phidgets_api/share/setup-udev.sh
 
 You will be prompted to type in your password.
 
 
-For documentation regarding nodes, topics and services:
+For documentation regarding nodes, topics, etc:
 ---------------------------------------------
 
 http://ros.org/wiki/phidgets_drivers
