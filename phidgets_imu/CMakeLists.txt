@@ -5,7 +5,7 @@ find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscp
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES phidgets_imu phidgets_imu_nodelet
+  LIBRARIES phidgets_imu 
   CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
 )
 
