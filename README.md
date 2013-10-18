@@ -35,7 +35,7 @@ a `src/` folder within it, then execute:
 
 Download the metapackage from the github repository:
 
-    git clone -b groovy https://github.com/muhrix/phidgets_drivers.git
+    git clone -b groovy https://github.com/ccny-ros-pkg/phidgets_drivers.git
 
 Install dependencies using rosdep:
 
