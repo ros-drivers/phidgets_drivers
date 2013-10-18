@@ -1,4 +1,4 @@
-Phidgets drivers for ROS Groovy
+Phidgets drivers for ROS Groovy/Hydro
 =============================================
 
 Overview
@@ -33,9 +33,9 @@ a `src/` folder within it, then execute:
 
     cd ~/catkin_ws/src
 
-Download the metapackage from the github repository:
+Download the metapackage from the github repository (<ros_distro> may be `groovy` or `hydro`):
 
-    git clone -b groovy https://github.com/ccny-ros-pkg/phidgets_drivers.git
+    git clone -b <ros_distro> https://github.com/ccny-ros-pkg/phidgets_drivers.git
 
 Install dependencies using rosdep:
 
