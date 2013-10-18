@@ -1,27 +1,32 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(phidgets_ir)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
 
-rosbuild_init()
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES phidgets_ir
+  CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
+)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+include_directories(include ${catkin_INCLUDE_DIRS})
 
-# create phidgets_ir library
-rosbuild_add_library (phidgets_ir src/ir_ros_i.cpp)
-target_link_libraries (phidgets_ir phidgets_api)
+add_library(phidgets_ir src/ir_ros_i.cpp)
 
-# create phidgets_ir_nodelet library
-#rosbuild_add_library (phidgets_ir_nodelet src/phidgets_ir_nodelet.cpp)
-#target_link_libraries (phidgets_ir_nodelet phidgets_ir)
+add_executable(phidgets_ir_node src/phidgets_ir_node.cpp)
 
-# create phidgets_ir_node executable
-rosbuild_add_executable(phidgets_ir_node src/phidgets_ir_node.cpp)
-target_link_libraries (phidgets_ir_node phidgets_ir)
+add_dependencies(phidgets_ir phidgets_api)
+
+target_link_libraries(phidgets_ir ${catkin_LIBRARIES})
+target_link_libraries(phidgets_ir_node ${catkin_LIBRARIES} phidgets_ir)
+
+install(TARGETS phidgets_ir phidgets_ir_node
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+)

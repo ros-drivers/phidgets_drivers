@@ -1,27 +1,38 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(phidgets_imu)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
 
-rosbuild_init()
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES phidgets_imu 
+  CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
+)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+include_directories(include ${catkin_INCLUDE_DIRS})
 
-# create phidgets_imu library
-rosbuild_add_library (phidgets_imu src/imu_ros_i.cpp)
-target_link_libraries (phidgets_imu phidgets_api)
+add_library(phidgets_imu src/imu_ros_i.cpp)
+add_library(phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
 
-# create phidgets_imu_nodelet library
-rosbuild_add_library (phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
-target_link_libraries (phidgets_imu_nodelet phidgets_imu)
+add_executable(phidgets_imu_node src/phidgets_imu_node.cpp)
 
-# create phidgets_imu_node executable
-rosbuild_add_executable(phidgets_imu_node src/phidgets_imu_node.cpp)
-target_link_libraries (phidgets_imu_node phidgets_imu)
+add_dependencies(phidgets_imu phidgets_api)
+
+target_link_libraries(phidgets_imu ${catkin_LIBRARIES})
+target_link_libraries(phidgets_imu_nodelet ${catkin_LIBRARIES} phidgets_imu)
+target_link_libraries(phidgets_imu_node ${catkin_LIBRARIES} phidgets_imu)
+
+install(TARGETS phidgets_imu phidgets_imu_nodelet phidgets_imu_node
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+)
+
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
