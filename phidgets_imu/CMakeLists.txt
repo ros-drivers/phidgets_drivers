@@ -36,3 +36,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
+
+install(FILES phidgets_imu_nodelet.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
