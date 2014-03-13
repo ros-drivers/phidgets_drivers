@@ -24,7 +24,7 @@ if(NOT DEFINED PROCESSOR_COUNT)
 endif()
 
 include(ExternalProject)
-ExternalProject_Add(libphidget21
+externalproject_add(libphidget21
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}
   DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/download
   URL http://www.phidgets.com/downloads/libraries/libphidget_2.1.8.20130723.tar.gz
@@ -40,7 +40,7 @@ ExternalProject_Add(libphidget21
   INSTALL_COMMAND make install
 )
 
-ExternalProject_Get_Property(libphidget21 install_dir)
+externalproject_get_property(libphidget21 install_dir)
 
 project(phidgets_api)
 
