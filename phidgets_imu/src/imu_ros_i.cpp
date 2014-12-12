@@ -83,10 +83,12 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     int result = CPhidgetSpatial_setCompassCorrectionParameters(imu_handle_, cc_mag_field_,
           cc_offset0_, cc_offset1_, cc_offset2_, cc_gain0_, cc_gain1_, cc_gain2_,
           cc_T0_, cc_T1_, cc_T2_, cc_T3_, cc_T4_, cc_T5_);
-    if (result == EPHIDGET_UNSUPPORTED)
-      ROS_WARN("Tried to set compass correction params on device which doesn't support it.");
-    else if (result != EPHIDGET_OK)
-      ROS_WARN("Unknown error code while trying to set compass correction params: %d", result);
+    if (result)
+    {
+      const char *err;
+      CPhidget_getErrorDescription(result, &err);
+      ROS_ERROR("Problem while trying to set compass correction params: '%s'.", err);
+    }
   }
   else
   {
