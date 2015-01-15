@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2015-01-15)
+------------------
 * phidgets_api: add libusb dependency
   This caused Jenkins CI tests to fail.
 * phidgets_api: fix case in CMakeLists

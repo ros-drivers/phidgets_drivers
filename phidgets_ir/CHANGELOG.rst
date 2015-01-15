@@ -2,8 +2,8 @@
 Changelog for package phidgets_ir
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2015-01-15)
+------------------
 * Updated version, maintainer and author information
 * phidgets_ir: added dependency to phidgets_api package
 * Deleted comments within files of all packages

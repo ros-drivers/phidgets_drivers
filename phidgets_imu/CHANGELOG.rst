@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2015-01-15)
+------------------
 * add boost depends to CMakeLists
   All non-catkin things that we expose in our headers should be added to
   the DEPENDS, so that packages which depend on our package will also
