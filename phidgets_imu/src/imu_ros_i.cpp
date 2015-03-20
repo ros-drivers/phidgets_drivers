@@ -76,6 +76,9 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     }
   }
 
+  // signal that we have no orientation estimate (see Imu.msg)
+  imu_msg_.orientation_covariance[0] = -1;
+
   initDevice();
 
   if (has_compass_params)
