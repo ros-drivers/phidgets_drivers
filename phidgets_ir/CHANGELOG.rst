@@ -2,6 +2,9 @@
 Changelog for package phidgets_ir
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.1 (2015-01-15)
 ------------------
 * Updated version, maintainer and author information

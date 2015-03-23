@@ -2,6 +2,17 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request #18 from ccny-ros-pkg/libphidgets
+  Merge libphidgets branch into indigo
+* set orientation_covariance[0] to -1
+  from Imu.msg:
+  > If you have no estimate for one of the data elements (e.g. your IMU doesn't produce an orientation
+  > estimate), please set element 0 of the associated covariance matrix to -1.
+* phidgets_imu: fixed issue #9
+* Contributors: Martin Günther, Murilo FM
+
 0.2.1 (2015-01-15)
 ------------------
 * add boost depends to CMakeLists

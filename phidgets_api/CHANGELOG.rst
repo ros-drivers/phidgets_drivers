@@ -2,6 +2,15 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* phidgets_api: updated build/installation rules to use 3rd party libphdigets ROS package
+* phidgets_api: updated package details
+* phidgets_api: added copy of udev rule to package and updated path in script
+* phidgets_api: updated path to libphidgets header file
+* phidgets_api: removed license and header file of phidgets library
+* Contributors: Murilo FM
+
 0.2.1 (2015-01-15)
 ------------------
 * phidgets_api: add libusb dependency
