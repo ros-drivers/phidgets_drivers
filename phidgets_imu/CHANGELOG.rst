@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2015-03-23)
+------------------
 * Merge pull request #18 from ccny-ros-pkg/libphidgets
   Merge libphidgets branch into indigo
 * set orientation_covariance[0] to -1
