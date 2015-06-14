@@ -33,6 +33,8 @@
 
 #include <libphidgets/phidget21.h>
 
+#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_updater/publisher.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -48,8 +50,23 @@ class Phidget
     Phidget();
     ~Phidget();
 
+    /**@brief updater object of class Update. Used to add diagnostic tasks, set ID etc. refer package API.
+     * Added for diagnostics */
+    diagnostic_updater::Updater updater;
+
+    /**@brief This bool is public to allow to know when 1000s condition in imu_ros_i.cpp is over and need
+     * to report a connection error.
+     * Added for diagnostics */
+    bool is_connected;
+
+    /**@brief Main diagnostic method that takes care of collecting diagnostic data.
+     * @param stat The stat param is what is the diagnostic tasks are added two. Internally published by the
+     * 		    diagnostic_updater package.
+     * Added for diagnostics */
+    void phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat);
+
     /**@brief Open a connection to a Phidget
-     * @param serial_number THe serial number of the phidget to which to attach (-1 will connect to any)*/
+     * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)*/
     int open(int serial_number);
     
     /**@brief Close the connection to the phidget */
@@ -93,6 +110,10 @@ class Phidget
     virtual void errorHandler(int error);
 
   private:
+
+    // Added for diagnostics
+    bool is_error;
+    int error_number;
 
     static int AttachHandler(CPhidgetHandle handle, void *userptr);
     static int DetachHandler(CPhidgetHandle handle, void *userptr);

@@ -4,6 +4,7 @@ namespace phidgets {
 
 Phidget::Phidget()
 {
+  updater.add("IMU Driver Status", this, &phidgets::Phidget::phidgetsDiagnostics);
 
 }
 
@@ -17,7 +18,7 @@ void Phidget::registerHandlers()
 {
   CPhidget_set_OnAttach_Handler(handle_, &Phidget::AttachHandler, this); 
   CPhidget_set_OnDetach_Handler(handle_, &Phidget::DetachHandler, this); 
-	CPhidget_set_OnError_Handler (handle_, &Phidget::ErrorHandler,  this);
+  CPhidget_set_OnError_Handler (handle_, &Phidget::ErrorHandler,  this);
 }
 
 void Phidget::init(CPhidgetHandle handle)
@@ -27,6 +28,7 @@ void Phidget::init(CPhidgetHandle handle)
 
 int Phidget::open(int serial_number)
 {
+  updater.setHardwareID("none");
   return CPhidget_open(handle_, serial_number);
 }
 
@@ -111,19 +113,49 @@ void Phidget::errorHandler(int error)
 int Phidget::AttachHandler(CPhidgetHandle handle, void *userptr)
 {
   ((Phidget*)userptr)->attachHandler();
+  is_connected = true;
+  updater.force_update();
   return 0;
 }
 
 int Phidget::DetachHandler(CPhidgetHandle handle, void *userptr)
 {
   ((Phidget*)userptr)->detachHandler();
+  is_connected = false;
+  updater.force_update();
   return 0;
 }
 
 int Phidget::ErrorHandler(CPhidgetHandle handle, void *userptr, int ErrorCode, const char *unknown)
 {
   ((Phidget*)userptr)->errorHandler(ErrorCode);
+  is_error = true;
+  updater.force_update();
+  is_error = false;
   return 0;
+}
+
+//  Added for diagnostics
+void Phidget::phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat)
+{
+  if (is_connected)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "The Phidget is connected.");
+    stat.add("Device Serial Number", getDeviceSerialNumber());
+    stat.add("Device Name", getDeviceName());
+    stat.add("Device Type", getDeviceType());
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "The Phidget is not connected. Check USB.");
+  }
+
+  if (is_error && error_number != 0)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "The Phidget is in Error.");
+    stat.addf("Error Number","%f",error_number);
+    stat.add("Error message",getErrorDescription(error_number));
+  }
 }
 
 } //namespace phidgets

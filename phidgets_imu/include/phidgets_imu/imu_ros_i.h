@@ -11,6 +11,8 @@
 #include <geometry_msgs/Vector3Stamped.h>
 #include <phidgets_api/imu.h>
 
+using namespace std;
+
 namespace phidgets {
 
 const float G = 9.81;
