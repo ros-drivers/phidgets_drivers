@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_drivers</name>
-  <version>0.2.0</version>
+  <version>0.2.2</version>
   <description>API and ROS drivers for Phidgets devices</description>
 
-  <maintainer email="muhrix@gmail.com">Murilo F. M.</maintainer>
+  <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
   <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
 
   <license>BSD, LGPL</license>
