@@ -97,41 +97,41 @@ std::string Phidget::getErrorDescription(int errorCode)
 
 void Phidget::attachHandler()
 {
+  	is_connected = true;
+  	updater.force_update();
 	printf("Phidget attached (serial# %d)\n", getDeviceSerialNumber());
 }
 
 void Phidget::detachHandler()
 {
 	printf("Phidget detached (serial# %d)\n", getDeviceSerialNumber());
+        is_connected = false;
+        updater.force_update();
 }
 
 void Phidget::errorHandler(int error)
 {
+        is_error = true;
+        updater.force_update();
+        is_error = false;
 	printf("Phidget error [%d]: %s\n", error, getErrorDescription(error).c_str());
 }
 
 int Phidget::AttachHandler(CPhidgetHandle handle, void *userptr)
 {
   ((Phidget*)userptr)->attachHandler();
-  is_connected = true;
-  updater.force_update();
   return 0;
 }
 
 int Phidget::DetachHandler(CPhidgetHandle handle, void *userptr)
 {
   ((Phidget*)userptr)->detachHandler();
-  is_connected = false;
-  updater.force_update();
   return 0;
 }
 
 int Phidget::ErrorHandler(CPhidgetHandle handle, void *userptr, int ErrorCode, const char *unknown)
 {
   ((Phidget*)userptr)->errorHandler(ErrorCode);
-  is_error = true;
-  updater.force_update();
-  is_error = false;
   return 0;
 }
 
