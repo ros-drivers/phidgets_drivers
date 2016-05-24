@@ -17,7 +17,6 @@ catkin_package(
   CATKIN_DEPENDS phidgets_api roscpp std_msgs message_runtime
 )
 
-message("catkin_INCLUDE_DIRS=" ${catkin_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(high_speed_encoder src/high_speed_encoder.cpp)
