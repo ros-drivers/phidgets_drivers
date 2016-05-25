@@ -19,12 +19,12 @@ catkin_package(
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_executable(high_speed_encoder src/high_speed_encoder.cpp)
-target_link_libraries(high_speed_encoder ${catkin_LIBRARIES})
-add_dependencies(high_speed_encoder ${catkin_EXPORTED_TARGETS})
-add_dependencies(high_speed_encoder phidgets_high_speed_encoder_generate_messages)
+add_executable(phidgets_high_speed_encoder src/phidgets_high_speed_encoder.cpp)
+target_link_libraries(phidgets_high_speed_encoder ${catkin_LIBRARIES})
+add_dependencies(phidgets_high_speed_encoder ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_high_speed_encoder phidgets_high_speed_encoder_generate_messages)
 
-install(TARGETS high_speed_encoder
+install(TARGETS phidgets_high_speed_encoder
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
