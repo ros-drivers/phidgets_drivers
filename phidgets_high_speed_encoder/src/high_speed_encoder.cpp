@@ -209,9 +209,6 @@ int main(int argc, char* argv[])
     std::string topic_path = "phidgets/";
     nh.getParam("topic_path", topic_path);
 
-    int frequency = 30;
-    nh.getParam("frequency", frequency);
-
     if (attach(phid, serial_number)) {
 		display_properties(phid);
 
@@ -226,14 +223,10 @@ int main(int argc, char* argv[])
         encoder_pub =
 			n.advertise<phidgets_high_speed_encoder::encoder_params>(topic_name,
 												  buffer_length);
-        ros::Rate loop_rate(frequency);
 
         initialised = true;
 
-        while (ros::ok()) {
-            ros::spinOnce();
-            loop_rate.sleep();
-        }
+        ros::spin();
 
         disconnect(phid);
     }
