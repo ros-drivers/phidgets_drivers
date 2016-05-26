@@ -38,13 +38,11 @@
 #include <std_msgs/String.h>
 #include "phidgets_high_speed_encoder/encoder_params.h"
 
-// Handle
-CPhidgetEncoderHandle phid;
-
-// encoder state publisher
-ros::Publisher encoder_pub;
-
-bool initialised = false;
+static CPhidgetEncoderHandle phid;
+static ros::Publisher encoder_pub;
+static bool initialised = false;
+static std::string frame_id;
+static bool inverted = false;
 
 int AttachHandler(CPhidgetHandle phid, void *userptr)
 {
@@ -89,16 +87,20 @@ int PositionChangeHandler(CPhidgetEncoderHandle ENC,
 						  void *usrptr, int Index,
 						  int Time, int RelativePosition)
 {
+    static uint32_t sequence_number = 0U;
     int Position;
     CPhidgetEncoder_getPosition(ENC, Index, &Position);
 
     phidgets_high_speed_encoder::encoder_params e;
+    e.header.stamp = ros::Time::now();
+    e.header.frame_id = frame_id;
+    e.header.seq = sequence_number++;
     e.index = Index;
-    e.count = Position;
-    e.count_change = RelativePosition;
+    e.count = (inverted ? -Position : Position);
+    e.count_change = (inverted ? -RelativePosition : RelativePosition);
     e.time = Time;
     if (initialised) encoder_pub.publish(e);
-    ROS_INFO("Encoder %d Count %d", Index, Position);
+    ROS_DEBUG("Encoder %d Count %d", Index, Position);
     return 0;
 }
 
@@ -205,9 +207,12 @@ int main(int argc, char* argv[])
     nh.getParam("name", name);
     if (serial_number==-1) {
         nh.getParam("serial_number", serial_number);
-    }
+    }    ROS_INFO("%s, %d", frame_id.c_str(), (inverted ? 1ff : 0) );
+
     std::string topic_path = "phidgets/";
     nh.getParam("topic_path", topic_path);
+    nh.getParam("frame_id", frame_id);
+    nh.getParam("inverted", inverted);
 
     if (attach(phid, serial_number)) {
 		display_properties(phid);
