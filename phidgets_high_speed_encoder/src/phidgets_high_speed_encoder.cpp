@@ -107,12 +107,12 @@ int PositionChangeHandler(CPhidgetEncoderHandle ENC,
 int display_properties(CPhidgetEncoderHandle phid)
 {
   int serial_number, version, num_encoders, num_inputs;
-  const char* ptr;
+  const char *ptr;
 
-  CPhidget_getDeviceType((CPhidgetHandle)phid, &ptr);
-  CPhidget_getSerialNumber((CPhidgetHandle)phid,
+  CPhidget_getDeviceType((CPhidgetHandle) phid, &ptr);
+  CPhidget_getSerialNumber((CPhidgetHandle) phid,
                            &serial_number);
-  CPhidget_getDeviceVersion((CPhidgetHandle)phid, &version);
+  CPhidget_getDeviceVersion((CPhidgetHandle) phid, &version);
 
   CPhidgetEncoder_getInputCount(phid, &num_inputs);
   CPhidgetEncoder_getEncoderCount(phid, &num_encoders);
@@ -135,11 +135,11 @@ bool attach(
   // Set the handlers to be run when the device is
   // plugged in or opened from software, unplugged or
   // closed from software, or generates an error.
-  CPhidget_set_OnAttach_Handler((CPhidgetHandle)phid,
+  CPhidget_set_OnAttach_Handler((CPhidgetHandle) phid,
                                 AttachHandler, NULL);
-  CPhidget_set_OnDetach_Handler((CPhidgetHandle)phid,
+  CPhidget_set_OnDetach_Handler((CPhidgetHandle) phid,
                                 DetachHandler, NULL);
-  CPhidget_set_OnError_Handler((CPhidgetHandle)phid,
+  CPhidget_set_OnError_Handler((CPhidgetHandle) phid,
                                ErrorHandler, NULL);
 
   // Registers a callback that will run if an input changes.
@@ -160,7 +160,7 @@ bool attach(
       NULL);
 
   //open the device for connections
-  CPhidget_open((CPhidgetHandle)phid, serial_number);
+  CPhidget_open((CPhidgetHandle) phid, serial_number);
 
   // get the program to wait for an encoder device
   // to be attached
@@ -176,7 +176,7 @@ bool attach(
   }
   int result;
   if ((result =
-         CPhidget_waitForAttachment((CPhidgetHandle)phid,
+         CPhidget_waitForAttachment((CPhidgetHandle) phid,
                                     10000)))
   {
     const char *err;
@@ -194,11 +194,11 @@ bool attach(
 void disconnect(CPhidgetEncoderHandle &phid)
 {
   ROS_INFO("Closing...");
-  CPhidget_close((CPhidgetHandle)phid);
-  CPhidget_delete((CPhidgetHandle)phid);
+  CPhidget_close((CPhidgetHandle) phid);
+  CPhidget_delete((CPhidgetHandle) phid);
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "phidgets_high_speed_encoder");
   ros::NodeHandle n;
@@ -211,7 +211,11 @@ int main(int argc, char* argv[])
   {
     nh.getParam("serial_number", serial_number);
   }
-  ROS_INFO("%s, %d", frame_id.c_str(), (inverted ? 1ff : 0));
+  ROS_INFO("frame_id = %s", frame_id.c_str());
+  if (inverted)
+  {
+    ROS_INFO("values are inverted");
+  }
 
   std::string topic_path = "phidgets/";
   nh.getParam("topic_path", topic_path);
