@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(phidgets_imu)
 
-find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
+find_package(catkin REQUIRED COMPONENTS diagnostic_msgs diagnostic_updater geometry_msgs nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
@@ -9,7 +9,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES phidgets_imu 
   DEPENDS Boost
-  CATKIN_DEPENDS geometry_msgs nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
+  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater geometry_msgs nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})

@@ -1,11 +1,15 @@
+#include <boost/make_shared.hpp>
 #include "phidgets_imu/imu_ros_i.h"
 
 namespace phidgets {
 
 ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   Imu(),
-  nh_(nh), 
+  nh_(nh),
   nh_private_(nh_private),
+  is_connected_(false),
+  error_number_(0),
+  target_publish_freq_(0.0),
   initialized_(false)
 {
   ROS_INFO ("Starting Phidgets IMU");
@@ -45,13 +49,27 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   cal_publisher_ = nh_.advertise<std_msgs::Bool>(
     "imu/is_calibrated", 5);
 
+  // Set up the topic publisher diagnostics monitor for imu/data_raw
+  // 1. The frequency status component monitors if imu data is published
+  // within 10% tolerance of the desired frequency of 1.0 / period
+  // 2. The timstamp status component monitors the delay between
+  // the header.stamp of the imu message and the real (ros) time
+  // the maximum tolerable drift is +- 100ms
+  target_publish_freq_ = 1000.0 / static_cast<double>(period_);
+  imu_publisher_diag_ptr_ = boost::make_shared<diagnostic_updater::TopicDiagnostic>(
+        "imu/data_raw",
+        boost::ref(diag_updater_),
+        diagnostic_updater::FrequencyStatusParam(&target_publish_freq_, &target_publish_freq_, 0.1, 5),
+        diagnostic_updater::TimeStampStatusParam(-0.1, 0.1)
+        );
+
   // **** advertise services
 
   cal_srv_ = nh_.advertiseService(
     "imu/calibrate", &ImuRosI::calibrateService, this);
 
   // **** initialize variables and device
-  
+
   imu_msg_.header.frame_id = frame_id_;
 
   // build covariance matrices
@@ -78,6 +96,10 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   // signal that we have no orientation estimate (see Imu.msg)
   imu_msg_.orientation_covariance[0] = -1;
+
+  // init diagnostics, we set the hardware id properly when the device is connected
+  diag_updater_.setHardwareID("none");
+  diag_updater_.add("IMU Driver Status", this, &phidgets::ImuRosI::phidgetsDiagnostics);
 
   initDevice();
 
@@ -108,9 +130,10 @@ void ImuRosI::initDevice()
 	int result = waitForAttachment(10000);
 	if(result)
 	{
-          phidgets::Phidget::is_connected = false;
-          phidgets::Phidget::updater.force_update();
-	  const char *err;
+		is_connected_ = false;
+		error_number_ = result;
+		diag_updater_.force_update();
+		const char *err;
 		CPhidget_getErrorDescription(result, &err);
 		ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err);
 	}
@@ -120,6 +143,11 @@ void ImuRosI::initDevice()
 
   // calibrate on startup
   calibrate();
+
+  // set the hardware id for diagnostics
+  diag_updater_.setHardwareIDf("%s-%d",
+                               getDeviceName().c_str(),
+                               getDeviceSerialNumber());
 }
 
 bool ImuRosI::calibrateService(std_srvs::Empty::Request  &req,
@@ -146,7 +174,7 @@ void ImuRosI::calibrate()
 void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i)
 {
   // **** calculate time from timestamp
-  ros::Duration time_imu(data[i]->timestamp.seconds + 
+  ros::Duration time_imu(data[i]->timestamp.seconds +
                          data[i]->timestamp.microseconds * 1e-6);
 
   ros::Time time_now = time_zero_ + time_imu;
@@ -161,14 +189,14 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   // **** initialize if needed
 
   if (!initialized_)
-  { 
+  {
     last_imu_time_ = time_now;
     initialized_ = true;
   }
 
   // **** create and publish imu message
 
-  boost::shared_ptr<ImuMsg> imu_msg = 
+  boost::shared_ptr<ImuMsg> imu_msg =
     boost::make_shared<ImuMsg>(imu_msg_);
 
   imu_msg->header.stamp = time_now;
@@ -184,12 +212,13 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
 
   imu_publisher_.publish(imu_msg);
+  imu_publisher_diag_ptr_->tick(time_now);
 
   // **** create and publish magnetic field message
 
-  boost::shared_ptr<MagMsg> mag_msg = 
+  boost::shared_ptr<MagMsg> mag_msg =
     boost::make_shared<MagMsg>();
-  
+
   mag_msg->header.frame_id = frame_id_;
   mag_msg->header.stamp = time_now;
 
@@ -207,14 +236,63 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
     mag_msg->vector.y = nan;
     mag_msg->vector.z = nan;
   }
-   
+
   mag_publisher_.publish(mag_msg);
+
+  // diagnostics
+  diag_updater_.update();
 }
 
 void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
 {
   for(int i = 0; i < count; i++)
     processImuData(data, i);
+}
+
+//  Added for diagnostics
+void ImuRosI::attachHandler()
+{
+  Imu::attachHandler();
+  is_connected_ = true;
+  // Reset error number to no error if the prev error was disconnect
+  if (error_number_ == 13) error_number_ = 0;
+  diag_updater_.force_update();
+}
+
+void ImuRosI::detachHandler()
+{
+  Imu::detachHandler();
+  is_connected_ = false;
+  diag_updater_.force_update();
+}
+
+void ImuRosI::errorHandler(int error)
+{
+  Imu::errorHandler(error);
+  error_number_ = error;
+  diag_updater_.force_update();
+}
+
+void ImuRosI::phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat)
+{
+  if (is_connected_)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "The Phidget is connected.");
+    stat.add("Device Serial Number", getDeviceSerialNumber());
+    stat.add("Device Name", getDeviceName());
+    stat.add("Device Type", getDeviceType());
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "The Phidget is not connected. Check the USB.");
+  }
+
+  if (error_number_ != 0)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "The Phidget reports error.");
+    stat.add("Error Number", error_number_);
+    stat.add("Error message", getErrorDescription(error_number_));
+  }
 }
 
 } // namespace phidgets
