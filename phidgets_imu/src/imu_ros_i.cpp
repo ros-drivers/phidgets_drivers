@@ -221,9 +221,10 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   if (data[i]->magneticField[0] != PUNK_DBL)
   {
-    mag_msg->vector.x = data[i]->magneticField[0];
-    mag_msg->vector.y = data[i]->magneticField[1];
-    mag_msg->vector.z = data[i]->magneticField[2];
+    // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
+    mag_msg->vector.x = data[i]->magneticField[0] * 1e-4;
+    mag_msg->vector.y = data[i]->magneticField[1] * 1e-4;
+    mag_msg->vector.z = data[i]->magneticField[2] * 1e-4;
   }
   else
   {
