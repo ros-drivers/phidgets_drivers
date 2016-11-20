@@ -49,7 +49,7 @@ class Phidget
     ~Phidget();
 
     /**@brief Open a connection to a Phidget
-     * @param serial_number THe serial number of the phidget to which to attach (-1 will connect to any)*/
+     * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)*/
     int open(int serial_number);
     
     /**@brief Close the connection to the phidget */

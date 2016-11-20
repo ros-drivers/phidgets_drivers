@@ -4,12 +4,17 @@
 #include <ros/ros.h>
 #include <ros/service_server.h>
 #include <boost/thread/mutex.hpp>
+#include <boost/shared_ptr.hpp>
 #include <tf/transform_datatypes.h>
 #include <sensor_msgs/Imu.h>
 #include <std_srvs/Empty.h>
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3Stamped.h>
+#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_updater/publisher.h>
 #include <phidgets_api/imu.h>
+
+using namespace std;
 
 namespace phidgets {
 
@@ -35,6 +40,16 @@ class ImuRosI : public Imu
     ros::Publisher  mag_publisher_;
     ros::Publisher  cal_publisher_;
     ros::ServiceServer cal_srv_;
+
+    /**@brief updater object of class Update. Used to add diagnostic tasks, set ID etc. refer package API.
+     * Added for diagnostics */
+    diagnostic_updater::Updater diag_updater_;
+    boost::shared_ptr<diagnostic_updater::TopicDiagnostic> imu_publisher_diag_ptr_;
+
+    // diagnostics
+    bool is_connected_;
+    int error_number_;
+    double target_publish_freq_;
 
     bool initialized_;
     boost::mutex mutex_;
@@ -70,7 +85,16 @@ class ImuRosI : public Imu
     void calibrate();
     void initDevice();
     void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);
+    void attachHandler();
+    void detachHandler();
+    void errorHandler(int error);
     void processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i);
+
+    /**@brief Main diagnostic method that takes care of collecting diagnostic data.
+     * @param stat The stat param is what is the diagnostic tasks are added two. Internally published by the
+     * 		    diagnostic_updater package.
+     * Added for diagnostics */
+    void phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat);
 };
 
 } //namespace phidgets
