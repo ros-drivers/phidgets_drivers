@@ -138,9 +138,6 @@ void ImuRosI::initDevice()
 		ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err);
 	}
 
-	// set the data rate for the spatial events
-  setDataRate(period_);
-
   // calibrate on startup
   calibrate();
 
@@ -249,7 +246,6 @@ void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int coun
     processImuData(data, i);
 }
 
-//  Added for diagnostics
 void ImuRosI::attachHandler()
 {
   Imu::attachHandler();
@@ -257,6 +253,9 @@ void ImuRosI::attachHandler()
   // Reset error number to no error if the prev error was disconnect
   if (error_number_ == 13) error_number_ = 0;
   diag_updater_.force_update();
+
+  // Set device params. This is in attachHandler(), since it has to be repeated on reattachment.
+  setDataRate(period_);
 }
 
 void ImuRosI::detachHandler()
