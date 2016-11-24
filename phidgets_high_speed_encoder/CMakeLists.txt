@@ -5,7 +5,7 @@ find_package(catkin REQUIRED COMPONENTS phidgets_api roscpp std_msgs message_gen
 
 add_message_files(
   FILES
-  encoder_params.msg
+  EncoderParams.msg
 )
 
 generate_messages(

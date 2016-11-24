@@ -36,7 +36,7 @@
 #include <sstream>
 #include <libphidgets/phidget21.h>
 #include <std_msgs/String.h>
-#include "phidgets_high_speed_encoder/encoder_params.h"
+#include "phidgets_high_speed_encoder/EncoderParams.h"
 
 static CPhidgetEncoderHandle phid;
 static ros::Publisher encoder_pub;
@@ -85,20 +85,17 @@ int InputChangeHandler(CPhidgetEncoderHandle ENC,
 
 int PositionChangeHandler(CPhidgetEncoderHandle ENC,
                           void *usrptr, int Index,
-                          int Time, int RelativePosition)
+                          int Time, int)
 {
   static uint32_t sequence_number = 0U;
   int Position;
   CPhidgetEncoder_getPosition(ENC, Index, &Position);
 
-  phidgets_high_speed_encoder::encoder_params e;
+  phidgets_high_speed_encoder::EncoderParams e;
   e.header.stamp = ros::Time::now();
   e.header.frame_id = frame_id;
-  e.header.seq = sequence_number++;
   e.index = Index;
   e.count = (inverted ? -Position : Position);
-  e.count_change = (inverted ? -RelativePosition : RelativePosition);
-  e.time = Time;
   if (initialised) encoder_pub.publish(e);
   ROS_DEBUG("Encoder %d Count %d", Index, Position);
   return 0;
@@ -211,7 +208,6 @@ int main(int argc, char *argv[])
   {
     nh.getParam("serial_number", serial_number);
   }
-  ROS_INFO("frame_id = %s", frame_id.c_str());
   if (inverted)
   {
     ROS_INFO("values are inverted");
@@ -220,6 +216,7 @@ int main(int argc, char *argv[])
   std::string topic_path = "phidgets/";
   nh.getParam("topic_path", topic_path);
   nh.getParam("frame_id", frame_id);
+  ROS_INFO("frame_id = %s", frame_id.c_str());
   nh.getParam("inverted", inverted);
 
   if (attach(phid, serial_number))
@@ -236,7 +233,7 @@ int main(int argc, char *argv[])
       topic_name += ser;
     }
     encoder_pub =
-        n.advertise<phidgets_high_speed_encoder::encoder_params>(topic_name,
+        n.advertise<phidgets_high_speed_encoder::EncoderParams>(topic_name,
                                                                  buffer_length);
 
     initialised = true;
@@ -247,4 +244,3 @@ int main(int argc, char *argv[])
   }
   return 0;
 }
-
