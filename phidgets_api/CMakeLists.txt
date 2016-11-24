@@ -17,6 +17,8 @@ add_library(phidgets_api src/phidget.cpp
                          src/imu.cpp
                          src/ir.cpp)
 
+add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
+
 target_link_libraries(phidgets_api ${catkin_LIBRARIES})
 
 install(TARGETS phidgets_api

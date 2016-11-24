@@ -19,7 +19,9 @@ add_library(phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
 
 add_executable(phidgets_imu_node src/phidgets_imu_node.cpp)
 
-add_dependencies(phidgets_imu phidgets_api)
+add_dependencies(phidgets_imu ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_imu_nodelet ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_imu_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_imu ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 target_link_libraries(phidgets_imu_nodelet ${catkin_LIBRARIES} phidgets_imu)
