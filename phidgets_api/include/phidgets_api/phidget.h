@@ -31,7 +31,7 @@
 #ifndef PHIDGETS_API_PHIDGET_H
 #define PHIDGETS_API_PHIDGET_H
 
-#include <libphidgets/phidget21.h>
+#include <libphidget21/phidget21.h>
 
 #include <iostream>
 #include <algorithm>
