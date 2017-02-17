@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_ir</name>
-  <version>0.2.2</version>
+  <version>0.2.3</version>
   <description>Driver for the Phidgets IR device</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
