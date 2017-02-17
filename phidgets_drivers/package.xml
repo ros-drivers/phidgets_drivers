@@ -22,7 +22,6 @@
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>phidgets_api</run_depend>
   <run_depend>phidgets_imu</run_depend>
-  <run_depend>phidgets_ir</run_depend>
   <run_depend>libphidget21</run_depend>
 
   <export>

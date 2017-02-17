@@ -11,8 +11,8 @@ Drivers for the Phidgets devices. This Catkin metapackage includes:
    for the C API, providing a base Phidget class and various inherited classes
    for different phidget devices.
 
- * Two packages exposing the functionality of specific phidgets devices using
-   the ROS API: `phidgets_imu` and `phidgets_ir`.
+ * `phidgets_imu`: a package exposing the functionality of the phidget IMU device
+   using the ROS API.
 
 
 Installing
