@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2017-02-17)
+------------------
 * Use our own libphidget21 instead of external libphidgets
 * Contributors: Martin Günther
 

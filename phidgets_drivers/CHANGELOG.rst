@@ -2,8 +2,8 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2017-02-17)
+------------------
 * Remove phidgets_ir package
   It was a stub anyway. If somebody has such a device and cares to expose
   the data via ROS topics, this can be revived.

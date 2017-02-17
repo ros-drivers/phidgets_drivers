@@ -2,8 +2,8 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2017-02-17)
+------------------
 * Rename libphidgets => libphidget21
 * Copy libphidget21 from cob_extern
 * Contributors: Martin Günther, Murilo FM

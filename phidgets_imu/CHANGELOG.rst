@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2017-02-17)
+------------------
 * Publish MagneticField instead of Vector3Stamped
 * Report mag data in Tesla, not Gauss
   This is to conform with sensor_msgs/MagneticField, which requires the
