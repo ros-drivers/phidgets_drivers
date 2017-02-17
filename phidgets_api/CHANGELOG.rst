@@ -2,6 +2,11 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add IMU diagnostics (`#24 <https://github.com/ccny-ros-pkg/phidgets_drivers/pull/24>`_)
+* Contributors: Mani Monajjemi, Keshav Iyengar, Martin Günther
+
 0.2.2 (2015-03-23)
 ------------------
 * phidgets_api: updated build/installation rules to use 3rd party libphdigets ROS package

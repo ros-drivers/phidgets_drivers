@@ -2,6 +2,16 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add IMU diagnostics (`#24 <https://github.com/ccny-ros-pkg/phidgets_drivers/pull/24>`_)
+* Set data rate after reattachment
+  This fixes a bug where after disconnecting and reconnecting the USB
+  cable, the data rate would be set to the default of 125 Hz (= period of
+  8ms). By moving the setDataRate call to the attachHandler, the data rate
+  is correctly set after each reattachment.
+* Contributors: Mani Monajjemi, Keshav Iyengar, Martin Günther
+
 0.2.2 (2015-03-23)
 ------------------
 * Merge pull request #18 from ccny-ros-pkg/libphidgets

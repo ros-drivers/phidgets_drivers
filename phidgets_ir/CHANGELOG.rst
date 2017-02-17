@@ -2,6 +2,11 @@
 Changelog for package phidgets_ir
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update package.xml meta info
+* Contributors: Martin Günther
+
 0.2.2 (2015-03-23)
 ------------------
 
