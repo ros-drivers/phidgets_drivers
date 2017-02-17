@@ -4,8 +4,8 @@
   <version>0.2.2</version>
   <description>Driver for the Phidgets IR device</description>
 
+  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
   <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
-  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
 
   <license>BSD</license>
 

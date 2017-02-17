@@ -4,12 +4,14 @@
   <version>0.2.2</version>
   <description>Driver for the Phidgets Spatial 3/3/3 devices</description>
 
+  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
   <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
-  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://ros.org/wiki/phidgets_imu</url>
+  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
 
   <author email="ccnyroboticslab@gmail.com">Ivan Dryanovski</author>
 

@@ -3,12 +3,15 @@
   <name>phidgets_api</name>
   <version>0.2.2</version>
   <description>A C++ Wrapper for the Phidgets C API</description>
-  
+
+  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
   <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://ros.org/wiki/phidgets_api</url>
+  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
 
   <author>Tully Foote</author>
   <author>Ivan Dryanovski</author>
