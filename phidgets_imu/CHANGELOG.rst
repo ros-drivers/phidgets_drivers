@@ -2,6 +2,14 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Publish MagneticField instead of Vector3Stamped
+* Report mag data in Tesla, not Gauss
+  This is to conform with sensor_msgs/MagneticField, which requires the
+  data to be in Tesla.
+* Contributors: Martin Günther
+
 0.2.3 (2017-02-17)
 ------------------
 * Add IMU diagnostics (`#24 <https://github.com/ccny-ros-pkg/phidgets_drivers/pull/24>`_)

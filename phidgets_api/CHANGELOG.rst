@@ -2,6 +2,11 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use our own libphidget21 instead of external libphidgets
+* Contributors: Martin Günther
+
 0.2.3 (2017-02-17)
 ------------------
 * Add IMU diagnostics (`#24 <https://github.com/ccny-ros-pkg/phidgets_drivers/pull/24>`_)
