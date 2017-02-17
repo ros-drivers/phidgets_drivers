@@ -24,6 +24,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     angular_velocity_stdev_ = 0.02 * (M_PI / 180.0); // 0.02 deg/s resolution, as per manual
   if (!nh_private_.getParam ("linear_acceleration_stdev", linear_acceleration_stdev_))
     linear_acceleration_stdev_ = 300.0 * 1e-6 * G; // 300 ug as per manual
+  if (!nh_private_.getParam ("magnetic_field_stdev", magnetic_field_stdev_))
+    magnetic_field_stdev_ = 0.095 * (M_PI / 180.0); // 0.095°/s as per manual
 
   bool has_compass_params =
       nh_private_.getParam ("cc_mag_field", cc_mag_field_)
@@ -70,6 +72,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   // **** initialize variables and device
 
+  // ---- IMU message
+
   imu_msg_.header.frame_id = frame_id_;
 
   // build covariance matrices
@@ -94,8 +98,28 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     }
   }
 
-  // signal that we have no orientation estimate (see Imu.msg)
-  imu_msg_.orientation_covariance[0] = -1;
+  // ---- magnetic field message
+
+  mag_msg_.header.frame_id = frame_id_;
+
+  // build covariance matrix
+
+  double mag_field_var = magnetic_field_stdev_ * magnetic_field_stdev_;
+
+  for (int i = 0; i < 3; ++i)
+  for (int j = 0; j < 3; ++j)
+  {
+    int idx = j * 3 + i;
+
+    if (i == j)
+    {
+      mag_msg_.magnetic_field_covariance[idx] = mag_field_var;
+    }
+    else
+    {
+      mag_msg_.magnetic_field_covariance[idx] = 0.0;
+    }
+  }
 
   // init diagnostics, we set the hardware id properly when the device is connected
   diag_updater_.setHardwareID("none");
@@ -214,25 +238,24 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   // **** create and publish magnetic field message
 
   boost::shared_ptr<MagMsg> mag_msg =
-    boost::make_shared<MagMsg>();
+    boost::make_shared<MagMsg>(mag_msg_);
 
-  mag_msg->header.frame_id = frame_id_;
   mag_msg->header.stamp = time_now;
 
   if (data[i]->magneticField[0] != PUNK_DBL)
   {
     // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-    mag_msg->vector.x = data[i]->magneticField[0] * 1e-4;
-    mag_msg->vector.y = data[i]->magneticField[1] * 1e-4;
-    mag_msg->vector.z = data[i]->magneticField[2] * 1e-4;
+    mag_msg->magnetic_field.x = data[i]->magneticField[0] * 1e-4;
+    mag_msg->magnetic_field.y = data[i]->magneticField[1] * 1e-4;
+    mag_msg->magnetic_field.z = data[i]->magneticField[2] * 1e-4;
   }
   else
   {
     double nan = std::numeric_limits<double>::quiet_NaN();
 
-    mag_msg->vector.x = nan;
-    mag_msg->vector.y = nan;
-    mag_msg->vector.z = nan;
+    mag_msg->magnetic_field.x = nan;
+    mag_msg->magnetic_field.y = nan;
+    mag_msg->magnetic_field.z = nan;
   }
 
   mag_publisher_.publish(mag_msg);

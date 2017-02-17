@@ -7,9 +7,9 @@
 #include <boost/shared_ptr.hpp>
 #include <tf/transform_datatypes.h>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/MagneticField.h>
 #include <std_srvs/Empty.h>
 #include <std_msgs/Bool.h>
-#include <geometry_msgs/Vector3Stamped.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
 #include <phidgets_api/imu.h>
@@ -23,7 +23,7 @@ const float G = 9.81;
 class ImuRosI : public Imu
 {
   typedef sensor_msgs::Imu              ImuMsg;
-  typedef geometry_msgs::Vector3Stamped MagMsg;
+  typedef sensor_msgs::MagneticField    MagMsg;
 
   public:
 
@@ -56,6 +56,7 @@ class ImuRosI : public Imu
     ros::Time last_imu_time_;
 
     ImuMsg imu_msg_;
+    MagMsg mag_msg_;
 
     ros::Time time_zero_;
 
@@ -66,6 +67,7 @@ class ImuRosI : public Imu
 
     double angular_velocity_stdev_;
     double linear_acceleration_stdev_;
+    double magnetic_field_stdev_;
 
     // compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
     double cc_mag_field_;
