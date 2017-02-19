@@ -2,12 +2,17 @@
 <package format="2">
   <name>libphidget21</name>
   <version>0.7.0</version>
-  <description>This package wraps the libphidget21 to use it as a ros dependency</description>
+  <description>This package wraps the libphidget21 to use it as a ROS dependency</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
+  <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
 
   <license>LGPL</license>
 
   <url type="website">http://ros.org/wiki/libphidget21</url>
-  <maintainer email="benjamin.maidel@ipa.fraunhofer.de">Benjamin Maidel</maintainer>
+  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
+
   <author>Alexander Bubeck</author>
 
   <buildtool_depend>catkin</buildtool_depend>
