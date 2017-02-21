@@ -14,9 +14,10 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(phidgets_api src/encoder.cpp
-                         src/phidget.cpp
                          src/imu.cpp
-                         src/ir.cpp)
+                         src/ir.cpp
+                         src/motor.cpp
+                         src/phidget.cpp)
 
 add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
 
