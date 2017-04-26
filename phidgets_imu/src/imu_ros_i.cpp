@@ -8,6 +8,7 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   nh_(nh),
   nh_private_(nh_private),
   is_connected_(false),
+  serial_number_(-1),
   error_number_(0),
   target_publish_freq_(0.0),
   initialized_(false)
@@ -26,6 +27,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
     linear_acceleration_stdev_ = 300.0 * 1e-6 * G; // 300 ug as per manual
   if (!nh_private_.getParam ("magnetic_field_stdev", magnetic_field_stdev_))
     magnetic_field_stdev_ = 0.095 * (M_PI / 180.0); // 0.095°/s as per manual
+  if (nh_private_.getParam ("serial_number", serial_number_)) // optional param serial_number, default is -1
+    ROS_INFO_STREAM("Searching for device with serial number: " << serial_number_);
 
   bool has_compass_params =
       nh_private_.getParam ("cc_mag_field", cc_mag_field_)
@@ -147,8 +150,9 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
 void ImuRosI::initDevice()
 {
-	ROS_INFO("Opening device");
-	open(-1);
+	ROS_INFO_STREAM("Opening device");
+
+	open(serial_number_); // optional param serial_number, default is -1
 
 	ROS_INFO("Waiting for IMU to be attached...");
 	int result = waitForAttachment(10000);
