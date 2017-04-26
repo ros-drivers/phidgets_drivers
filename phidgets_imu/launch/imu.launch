@@ -16,6 +16,9 @@
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="period" value="4"/>
 
+    # optional param serial_number, default is -1
+    <!-- <param name="serial_number" value="123456"/> -->
+
     # compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
     <!-- <param name="cc_mag_field" value="0.52859"/>
          <param name="cc_offset0" value="0.03921"/>

@@ -54,6 +54,7 @@ class ImuRosI : public Imu
     bool initialized_;
     boost::mutex mutex_;
     ros::Time last_imu_time_;
+    int serial_number_;
 
     ImuMsg imu_msg_;
     MagMsg mag_msg_;
