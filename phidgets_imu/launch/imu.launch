@@ -3,7 +3,7 @@
 <launch>
 
   #### Nodelet manager ######################################################
-<param name="serial_number" value="123456"/>
+
   <node pkg="nodelet" type="nodelet" name="imu_manager" 
     args="manager" output="screen" />
 
