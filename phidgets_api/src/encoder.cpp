@@ -17,6 +17,11 @@ Encoder::Encoder():
 
   // register base class callbacks
   Phidget::registerHandlers();
+
+  // register encoder data callbacks
+  CPhidgetEncoder_set_OnInputChange_Handler(encoder_handle_, InputChangeHandler, this);
+  CPhidgetEncoder_set_OnPositionChange_Handler(encoder_handle_, PositionChangeHandler, this);
+  CPhidgetEncoder_set_OnIndex_Handler(encoder_handle_, IndexHandler, this);
 }
 
 int Encoder::getInputCount()
@@ -95,6 +100,37 @@ void Encoder::setEnabled(int index, bool enabled)
 
   assert(ret == EPHIDGET_OK);
 }
+
+int Encoder::InputChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState)
+{
+  ((Encoder*)userPtr)->inputChangeHandler(index, inputState);
+}
+
+int Encoder::PositionChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange)
+{
+  ((Encoder*)userPtr)->positionChangeHandler(index, time, positionChange);
+}
+
+int Encoder::IndexHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int indexPosition)
+{
+  ((Encoder*)userPtr)->indexHandler(index, indexPosition);
+}
+
+void Encoder::inputChangeHandler(int index, int inputState)
+{
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+}
+
+void Encoder::positionChangeHandler(int index, int time, int positionChange)
+{
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+}
+
+void Encoder::indexHandler(int index, int indexPosition)
+{
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+}
+
 
 } //namespace phidgets
 

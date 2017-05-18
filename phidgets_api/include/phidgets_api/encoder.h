@@ -45,14 +45,17 @@ public:
    * @param enabled The new powered state of the encoder*/
   void setEnabled(int index, bool enabled);
 
-  /* TODO Add set event handlers from phidget api
-   * int CPhidgetEncoder_set_OnInputChange_Handler (CPhidgetEncoderHandle phid, int(*fptr)(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState), void *userPtr)
-   * int CPhidgetEncoder_set_OnPositionChange_Handler (CPhidgetEncoderHandle phid, int(*fptr)(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange), void *userPtr)
-   * int CPhidgetEncoder_set_OnIndex_Handler (CPhidgetEncoderHandle phid, int(*fptr)(CPhidgetEncoderHandle phid, void *userPtr, int index, int indexPosition), void *userPtr)
-   */
-
 protected:
   CPhidgetEncoderHandle encoder_handle_;
+
+  virtual void inputChangeHandler(int index, int inputState);
+  virtual void positionChangeHandler(int index, int time, int positionChange);
+  virtual void indexHandler(int index, int indexPosition);
+
+private:
+  static int InputChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState);
+  static int PositionChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange);
+  static int IndexHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int indexPosition);
 };
 
 } //namespace phidgets

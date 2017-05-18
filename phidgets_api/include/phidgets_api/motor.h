@@ -48,19 +48,27 @@ public:
   int  getRatiometric();
   void setRatiometric(int ratiometric);
 
-  /* TODO Add event handlers from phidget api
-   * int CPhidgetMotorControl_set_OnVelocityChange_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, double velocity), void *userPtr)
-   * int CPhidgetMotorControl_set_OnCurrentChange_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current), void *userPtr)
-   * int CPhidgetMotorControl_set_OnInputChange_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, int inputState), void *userPtr)
-   * int CPhidgetMotorControl_set_OnEncoderPositionChange_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, int time, int positionChange), void *userPtr)
-   * int CPhidgetMotorControl_set_OnEncoderPositionUpdate_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, int positionChange), void *userPtr)
-   * int CPhidgetMotorControl_set_OnBackEMFUpdate_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, double voltage), void *userPtr)
-   * int CPhidgetMotorControl_set_OnSensorUpdate_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, int sensorValue), void *userPtr)
-   * int CPhidgetMotorControl_set_OnCurrentUpdate_Handler (CPhidgetMotorControlHandle phid, int(*fptr)(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current), void *userPtr)
-   */
-
 protected:
   CPhidgetMotorControlHandle motor_handle_;
+
+  virtual void velocityChangeHandler(int index, double velocity);
+  virtual void currentChangeHandler(int index, double current);
+  virtual void inputChangeHandler(int index, int inputState);
+  virtual void encoderPositionChangeHandler(int index, int time, int positionChange);
+  virtual void encoderPositionUpdateHandler(int index, int positionChange);
+  virtual void backEMFUpdateHandler(int index, double voltage);
+  virtual void sensorUpdateHandler(int index, int sensorValue);
+  virtual void currentUpdateHandler(int index, double current);
+
+private:
+  static int VelocityChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double velocity);
+  static int CurrentChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current);
+  static int InputChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int inputState);
+  static int EncoderPositionChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int time, int positionChange);
+  static int EncoderPositionUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int positionChange);
+  static int BackEMFUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double voltage);
+  static int SensorUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int sensorValue);
+  static int CurrentUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current);
 };
 
 } //namespace phidgets
