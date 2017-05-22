@@ -2,6 +2,14 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* libphidget21: disable warnings from upstream lib
+  We can't do anything about the upstream bugs, and this caused the build
+  to become "unstable" on the Kinetic build farm.
+* Migrate libphidget21 to catkin-native wrapping
+* Contributors: Martin Günther
+
 0.7.0 (2017-02-17)
 ------------------
 * Rename libphidgets => libphidget21

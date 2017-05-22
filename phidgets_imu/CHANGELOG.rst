@@ -2,6 +2,13 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* phidgets_imu: add optional serial number parameter (`#7 <https://github.com/ros-drivers/phidgets_drivers/issues/7>`_)
+* phidgets_imu: Add imu_filter_madgwick dependency
+  Closes `#9 <https://github.com/ros-drivers/phidgets_drivers/issues/9>`_.
+* Contributors: Johan M. von Behren, Martin Günther
+
 0.7.0 (2017-02-17)
 ------------------
 * Publish MagneticField instead of Vector3Stamped
