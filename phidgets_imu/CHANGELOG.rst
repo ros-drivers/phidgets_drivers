@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.1 (2017-05-22)
+------------------
 * phidgets_imu: add optional serial number parameter (`#7 <https://github.com/ros-drivers/phidgets_drivers/issues/7>`_)
 * phidgets_imu: Add imu_filter_madgwick dependency
   Closes `#9 <https://github.com/ros-drivers/phidgets_drivers/issues/9>`_.

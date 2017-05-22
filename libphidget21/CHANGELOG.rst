@@ -2,8 +2,8 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.1 (2017-05-22)
+------------------
 * libphidget21: disable warnings from upstream lib
   We can't do anything about the upstream bugs, and this caused the build
   to become "unstable" on the Kinetic build farm.

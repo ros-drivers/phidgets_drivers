@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_drivers</name>
-  <version>0.7.0</version>
+  <version>0.7.1</version>
   <description>API and ROS drivers for Phidgets devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
