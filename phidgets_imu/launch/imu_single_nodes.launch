@@ -1,23 +1,13 @@
 <!-- Phidgets IMU launch file -->
 
 <launch>
-
-  #### Nodelet manager ######################################################
-
-  <node pkg="nodelet" type="nodelet" name="imu_manager" 
-    args="manager" output="screen" />
-
   #### IMU Driver ###########################################################
 
-  <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" 
-    args="load phidgets_imu/PhidgetsImuNodelet imu_manager" 
+  <node pkg="phidgets_imu" type="phidgets_imu_node" name="phidgets_imu_node" 
     output="screen">
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="period" value="4"/>
-
-    # optional param serial_number, default is -1
-    <!-- <param name="serial_number" value="123456"/> -->
 
     # compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
     <!-- <param name="cc_mag_field" value="0.52859"/>
@@ -37,8 +27,7 @@
 
   #### IMU Orientation Filter ###############################################
 
-  <node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" 
-    args="load imu_filter_madgwick/ImuFilterNodelet imu_manager" 
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_node" 
     output="screen">
 
     <param name="use_mag" value="true"/>
