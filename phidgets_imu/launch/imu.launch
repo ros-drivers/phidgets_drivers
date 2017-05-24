@@ -42,6 +42,7 @@
     output="screen">
 
     <param name="use_mag" value="true"/>
+    <param name="use_magnetic_field_msg" value="true"/>
   </node>
 
 </launch>
