@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_imu</name>
-  <version>0.7.1</version>
+  <version>0.7.2</version>
   <description>Driver for the Phidgets Spatial 3/3/3 devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>

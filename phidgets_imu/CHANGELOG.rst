@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.2 (2017-06-02)
+------------------
 * First release into Lunar
 * phidgets_imu: Add use_magnetic_field_msg to launch
   This is required in Jade: Since Jade, phidgets_imu publishes
