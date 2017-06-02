@@ -2,6 +2,20 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* First release into Lunar
+* phidgets_imu: Add use_magnetic_field_msg to launch
+  This is required in Jade: Since Jade, phidgets_imu publishes
+  MagneticField messages, but imu_filter_madgwick still subscribes by
+  default to Vector3Stamped messages. When running as nodelets, this can
+  produce a silent error.
+  In Kinetic, this is optional: imu_filter_madgwick now defaults to
+  MagneticField.
+  From Lunar on, it should be removed, because the use_magnetic_field_msg
+  param was removed from imu_filter_madgwick.
+* Contributors: Martin Günther
+
 0.7.1 (2017-05-22)
 ------------------
 * phidgets_imu: add optional serial number parameter (`#7 <https://github.com/ros-drivers/phidgets_drivers/issues/7>`_)

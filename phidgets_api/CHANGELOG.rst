@@ -2,6 +2,9 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.1 (2017-05-22)
 ------------------
 * Set event handlers for motor + encoder APIs

@@ -2,6 +2,9 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.1 (2017-05-22)
 ------------------
 * libphidget21: disable warnings from upstream lib
