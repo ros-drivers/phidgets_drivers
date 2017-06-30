@@ -2,6 +2,9 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.2 (2017-06-02)
 ------------------
 * First release into Lunar

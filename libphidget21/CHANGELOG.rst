@@ -2,6 +2,11 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixed broken url to phidgets library (`#12 <https://github.com/ros-drivers/phidgets_drivers/issues/12>`_)
+* Contributors: imitschke
+
 0.7.2 (2017-06-02)
 ------------------
 
