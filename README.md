@@ -35,7 +35,7 @@ a `src/` folder within it, then execute:
 
 Download the metapackage from the github repository (<ros_distro> may be `groovy`, `hydro`, `indigo`...):
 
-    git clone -b <ros_distro> https://github.com/ccny-ros-pkg/phidgets_drivers.git
+    git clone -b <ros_distro> https://github.com/ros-drivers/phidgets_drivers.git
 
 Install dependencies using rosdep:
 
