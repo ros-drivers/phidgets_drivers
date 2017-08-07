@@ -3,6 +3,7 @@
  *
  *  ROS driver for Phidgets high speed encoder
  *  Copyright (c) 2010, Bob Mottram
+ *  Copyright (c) 2017, Jose Luis Blanco Claraco
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -32,17 +33,38 @@
 
 #include <ros/ros.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <sstream>
 #include <libphidgets/phidget21.h>
 #include <std_msgs/String.h>
+#include <vector>
+#include <mutex>
+#include <numeric> // std::accumulate()
 #include "phidgets_high_speed_encoder/EncoderParams.h"
+#include "phidgets_high_speed_encoder/EncoderDecimatedSpeed.h"
 
 static CPhidgetEncoderHandle phid;
-static ros::Publisher encoder_pub;
-static bool initialised = false;
+std::vector<ros::Publisher> encoder_pubs, encoder_decimspeed_pubs;
 static std::string frame_id;
 static bool inverted = false;
+// (Default=20 Hz) Rate for publishing encoder states
+double PUBLISH_RATE = 20; // [Hz]
+// (Default=10) Number of samples for the sliding window average filter of speeds.
+int SPEED_FILTER_SAMPLES_LEN = 10;
+// (Default=1) Number of "ITERATE" loops without any new encoder tick before resetting the filtered average velocities.
+int SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET = 1;
+
+struct TStatePerChannel
+{
+  int tickPos = .0;
+  double instantaneousSpeed = .0;
+  std::vector<double> speeds_buffer;
+  bool speed_buffer_updated = false;
+  unsigned int  loops_without_update_speed_buffer = 0;
+};
+std::vector<TStatePerChannel>  encoder_states;
+std::mutex  encoder_states_mux;
+
 
 int AttachHandler(CPhidgetHandle phid, void *userptr)
 {
@@ -51,8 +73,26 @@ int AttachHandler(CPhidgetHandle phid, void *userptr)
 
   CPhidget_getDeviceName(phid, &name);
   CPhidget_getSerialNumber(phid, &serial_number);
-  ROS_INFO("%s Serial number %d attached!",
-           name, serial_number);
+
+  CPhidget_DeviceID deviceID;
+  //Retrieve the device ID and number of encoders so that we can set the enables if needed
+  CPhidget_getDeviceID(phid, &deviceID);
+  int inputcount = 0;
+  CPhidgetEncoder_getEncoderCount((CPhidgetEncoderHandle)phid, &inputcount);
+
+  {
+    std::lock_guard<std::mutex> lock(encoder_states_mux);
+    encoder_states.resize(inputcount);
+  }
+  ROS_INFO("%s Serial number %d attached with %d encoders!",
+           name, serial_number, inputcount);
+
+  //the 1047 requires enabling of the encoder inputs, so enable them if this is a 1047
+  if (deviceID == PHIDID_ENCODER_HS_4ENCODER_4INPUT)
+  {
+    for (int i = 0 ; i < inputcount ; i++)
+      CPhidgetEncoder_setEnabled((CPhidgetEncoderHandle)phid, i, 1);
+  }
 
   return 0;
 }
@@ -85,19 +125,23 @@ int InputChangeHandler(CPhidgetEncoderHandle ENC,
 
 int PositionChangeHandler(CPhidgetEncoderHandle ENC,
                           void *usrptr, int Index,
-                          int Time, int)
+                          int Time, int RelativePosition)
 {
-  static uint32_t sequence_number = 0U;
   int Position;
   CPhidgetEncoder_getPosition(ENC, Index, &Position);
-
-  phidgets_high_speed_encoder::EncoderParams e;
-  e.header.stamp = ros::Time::now();
-  e.header.frame_id = frame_id;
-  e.index = Index;
-  e.count = (inverted ? -Position : Position);
-  if (initialised) encoder_pub.publish(e);
   ROS_DEBUG("Encoder %d Count %d", Index, Position);
+
+  std::lock_guard<std::mutex> lock(encoder_states_mux);
+  if (Index < encoder_states.size())
+  {
+    TStatePerChannel &spc = encoder_states[Index];
+    spc.tickPos = Position;
+    spc.instantaneousSpeed = RelativePosition / (Time * 1e-6);
+    spc.speeds_buffer.push_back(spc.instantaneousSpeed);
+    spc.speed_buffer_updated = true;
+    spc.loops_without_update_speed_buffer = 0;
+  }
+
   return 0;
 }
 
@@ -218,29 +262,108 @@ int main(int argc, char *argv[])
   nh.getParam("frame_id", frame_id);
   ROS_INFO("frame_id = %s", frame_id.c_str());
   nh.getParam("inverted", inverted);
+  nh.getParam("PUBLISH_RATE", PUBLISH_RATE);
+  nh.getParam("SPEED_FILTER_SAMPLES_LEN", SPEED_FILTER_SAMPLES_LEN);
+  nh.getParam("SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET", SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET);
+
+  std::string topic_name = topic_path + name;
+  if (serial_number > -1)
+  {
+    char ser[10];
+    sprintf(ser, "%d", serial_number);
+    topic_name += "/";
+    topic_name += ser;
+  }
 
   if (attach(phid, serial_number))
   {
     display_properties(phid);
 
-    const int buffer_length = 100;
-    std::string topic_name = topic_path + name;
-    if (serial_number > -1)
+    ros::Rate rate(PUBLISH_RATE);
+    ROS_INFO("Publishing encoder states at %.03f Hz", PUBLISH_RATE);
+    while (ros::ok())
     {
-      char ser[10];
-      sprintf(ser, "%d", serial_number);
-      topic_name += "/";
-      topic_name += ser;
-    }
-    encoder_pub =
-      n.advertise<phidgets_high_speed_encoder::EncoderParams>(topic_name,
-          buffer_length);
+      ros::spinOnce();
+      rate.sleep();
 
-    initialised = true;
+      // Publish:
+      {
+        std::lock_guard<std::mutex> lock(encoder_states_mux);
+        const unsigned int N = encoder_states.size();
 
-    ros::spin();
+        // First time: create publishers:
+        ROS_ASSERT(encoder_decimspeed_pubs.size() == encoder_pubs.size());
+        if (encoder_pubs.size() != N)
+        {
+          encoder_pubs.resize(N);
+          encoder_decimspeed_pubs.resize(N);
+          for (unsigned int i = 0; i < N; i++)
+          {
+            std::string pub_name = topic_name;
+            char ch[10];
+            sprintf(ch, "/channel%u", i);
+            pub_name += ch;
+            ROS_INFO("Publishing state to topic: %s", pub_name.c_str());
+            encoder_pubs[i] =
+              n.advertise<phidgets_high_speed_encoder::EncoderParams>(
+                pub_name,
+                100);
 
-    disconnect(phid);
-  }
+            ROS_INFO("Publishing decimated speed to topic: %s", pub_name.c_str());
+            pub_name += "_decim_speed";
+            encoder_decimspeed_pubs[i] =
+              n.advertise<phidgets_high_speed_encoder::EncoderDecimatedSpeed>(
+                pub_name,
+                10);
+          }
+        }
+
+        for (unsigned int i = 0; i < N; i++)
+        {
+          TStatePerChannel &spc = encoder_states[i];
+
+          phidgets_high_speed_encoder::EncoderParams e;
+          e.header.stamp = ros::Time::now();
+          e.header.frame_id = frame_id;
+          e.count = (inverted ? -spc.tickPos : spc.tickPos);
+          e.inst_vel = spc.instantaneousSpeed;
+          encoder_pubs[i].publish(e);
+
+          if (SPEED_FILTER_SAMPLES_LEN > 0)
+          {
+            if (!spc.speed_buffer_updated)
+            {
+              if (++spc.loops_without_update_speed_buffer >= SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET)
+              {
+                phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
+                e.header.stamp = ros::Time::now();
+                e.header.frame_id = frame_id;
+                e.speed = .0;
+                encoder_decimspeed_pubs[i].publish(e);
+              }
+            }
+            else
+            {
+              spc.loops_without_update_speed_buffer = 0;
+
+              if (spc.speeds_buffer.size() >= SPEED_FILTER_SAMPLES_LEN)
+              {
+                const double avrg = std::accumulate(spc.speeds_buffer.begin(), spc.speeds_buffer.end(), 0.0) / spc.speeds_buffer.size();
+                spc.speeds_buffer.clear();
+
+                phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
+                e.header.stamp = ros::Time::now();
+                e.header.frame_id = frame_id;
+                e.speed = avrg;
+                encoder_decimspeed_pubs[i].publish(e);
+              }
+            }
+          }
+        }
+      } // end lock guard
+    } // end while ros::ok()
+  } // end if attached()
+
+  disconnect(phid);
   return 0;
 }
