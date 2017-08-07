@@ -14,7 +14,7 @@ Drivers for the Phidgets devices. This Catkin metapackage includes:
  * ROS nodes exposing the functionality of specific phidgets devices using: 
    * `phidgets_imu` 
    * `phidgets_ir`
-   * `phidgets_high_speed_encoder`
+   * `phidgets_high_speed_encoder`
 
 Installing
 ---------------------------------------------
@@ -34,17 +34,25 @@ a `src/` folder within it, then execute:
 
     cd ~/catkin_ws/src
 
-Download the package from GitHub:
+#### Install ROS wrapper for Phidgets driver ####
 
-    git clone -b master https://github.com/ccny-ros-pkg/phidgets_drivers.git
-
-Install dependencies using rosdep:
-
-    rosdep install phidgets_drivers
-
-Alternatively, if rosdep does not work, install the following packages:
+Install dependencies:
 
     sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev
+
+Execute:
+
+    cd ~/catkin_ws/src
+    git clone https://github.com/ipa320/cob_extern.git
+    # Only build what we need:
+    mv cob_extern/libphidgets . && rm -fr cob_extern
+
+#### Build this package ####
+
+Download the package from GitHub:
+
+    cd ~/catkin_ws/src
+    git clone -b master https://github.com/ccny-ros-pkg/phidgets_drivers.git
 
 Compile your catkin workspace:
 
