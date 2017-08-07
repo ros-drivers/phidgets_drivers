@@ -11,9 +11,10 @@ Drivers for the Phidgets devices. This Catkin metapackage includes:
    for the C API, providing a base Phidget class and various inherited classes
    for different phidget devices.
 
- * Two packages exposing the functionality of specific phidgets devices using
-   the ROS API: `phidgets_imu` and `phidgets_ir`.
-
+ * ROS nodes exposing the functionality of specific phidgets devices using: 
+   * `phidgets_imu` 
+   * `phidgets_ir`
+   * `phidgets_high_speed_encoder`
 
 Installing
 ---------------------------------------------
@@ -33,9 +34,9 @@ a `src/` folder within it, then execute:
 
     cd ~/catkin_ws/src
 
-Download the metapackage from the github repository (<ros_distro> may be `groovy`, `hydro`, `indigo`...):
+Download the package from GitHub:
 
-    git clone -b <ros_distro> https://github.com/ccny-ros-pkg/phidgets_drivers.git
+    git clone -b master https://github.com/ccny-ros-pkg/phidgets_drivers.git
 
 Install dependencies using rosdep:
 
