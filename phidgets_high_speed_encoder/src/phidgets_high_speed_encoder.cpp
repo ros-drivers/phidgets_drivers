@@ -35,7 +35,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <sstream>
-#include <libphidgets/phidget21.h>
+#include <libphidget21/phidget21.h>
 #include <std_msgs/String.h>
 #include <vector>
 #include <mutex>
