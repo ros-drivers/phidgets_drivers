@@ -327,6 +327,7 @@ int main(int argc, char *argv[])
           e.header.frame_id = frame_id;
           e.count = (inverted ? -spc.tickPos : spc.tickPos);
           e.inst_vel = spc.instantaneousSpeed;
+          spc.instantaneousSpeed = 0; // Reset speed
           encoder_pubs[i].publish(e);
 
           if (SPEED_FILTER_SAMPLES_LEN > 0)
