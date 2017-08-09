@@ -40,13 +40,6 @@ Install dependencies:
 
     sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev
 
-Execute:
-
-    cd ~/catkin_ws/src
-    git clone https://github.com/ipa320/cob_extern.git
-    # Only build what we need:
-    mv cob_extern/libphidgets . && rm -fr cob_extern
-
 #### Build this package ####
 
 Download the package from GitHub:
