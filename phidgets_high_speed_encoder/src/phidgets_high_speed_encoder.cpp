@@ -309,8 +309,8 @@ int main(int argc, char *argv[])
 									pub_name,
 									100);
 
-						ROS_INFO("Publishing decimated speed to topic: %s",pub_name.c_str());
 						pub_name+="_decim_speed";
+						ROS_INFO("Publishing decimated speed to topic: %s",pub_name.c_str());
 						encoder_decimspeed_pubs[i] =
 							n.advertise<phidgets_high_speed_encoder::EncoderDecimatedSpeed>(
 									pub_name,
