@@ -17,6 +17,7 @@ install:
   # Use rosdep to install all dependencies (including ROS itself)
   - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO
 script:
+  - export PYTHONPATH=/usr/lib/python2.7/dist-packages   # temporary fix for travis-ci/travis-ci#8048
   - source /opt/ros/$CI_ROS_DISTRO/setup.bash
   - mkdir -p $CATKIN_WS_SRC
   - ln -s $TRAVIS_BUILD_DIR $CATKIN_WS_SRC
