@@ -146,14 +146,6 @@ protected:
 
 }; // end EncoderNode
 
-int PositionChangeHandler(CPhidgetEncoderHandle ENC,
-                          void *usrptr, int Index,
-                          int Time, int RelativePosition)
-{
-
-  return 0;
-}
-
 int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "phidgets_high_speed_encoder");
@@ -273,7 +265,7 @@ int main(int argc, char *argv[])
         {
           if (!spc.speed_buffer_updated)
           {
-            if (++spc.loops_without_update_speed_buffer >= SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET)
+            if (int(++spc.loops_without_update_speed_buffer) >= SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET)
             {
               phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
               e.header.stamp = ros::Time::now();
@@ -286,7 +278,7 @@ int main(int argc, char *argv[])
           {
             spc.loops_without_update_speed_buffer = 0;
 
-            if (spc.speeds_buffer.size() >= SPEED_FILTER_SAMPLES_LEN)
+            if (int(spc.speeds_buffer.size()) >= SPEED_FILTER_SAMPLES_LEN)
             {
               const double avrg = std::accumulate(spc.speeds_buffer.begin(), spc.speeds_buffer.end(), 0.0) / spc.speeds_buffer.size();
               spc.speeds_buffer.clear();
