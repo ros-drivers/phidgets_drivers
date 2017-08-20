@@ -10,7 +10,7 @@ else ()
 	set (CMAKE_CXX_STANDARD 11)
 endif ()
 
-find_package(catkin REQUIRED COMPONENTS libphidget21 roscpp std_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS libphidget21 phidgets_api roscpp std_msgs message_generation)
 
 add_message_files(
   FILES
@@ -24,7 +24,7 @@ generate_messages(
 )
 
 catkin_package(
-  CATKIN_DEPENDS libphidget21 roscpp std_msgs message_runtime
+  CATKIN_DEPENDS libphidget21 phidgets_api roscpp std_msgs message_runtime
 )
 
 include_directories(${catkin_INCLUDE_DIRS})
