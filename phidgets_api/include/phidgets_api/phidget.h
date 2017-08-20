@@ -56,7 +56,8 @@ class Phidget
     int close();
     
     /** @brief Block until the unit is attached or timeout occurs
-     * @param timeout Milliseconds to wait before timing out */
+     * @param timeout Milliseconds to wait before timing out
+     * @return 0 on success */
     int waitForAttachment(int timeout);
 
     /** @brief Get the device type string */
