@@ -10,6 +10,12 @@ else ()
 	set (CMAKE_CXX_STANDARD 11)
 endif ()
 
+# High level of warnings:
+if (CMAKE_COMPILER_IS_GNUCXX)
+	add_compile_options(-Wall)
+endif()
+
+
 find_package(catkin REQUIRED COMPONENTS libphidget21 phidgets_api roscpp std_msgs message_generation)
 
 add_message_files(
