@@ -41,12 +41,9 @@
 #include <numeric> // std::accumulate()
 #include "phidgets_api/encoder.h"
 
-#include "phidgets_high_speed_encoder/EncoderParams.h"
+#include <sensor_msgs/JointState.h>
 #include "phidgets_high_speed_encoder/EncoderDecimatedSpeed.h"
 
-std::vector<ros::Publisher> encoder_pubs, encoder_decimspeed_pubs;
-static std::string frame_id;
-static bool inverted = false;
 // (Default=20 Hz) Rate for publishing encoder states
 double PUBLISH_RATE = 20; // [Hz]
 // (Default=10) Number of samples for the sliding window average filter of speeds.
@@ -151,36 +148,40 @@ int main(int argc, char *argv[])
   ros::init(argc, argv, "phidgets_high_speed_encoder");
   ros::NodeHandle n;
   ros::NodeHandle nh("~");
+
+  std::vector<std::string> joint_names = { "joint0", "joint1", "joint2", "joint3"};
+  std::vector<double>      joint_tick2rad = { 4, 1.0};
+  for (unsigned int i = 0; i < joint_names.size(); i++)
+  {
+    char str[100];
+    sprintf(str, "joint%u_name", i);
+    nh.getParam(str, joint_names[i]);
+
+    sprintf(str, "joint%u_tick2rad", i);
+    nh.getParam(str, joint_tick2rad[i]);
+
+    ROS_INFO("Channel %u: '%s'='%s'", i, str, joint_names[i].c_str());
+  }
+
   int serial_number = -1;
-  nh.getParam("serial", serial_number);
-  std::string name = "encoder";
-  nh.getParam("name", name);
   if (serial_number == -1)
   {
     nh.getParam("serial_number", serial_number);
   }
-  if (inverted)
-  {
-    ROS_INFO("values are inverted");
-  }
 
-  std::string topic_path = "phidgets/";
-  nh.getParam("topic_path", topic_path);
+  std::string frame_id;
   nh.getParam("frame_id", frame_id);
-  ROS_INFO("frame_id = %s", frame_id.c_str());
-  nh.getParam("inverted", inverted);
+  ROS_INFO("frame_id = '%s'", frame_id.c_str());
   nh.getParam("PUBLISH_RATE", PUBLISH_RATE);
   nh.getParam("SPEED_FILTER_SAMPLES_LEN", SPEED_FILTER_SAMPLES_LEN);
   nh.getParam("SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET", SPEED_FILTER_IDLE_ITER_LOOPS_BEFORE_RESET);
 
-  std::string topic_name = topic_path + name;
-  if (serial_number > -1)
-  {
-    char ser[100];
-    sprintf(ser, "%d", serial_number);
-    topic_name += "/";
-    topic_name += ser;
-  }
+  // First time: create publishers:
+  const std::string topic_path = "joint_states";
+  ROS_INFO("Publishing state to topic: %s", topic_path.c_str());
+
+  ros::Publisher encoder_pub = n.advertise<sensor_msgs::JointState>(topic_path, 100);
+  std::vector<ros::Publisher> encoder_decimspeed_pubs;
 
   // The encoder object instance:
   EncoderNode  encoder_node;
@@ -222,44 +223,49 @@ int main(int argc, char *argv[])
       std::lock_guard<std::mutex> lock(encoder_states_mux);
       const unsigned int N = encoder_states.size();
 
-      // First time: create publishers:
-      ROS_ASSERT(encoder_decimspeed_pubs.size() == encoder_pubs.size());
-      if (encoder_pubs.size() != N)
+      // First time? We need to create decimated speed publisher here,
+      // once we know how many channel we have. Also, they must be independent
+      // for each channel due to the unsynchronous nature of the filtering
+      // algorithm:
+      if (encoder_decimspeed_pubs.size() != N)
       {
-        encoder_pubs.resize(N);
         encoder_decimspeed_pubs.resize(N);
         for (unsigned int i = 0; i < N; i++)
         {
-          std::string pub_name = topic_name;
-          char ch[10];
-          sprintf(ch, "/channel%u", i);
-          pub_name += ch;
-          ROS_INFO("Publishing state to topic: %s", pub_name.c_str());
-          encoder_pubs[i] =
-            n.advertise<phidgets_high_speed_encoder::EncoderParams>(
-              pub_name,
-              100);
-
-          pub_name += "_decim_speed";
-          ROS_INFO("Publishing decimated speed to topic: %s", pub_name.c_str());
+          std::string s = topic_path;
+          char buf[100];
+          sprintf(buf, "_ch%u_decim_speed", i);
+          s += buf;
+          ROS_INFO("Publishing decimated speed of channel %u to topic: %s", i, s.c_str());
           encoder_decimspeed_pubs[i] =
             n.advertise<phidgets_high_speed_encoder::EncoderDecimatedSpeed>(
-              pub_name,
+              s,
               10);
         }
       }
+
+      sensor_msgs::JointState js_msg;
+      static uint32_t seq_cnt = 0;
+      js_msg.header.seq = (seq_cnt++);
+      js_msg.header.stamp = ros::Time::now();
+      js_msg.header.frame_id = frame_id;
+
+      js_msg.name.resize(N);
+      for (unsigned int i = 0; i < std::min<size_t>(joint_names.size(), N); i++)
+        js_msg.name[i] = joint_names[i];
+
+      js_msg.position.resize(N);
+      js_msg.velocity.resize(N);
+      js_msg.effort.resize(N);
 
       for (unsigned int i = 0; i < N; i++)
       {
         TStatePerChannel &spc = encoder_states[i];
 
-        phidgets_high_speed_encoder::EncoderParams e;
-        e.header.stamp = ros::Time::now();
-        e.header.frame_id = frame_id;
-        e.count = (inverted ? -spc.tickPos : spc.tickPos);
-        e.inst_vel = spc.instantaneousSpeed;
+        js_msg.position[i] = spc.tickPos * joint_tick2rad[i];
+        js_msg.velocity[i] = spc.instantaneousSpeed * joint_tick2rad[i];
+
         spc.instantaneousSpeed = 0; // Reset speed
-        encoder_pubs[i].publish(e);
 
         if (SPEED_FILTER_SAMPLES_LEN > 0)
         {
@@ -270,7 +276,7 @@ int main(int argc, char *argv[])
               phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
               e.header.stamp = ros::Time::now();
               e.header.frame_id = frame_id;
-              e.speed = .0;
+              e.avr_speed = .0;
               encoder_decimspeed_pubs[i].publish(e);
             }
           }
@@ -286,12 +292,15 @@ int main(int argc, char *argv[])
               phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
               e.header.stamp = ros::Time::now();
               e.header.frame_id = frame_id;
-              e.speed = avrg;
+              e.avr_speed = avrg * joint_tick2rad[i];
               encoder_decimspeed_pubs[i].publish(e);
             }
           }
         }
       }
+
+      encoder_pub.publish(js_msg);
+
     } // end lock guard
   } // end while ros::ok()
 

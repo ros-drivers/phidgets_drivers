@@ -16,11 +16,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 
-find_package(catkin REQUIRED COMPONENTS libphidget21 phidgets_api roscpp std_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS libphidget21 phidgets_api roscpp std_msgs message_generation sensor_msgs)
 
 add_message_files(
   FILES
-  EncoderParams.msg
   EncoderDecimatedSpeed.msg
 )
 
@@ -30,14 +29,14 @@ generate_messages(
 )
 
 catkin_package(
-  CATKIN_DEPENDS libphidget21 phidgets_api roscpp std_msgs message_runtime
+  CATKIN_DEPENDS libphidget21 phidgets_api roscpp std_msgs message_runtime sensor_msgs
 )
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_executable(phidgets_high_speed_encoder src/phidgets_high_speed_encoder.cpp)
-target_link_libraries(phidgets_high_speed_encoder ${catkin_LIBRARIES})
-add_dependencies(phidgets_high_speed_encoder ${catkin_EXPORTED_TARGETS})
+add_executable(${PROJECT_NAME} src/phidgets_high_speed_encoder.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_high_speed_encoder phidgets_high_speed_encoder_generate_messages)
 
 install(TARGETS phidgets_high_speed_encoder
