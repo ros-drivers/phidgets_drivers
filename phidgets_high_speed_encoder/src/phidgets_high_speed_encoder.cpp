@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
 
       js_msg.position.resize(N);
       js_msg.velocity.resize(N);
-      js_msg.effort.resize(N);
+      js_msg.effort.clear();
 
       for (unsigned int i = 0; i < N; i++)
       {
