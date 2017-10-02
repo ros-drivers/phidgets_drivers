@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+  <name>phidgets_high_speed_encoder</name>
+  <version>0.7.3</version>
+  <description>Driver for the Phidgets high speed encoder devices</description>
+
+  <maintainer email="geoffrey.viola@asirobots.com">Geoff Viola</maintainer>
+  <maintainer email="jlblanco@ual.es">José-Luis Blanco Claraco</maintainer>
+
+  <license>BSD</license>
+
+  <author email="geoffrey.viola@asirobots.com">Geoff Viola</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>libphidget21</build_depend>
+  <build_depend>phidgets_api</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <run_depend>libphidget21</run_depend>
+  <run_depend>phidgets_api</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+
+  <export>
+  </export>
+</package>
