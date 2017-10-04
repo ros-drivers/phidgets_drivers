@@ -6,14 +6,15 @@ Overview
 
 Drivers for the Phidgets devices. This Catkin metapackage includes:
 
- * `phidgets_api`: a package which downloads and builds the Phidgets C API from
+* `phidgets_api`: a package which downloads and builds the Phidgets C API from
    phidgets.com (as an external project). It also implements a C++ wrapper
    for the C API, providing a base Phidget class and various inherited classes
    for different phidget devices.
 
- * `phidgets_imu`: a package exposing the functionality of the phidget IMU device
-   using the ROS API.
+* ROS nodes exposing the functionality of specific phidgets devices using:
 
+  - `phidgets_imu`
+  - `phidgets_high_speed_encoder`
 
 Installing
 ---------------------------------------------
