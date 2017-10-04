@@ -2,6 +2,11 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add phidgets_high_speed_encoder to metapackage
+* Contributors: Jose Luis Blanco-Claraco, Martin Günther
+
 0.7.3 (2017-06-30)
 ------------------
 

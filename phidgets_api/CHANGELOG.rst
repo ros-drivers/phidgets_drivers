@@ -2,6 +2,11 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix typo and doxygen docs
+* Contributors: Jose Luis Blanco Claraco, Martin Günther
+
 0.7.3 (2017-06-30)
 ------------------
 
