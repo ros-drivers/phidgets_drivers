@@ -2,7 +2,7 @@
 
 typedef phidgets::PhidgetsImuNodelet PhidgetsImuNodelet;
 
-PLUGINLIB_DECLARE_CLASS (phidgets_imu, PhidgetsImuNodelet, PhidgetsImuNodelet, nodelet::Nodelet);
+PLUGINLIB_EXPORT_CLASS(PhidgetsImuNodelet, nodelet::Nodelet)
 
 void PhidgetsImuNodelet::onInit()
 {
