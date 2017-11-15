@@ -4,12 +4,12 @@
   <version>0.0.1</version>
   <description>Driver for the Phidgets InterfaceKit devices</description>
 
-  <maintainer email="jsarrett@gmail.com">James Sarrett</maintainer>
+  <maintainer email="russel@appliedinvention.com">Russel Howe</maintainer>
 
   <license>BSD</license>
 
   <!--
-  <url type="website">http://ros.org/wiki/phidgets_ir</url>
+  <url type="website">http://ros.org/wiki/phidgets_ik</url>
   -->
 
   <author>James Sarrett</author>
