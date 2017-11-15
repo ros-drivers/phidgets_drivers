@@ -31,7 +31,8 @@ void IKRosI::initDevice()
     const char *err;
     CPhidget_getErrorDescription(result, &err);
     ROS_FATAL("Problem waiting for IK attachment: %s", err);
-    exit(result);
+    ros::shutdown();
+    return;
   }
 
   CPhidgetInterfaceKit_getInputCount(ik_handle_, &n_in);
