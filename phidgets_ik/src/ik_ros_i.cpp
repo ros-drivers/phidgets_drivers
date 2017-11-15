@@ -24,7 +24,7 @@ void IKRosI::initDevice()
     serial_num = -1; //defalut open any device
   open(serial_num);
 
-  ROS_INFO("Waiting for IK to be attached...");
+  ROS_INFO("Waiting for IK %d to be attached...", serial_num);
   int result = waitForAttachment(10000);
   if(result)
   {
