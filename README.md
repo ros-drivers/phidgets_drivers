@@ -15,6 +15,7 @@ Drivers for the Phidgets devices. This Catkin metapackage includes:
 
   - `phidgets_imu`
   - `phidgets_high_speed_encoder`
+  - `phidgets_ik`
 
 Installing
 ---------------------------------------------
