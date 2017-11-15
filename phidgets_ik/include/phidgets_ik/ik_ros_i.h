@@ -42,8 +42,8 @@ class IKRosI : public IK
     ros::NodeHandle nh_private_;
 
     void initDevice();
-    void sensorHandler(int index, int sensorValue);
-    void inputHandler(int index, int inputValue);
+    void sensorHandler(size_t index, int sensorValue);
+    void inputHandler(size_t index, int inputValue);
 };
 
 } //namespace phidgets

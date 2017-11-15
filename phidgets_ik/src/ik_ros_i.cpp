@@ -58,7 +58,7 @@ void IKRosI::initDevice()
   }
 }
 
-void IKRosI::sensorHandler(int index, int sensorValue)
+void IKRosI::sensorHandler(size_t index, int sensorValue)
 {
   // do nothing - just refer to base class callbalck, which prints the values
   IK::sensorHandler(index, sensorValue);
@@ -72,7 +72,7 @@ void IKRosI::sensorHandler(int index, int sensorValue)
   }
 }
 
-void IKRosI::inputHandler(int index, int inputValue)
+void IKRosI::inputHandler(size_t index, int inputValue)
 {
   // do nothing - just refer to base class callbalck, which prints the values
   IK::inputHandler(index, inputValue);
