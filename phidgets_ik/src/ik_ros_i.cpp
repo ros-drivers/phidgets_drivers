@@ -91,7 +91,7 @@ void output_setter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
 
 output_setter::output_setter(CPhidgetInterfaceKitHandle ik_handle, int index)
 {
-    this->ik_handle_ = ik_handle_;
+    this->ik_handle_ = ik_handle;
     this->index = index;
 }
 
