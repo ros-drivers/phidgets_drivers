@@ -12,26 +12,26 @@ class IK: public Phidget
     IK();
 
   protected:
- 
+
     CPhidgetInterfaceKitHandle ik_handle_;
     virtual void sensorHandler(
-      int index, 
+      int index,
       int sensorValue);
     virtual void inputHandler(
-      int index, 
+      int index,
       int inputValue);
 
   private:
 
     static int SensorHandler(
-      CPhidgetInterfaceKitHandle ik, 
+      CPhidgetInterfaceKitHandle ik,
       void * userptr,
-      int index, 
+      int index,
       int sensorValue);
     static int InputHandler(
-      CPhidgetInterfaceKitHandle ik, 
+      CPhidgetInterfaceKitHandle ik,
       void * userptr,
-      int index, 
+      int index,
       int inputValue);
 };
 

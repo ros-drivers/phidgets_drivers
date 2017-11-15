@@ -20,7 +20,7 @@ class output_setter {
     CPhidgetInterfaceKitHandle ik_handle_;
 };
 
-class IKRosI : public IK 
+class IKRosI : public IK
 {
 
   public:
