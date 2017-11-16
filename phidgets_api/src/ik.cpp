@@ -26,9 +26,9 @@ int IK::SensorHandler(CPhidgetInterfaceKitHandle ik, void *userptr, int index, i
   return 0;
 }
 
-void IK::sensorHandler(int index, int sensorValue)
+void IK::sensorHandler(size_t index, int sensorValue)
 {
-  printf("index: %d, value: %d\n", index, sensorValue);
+  printf("index: %ld, value: %d\n", index, sensorValue);
 }
 
 int IK::InputHandler(CPhidgetInterfaceKitHandle ik, void *userptr, int index, int inputValue)
@@ -37,9 +37,9 @@ int IK::InputHandler(CPhidgetInterfaceKitHandle ik, void *userptr, int index, in
   return 0;
 }
 
-void IK::inputHandler(int index, int inputValue)
+void IK::inputHandler(size_t index, int inputValue)
 {
-  printf("index: %d, value: %d\n", index, inputValue);
+  printf("index: %ld, value: %d\n", index, inputValue);
 }
 
 } // namespace phidgets

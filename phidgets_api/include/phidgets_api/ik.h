@@ -15,10 +15,10 @@ class IK: public Phidget
 
     CPhidgetInterfaceKitHandle ik_handle_;
     virtual void sensorHandler(
-      int index,
+      size_t index,
       int sensorValue);
     virtual void inputHandler(
-      int index,
+      size_t index,
       int inputValue);
 
   private:
