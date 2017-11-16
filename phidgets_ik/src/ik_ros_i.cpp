@@ -40,20 +40,20 @@ void IKRosI::initDevice()
   CPhidgetInterfaceKit_getSensorCount(ik_handle_, &n_sensors);
   ROS_INFO("%d inputs, %d outputs, %d sensors", n_in, n_out, n_sensors);
   for (int i = 0; i < n_in; i++) {
-    char topicname[] = "input00";
-    snprintf(topicname, sizeof(topicname), "input%02d", i);
+    char topicname[] = "DigitalInput00";
+    snprintf(topicname, sizeof(topicname), "DigitalInput%02d", i);
     in_pubs_.push_back(nh_.advertise<std_msgs::Bool>(topicname, 1));
   }
   for (int i = 0; i < n_out; i++) {
-    char topicname[] = "output00";
-    snprintf(topicname, sizeof(topicname), "output%02d", i);
+    char topicname[] = "DigitalOutput00";
+    snprintf(topicname, sizeof(topicname), "DigitalOutput%02d", i);
     output_setter * s = new output_setter(ik_handle_, i);
     s->subscription = nh_.subscribe(topicname, 1, &output_setter::set_msg_callback, s);
     out_subs_.push_back(s);
   }
   for (int i = 0; i < n_sensors; i++) {
-    char topicname[] = "sensor00";
-    snprintf(topicname, sizeof(topicname), "sensor%02d", i);
+    char topicname[] = "AnalogInput00";
+    snprintf(topicname, sizeof(topicname), "AnalogInput%02d", i);
     sensor_pubs_.push_back(nh_.advertise<std_msgs::Float32>(topicname, 1));
   }
 }
