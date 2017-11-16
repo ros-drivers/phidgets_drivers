@@ -9,7 +9,8 @@ IKRosI::IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   n_out(0),
   n_sensors(0),
   nh_(nh),
-  nh_private_(nh_private)
+  nh_private_(nh_private),
+  VREF(5.0f)
 {
   ROS_INFO ("Starting Phidgets IK");
 
@@ -62,11 +63,13 @@ void IKRosI::sensorHandler(int index, int sensorValue)
 {
   // do nothing - just refer to base class callbalck, which prints the values
   IK::sensorHandler(index, sensorValue);
-  //get rawsensorvalue and divide by 4096, which according to the documentation for both the IK888 and IK222 are the maximum senosr value
+  //get rawsensorvalue and divide by 4096, which according to the documentation
+  //for both the IK888 and IK222 are the maximum sensor value
+  //Multiply by VREF=5.0V to get voltage
   int rawval = 0;
   CPhidgetInterfaceKit_getSensorRawValue(ik_handle_, index, &rawval);
   std_msgs::Float32 msg;
-  msg.data = float(rawval)/4095.0f;
+  msg.data = VREF*float(rawval)/4095.0f;
   if ((sensor_pubs_.size() > index) && (sensor_pubs_[index])) {
     sensor_pubs_[index].publish(msg);
   }
