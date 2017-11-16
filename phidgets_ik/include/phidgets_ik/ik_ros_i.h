@@ -41,6 +41,8 @@ class IKRosI : public IK
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
 
+    const float VREF;
+
     void initDevice();
     void sensorHandler(size_t index, int sensorValue);
     void inputHandler(size_t index, int inputValue);
