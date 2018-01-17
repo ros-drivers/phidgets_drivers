@@ -49,6 +49,7 @@ void IKRosI::initDevice()
     snprintf(topicname, sizeof(topicname), "DigitalOutput%02d", i);
     boost::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
     s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s);
+    s->service = nh_.advertiseService(topicname, &OutputSetter::set_srv_callback, s);
     out_subs_.push_back(s);
   }
   for (int i = 0; i < n_sensors; i++) {
@@ -85,6 +86,14 @@ void OutputSetter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
 {
   ROS_INFO("Setting output %d to %d", index, msg->data);
   CPhidgetInterfaceKit_setOutputState(ik_handle_, index, msg->data);
+}
+
+bool OutputSetter::set_srv_callback(std_srvs::SetBool::Request& req,
+  std_srvs::SetBool::Response &res)
+{
+  ROS_INFO("Setting output %d to %d", index, req.data);
+  res.success = CPhidgetInterfaceKit_setOutputState(ik_handle_, index, req.data);
+  return true;
 }
 
 OutputSetter::OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index)

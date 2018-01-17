@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
+#include <std_srvs/SetBool.h>
 #include <phidgets_api/ik.h>
 
 #include <vector>
@@ -15,7 +16,9 @@ class OutputSetter {
   public:
     OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
     virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
+    virtual bool set_srv_callback(std_srvs::SetBool::Request& req, std_srvs::SetBool::Response &res);
     ros::Subscriber subscription;
+    ros::ServiceServer service;
   protected:
     int index;
     CPhidgetInterfaceKitHandle ik_handle_;
