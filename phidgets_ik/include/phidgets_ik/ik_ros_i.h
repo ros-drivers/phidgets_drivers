@@ -7,6 +7,7 @@
 #include <phidgets_api/ik.h>
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 namespace phidgets {
 
@@ -34,7 +35,7 @@ class IKRosI : public IK
     int n_sensors;
     std::vector<ros::Publisher> in_pubs_;
     std::vector<ros::Publisher> sensor_pubs_;
-    std::vector<OutputSetter*> out_subs_;
+    std::vector<boost::shared_ptr<OutputSetter> > out_subs_;
 
   private:
 

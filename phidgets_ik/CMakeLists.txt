@@ -8,9 +8,12 @@ endif()
 
 find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
 
+find_package(Boost REQUIRED COMPONENTS thread)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES phidgets_ik
+  DEPENDS Boost
   CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
 )
 
