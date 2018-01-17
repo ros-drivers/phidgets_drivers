@@ -162,82 +162,90 @@ void MotorController::setRatiometric(int ratiometric)
   SET(Ratiometric, ratiometric);
 }
 
-int MotorController::VelocityChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double velocity)
+int MotorController::VelocityChangeHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, double velocity)
 {
   ((MotorController*)userPtr)->velocityChangeHandler(index, velocity);
+  return 0;
 }
 
-int MotorController::CurrentChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current)
+int MotorController::CurrentChangeHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, double current)
 {
   ((MotorController*)userPtr)->currentChangeHandler(index, current);
+  return 0;
 }
 
-int MotorController::InputChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int inputState)
+int MotorController::InputChangeHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, int inputState)
 {
   ((MotorController*)userPtr)->inputChangeHandler(index, inputState);
+  return 0;
 }
 
-int MotorController::EncoderPositionChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int time, int positionChange)
+int MotorController::EncoderPositionChangeHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, int time, int positionChange)
 {
   ((MotorController*)userPtr)->encoderPositionChangeHandler(index, time, positionChange);
+  return 0;
 }
 
-int MotorController::EncoderPositionUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int positionChange)
+int MotorController::EncoderPositionUpdateHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, int positionChange)
 {
   ((MotorController*)userPtr)->encoderPositionUpdateHandler(index, positionChange);
+  return 0;
 }
 
-int MotorController::BackEMFUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double voltage)
+int MotorController::BackEMFUpdateHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, double voltage)
 {
   ((MotorController*)userPtr)->backEMFUpdateHandler(index, voltage);
+  return 0;
 }
 
-int MotorController::SensorUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int sensorValue)
+int MotorController::SensorUpdateHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, int sensorValue)
 {
   ((MotorController*)userPtr)->sensorUpdateHandler(index, sensorValue);
+  return 0;
 }
 
-int MotorController::CurrentUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current)
+int MotorController::CurrentUpdateHandler(CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, double current)
 {
   ((MotorController*)userPtr)->currentUpdateHandler(index, current);
+  return 0;
 }
 
-void MotorController::velocityChangeHandler(int index, double velocity)
+void MotorController::velocityChangeHandler(int /* index */, double /* velocity */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::currentChangeHandler(int index, double current)
+void MotorController::currentChangeHandler(int /* index */, double /* current */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::inputChangeHandler(int index, int inputState)
+void MotorController::inputChangeHandler(int /* index */, int /* inputState */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::encoderPositionChangeHandler(int index, int time, int positionChange)
+void MotorController::encoderPositionChangeHandler(int /* index */, int /* time */, int /* positionChange */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::encoderPositionUpdateHandler(int index, int positionChange)
+void MotorController::encoderPositionUpdateHandler(int /* index */, int /* positionChange */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::backEMFUpdateHandler(int index, double voltage)
+void MotorController::backEMFUpdateHandler(int /* index */, double /* voltage */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::sensorUpdateHandler(int index, int sensorValue)
+void MotorController::sensorUpdateHandler(int /* index */, int /* sensorValue */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void MotorController::currentUpdateHandler(int index, double current)
+void MotorController::currentUpdateHandler(int /* index */, double /* current */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }

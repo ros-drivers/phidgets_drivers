@@ -30,13 +30,13 @@ void Imu::zero()
   CPhidgetSpatial_zeroGyro(imu_handle_);
 }
 
-int Imu::SpatialDataHandler(CPhidgetSpatialHandle handle, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count)
+int Imu::SpatialDataHandler(CPhidgetSpatialHandle /* handle */, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count)
 {
   ((Imu*)userptr)->dataHandler(data, count);
   return 0;
 }
 
-void Imu::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
+void Imu::dataHandler(CPhidgetSpatial_SpatialEventDataHandle * /* data */, int /* count */)
 {
   printf("Empty data handler\n");
 }
