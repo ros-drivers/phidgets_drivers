@@ -1,5 +1,4 @@
 #include "phidgets_ik/ik_ros_i.h"
-#include <stdio.h>
 
 namespace phidgets {
 
