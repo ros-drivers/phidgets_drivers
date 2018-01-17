@@ -60,8 +60,6 @@ void IKRosI::initDevice()
 
 void IKRosI::sensorHandler(int index, int sensorValue)
 {
-  // do nothing - just refer to base class callbalck, which prints the values
-  IK::sensorHandler(index, sensorValue);
   //get rawsensorvalue and divide by 4096, which according to the documentation
   //for both the IK888 and IK222 are the maximum sensor value
   //Multiply by VREF=5.0V to get voltage
@@ -76,8 +74,6 @@ void IKRosI::sensorHandler(int index, int sensorValue)
 
 void IKRosI::inputHandler(int index, int inputValue)
 {
-  // do nothing - just refer to base class callbalck, which prints the values
-  IK::inputHandler(index, inputValue);
   std_msgs::Bool msg;
   msg.data = inputValue != 0;
   if ((static_cast<int>(in_pubs_.size()) > index) && (in_pubs_[index])) {
