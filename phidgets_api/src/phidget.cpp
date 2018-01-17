@@ -108,19 +108,19 @@ void Phidget::errorHandler(int error)
 	printf("Phidget error [%d]: %s\n", error, getErrorDescription(error).c_str());
 }
 
-int Phidget::AttachHandler(CPhidgetHandle handle, void *userptr)
+int Phidget::AttachHandler(CPhidgetHandle /* handle */, void *userptr)
 {
   ((Phidget*)userptr)->attachHandler();
   return 0;
 }
 
-int Phidget::DetachHandler(CPhidgetHandle handle, void *userptr)
+int Phidget::DetachHandler(CPhidgetHandle /* handle */, void *userptr)
 {
   ((Phidget*)userptr)->detachHandler();
   return 0;
 }
 
-int Phidget::ErrorHandler(CPhidgetHandle handle, void *userptr, int ErrorCode, const char *unknown)
+int Phidget::ErrorHandler(CPhidgetHandle /* handle */, void *userptr, int ErrorCode, const char * /* unknown */)
 {
   ((Phidget*)userptr)->errorHandler(ErrorCode);
   return 0;

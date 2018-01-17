@@ -20,7 +20,7 @@ IR::IR():
 }
 
 
-int IR::CodeHandler(CPhidgetIRHandle ir, void *userptr, unsigned char *data, int dataLength, int bitCount, int repeat)
+int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr, unsigned char *data, int dataLength, int bitCount, int repeat)
 {
   ((IR*)userptr)->codeHandler(data, dataLength, bitCount, repeat);
   return 0;

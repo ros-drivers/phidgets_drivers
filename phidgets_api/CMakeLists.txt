@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8.3)
 
 project(phidgets_api)
 
+# High level of warnings:
+if (CMAKE_COMPILER_IS_GNUCXX)
+    add_compile_options(-Wall)
+endif()
+
 find_package(catkin REQUIRED COMPONENTS libphidget21)
 
 catkin_package(

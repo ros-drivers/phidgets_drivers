@@ -20,7 +20,7 @@ IK::IK():
 }
 
 
-int IK::SensorHandler(CPhidgetInterfaceKitHandle ik, void *userptr, int index, int sensorValue)
+int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int sensorValue)
 {
   ((IK*)userptr)->sensorHandler(index, sensorValue);
   return 0;
@@ -31,7 +31,7 @@ void IK::sensorHandler(int index, int sensorValue)
   printf("index: %d, value: %d\n", index, sensorValue);
 }
 
-int IK::InputHandler(CPhidgetInterfaceKitHandle ik, void *userptr, int index, int inputValue)
+int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int inputValue)
 {
   ((IK*)userptr)->inputHandler(index, inputValue);
   return 0;

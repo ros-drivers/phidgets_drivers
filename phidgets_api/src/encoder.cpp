@@ -101,32 +101,35 @@ void Encoder::setEnabled(int index, bool enabled)
   assert(ret == EPHIDGET_OK);
 }
 
-int Encoder::InputChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState)
+int Encoder::InputChangeHandler(CPhidgetEncoderHandle /* phid */, void *userPtr, int index, int inputState)
 {
   ((Encoder*)userPtr)->inputChangeHandler(index, inputState);
+  return 0;
 }
 
-int Encoder::PositionChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange)
+int Encoder::PositionChangeHandler(CPhidgetEncoderHandle /* phid */, void *userPtr, int index, int time, int positionChange)
 {
   ((Encoder*)userPtr)->positionChangeHandler(index, time, positionChange);
+  return 0;
 }
 
-int Encoder::IndexHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int indexPosition)
+int Encoder::IndexHandler(CPhidgetEncoderHandle /* phid */, void *userPtr, int index, int indexPosition)
 {
   ((Encoder*)userPtr)->indexHandler(index, indexPosition);
+  return 0;
 }
 
-void Encoder::inputChangeHandler(int index, int inputState)
+void Encoder::inputChangeHandler(int /* index */, int /* inputState */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void Encoder::positionChangeHandler(int index, int time, int positionChange)
+void Encoder::positionChangeHandler(int /* index */, int /* time */, int /* positionChange */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void Encoder::indexHandler(int index, int indexPosition)
+void Encoder::indexHandler(int /* index */, int /* indexPosition */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
