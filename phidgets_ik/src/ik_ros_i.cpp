@@ -48,8 +48,8 @@ void IKRosI::initDevice()
   for (int i = 0; i < n_out; i++) {
     char topicname[] = "DigitalOutput00";
     snprintf(topicname, sizeof(topicname), "DigitalOutput%02d", i);
-    output_setter * s = new output_setter(ik_handle_, i);
-    s->subscription = nh_.subscribe(topicname, 1, &output_setter::set_msg_callback, s);
+    OutputSetter * s = new OutputSetter(ik_handle_, i);
+    s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s);
     out_subs_.push_back(s);
   }
   for (int i = 0; i < n_sensors; i++) {
@@ -86,13 +86,13 @@ void IKRosI::inputHandler(int index, int inputValue)
   }
 }
 
-void output_setter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
+void OutputSetter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
 {
   ROS_INFO("Setting output %d to %d", index, msg->data);
   CPhidgetInterfaceKit_setOutputState(ik_handle_, index, msg->data);
 }
 
-output_setter::output_setter(CPhidgetInterfaceKitHandle ik_handle, int index)
+OutputSetter::OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index)
 {
     this->ik_handle_ = ik_handle;
     this->index = index;

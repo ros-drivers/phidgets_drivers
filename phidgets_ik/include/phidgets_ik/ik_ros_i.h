@@ -10,9 +10,9 @@
 
 namespace phidgets {
 
-class output_setter {
+class OutputSetter {
   public:
-    output_setter(CPhidgetInterfaceKitHandle ik_handle, int index);
+    OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
     virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
     ros::Subscriber subscription;
   protected:
@@ -34,7 +34,7 @@ class IKRosI : public IK
     int n_sensors;
     std::vector<ros::Publisher> in_pubs_;
     std::vector<ros::Publisher> sensor_pubs_;
-    std::vector<output_setter*> out_subs_;
+    std::vector<OutputSetter*> out_subs_;
 
   private:
 
