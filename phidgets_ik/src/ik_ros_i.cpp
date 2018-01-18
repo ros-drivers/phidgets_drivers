@@ -40,21 +40,23 @@ void IKRosI::initDevice()
   CPhidgetInterfaceKit_getSensorCount(ik_handle_, &n_sensors);
   ROS_INFO("%d inputs, %d outputs, %d sensors", n_in, n_out, n_sensors);
   for (int i = 0; i < n_in; i++) {
-    char topicname[] = "DigitalInput00";
-    snprintf(topicname, sizeof(topicname), "DigitalInput%02d", i);
+    char topicname[] = "digital_input00";
+    snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
     in_pubs_.push_back(nh_.advertise<std_msgs::Bool>(topicname, 1));
   }
   for (int i = 0; i < n_out; i++) {
-    char topicname[] = "DigitalOutput00";
-    snprintf(topicname, sizeof(topicname), "DigitalOutput%02d", i);
+    char topicname[] = "digital_output00";
+    snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
+    char servicename[] = "set_digital_output00";
+    snprintf(servicename, sizeof(servicename), "set_digital_output%02d", i);
     boost::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
     s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s);
-    s->service = nh_.advertiseService(topicname, &OutputSetter::set_srv_callback, s);
+    s->service = nh_.advertiseService(servicename, &OutputSetter::set_srv_callback, s);
     out_subs_.push_back(s);
   }
   for (int i = 0; i < n_sensors; i++) {
-    char topicname[] = "AnalogInput00";
-    snprintf(topicname, sizeof(topicname), "AnalogInput%02d", i);
+    char topicname[] = "analog_input00";
+    snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
     sensor_pubs_.push_back(nh_.advertise<std_msgs::Float32>(topicname, 1));
   }
 }
