@@ -2,10 +2,10 @@
 #define PHIDGETS_IK_IK_ROS_I_H
 
 #include <ros/ros.h>
+#include <phidgets_api/ik.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
-#include <std_srvs/SetBool.h>
-#include <phidgets_api/ik.h>
+#include "phidgets_ik/SetDigitalOutput.h"
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -16,7 +16,7 @@ class OutputSetter {
   public:
     OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
     virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
-    virtual bool set_srv_callback(std_srvs::SetBool::Request& req, std_srvs::SetBool::Response &res);
+    virtual bool set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req, phidgets_ik::SetDigitalOutput::Response &res);
     ros::Subscriber subscription;
     ros::ServiceServer service;
   protected:
