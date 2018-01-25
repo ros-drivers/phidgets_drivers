@@ -32,8 +32,8 @@ add_library(phidgets_ik src/ik_ros_i.cpp)
 
 add_executable(phidgets_ik_node src/phidgets_ik_node.cpp)
 
-add_dependencies(phidgets_ik ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_ik_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_ik ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_ik_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_ik ${catkin_LIBRARIES})
 target_link_libraries(phidgets_ik_node ${catkin_LIBRARIES} phidgets_ik)
