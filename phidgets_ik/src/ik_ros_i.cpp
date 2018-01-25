@@ -47,13 +47,11 @@ void IKRosI::initDevice()
   for (int i = 0; i < n_out; i++) {
     char topicname[] = "digital_output00";
     snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
-    char servicename[] = "set_digital_output00";
-    snprintf(servicename, sizeof(servicename), "set_digital_output%02d", i);
     boost::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
     s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s);
-    s->service = nh_.advertiseService(servicename, &OutputSetter::set_srv_callback, s);
     out_subs_.push_back(s);
   }
+  out_srv_ = nh_.advertiseService("set_digital_output", &IKRosI::set_srv_callback, this);
   for (int i = 0; i < n_sensors; i++) {
     char topicname[] = "analog_input00";
     snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
@@ -84,18 +82,18 @@ void IKRosI::inputHandler(int index, int inputValue)
   }
 }
 
+bool IKRosI::set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req,
+  phidgets_ik::SetDigitalOutput::Response &res)
+{
+  ROS_INFO("Setting output %d to %d", req.index, req.state);
+  res.success = !CPhidgetInterfaceKit_setOutputState(ik_handle_, req.index, req.state);
+  return true;
+}
+
 void OutputSetter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
 {
   ROS_INFO("Setting output %d to %d", index, msg->data);
   CPhidgetInterfaceKit_setOutputState(ik_handle_, index, msg->data);
-}
-
-bool OutputSetter::set_srv_callback(std_srvs::SetBool::Request& req,
-  std_srvs::SetBool::Response &res)
-{
-  ROS_INFO("Setting output %d to %d", index, req.data);
-  res.success = CPhidgetInterfaceKit_setOutputState(ik_handle_, index, req.data);
-  return true;
 }
 
 OutputSetter::OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index)
@@ -105,4 +103,3 @@ OutputSetter::OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index)
 }
 
 } // namespace phidgets
-

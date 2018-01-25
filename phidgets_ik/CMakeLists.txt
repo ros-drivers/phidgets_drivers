@@ -6,15 +6,24 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     add_compile_options(-Wall)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
+find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs message_generation tf)
 
 find_package(Boost REQUIRED COMPONENTS thread)
+
+add_service_files (
+  FILES
+  SetDigitalOutput.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES phidgets_ik
   DEPENDS Boost
-  CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
+  CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs message_runtime tf
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -23,8 +32,8 @@ add_library(phidgets_ik src/ik_ros_i.cpp)
 
 add_executable(phidgets_ik_node src/phidgets_ik_node.cpp)
 
-add_dependencies(phidgets_ik ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_ik_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_ik ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(phidgets_ik_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_ik ${catkin_LIBRARIES})
 target_link_libraries(phidgets_ik_node ${catkin_LIBRARIES} phidgets_ik)

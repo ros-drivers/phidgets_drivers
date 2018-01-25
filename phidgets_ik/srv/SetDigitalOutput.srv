@@ -1,0 +1,4 @@
+uint16 index # index of the output which state is defined
+bool state
+---
+bool success
