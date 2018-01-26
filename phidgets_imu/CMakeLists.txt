@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(phidgets_imu)
 
-find_package(catkin REQUIRED COMPONENTS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf)
+find_package(catkin REQUIRED COMPONENTS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp roslaunch sensor_msgs std_msgs std_srvs tf)
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
@@ -48,3 +48,5 @@ install(DIRECTORY launch
 
 install(FILES phidgets_imu_nodelet.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+roslaunch_add_file_check(launch)
