@@ -2,6 +2,14 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* phidgets_imu: Add roslaunch_add_file_check
+* phidgets_imu: Add diagnostic_aggregator dependency
+* phidgets_imu: Add missing install rule for config
+* update to use non deprecated pluginlib macro (`#19 <https://github.com/ros-drivers/phidgets_drivers/issues/19>`_)
+* Contributors: Martin Günther, Mikael Arguedas
+
 0.7.4 (2017-10-04)
 ------------------
 

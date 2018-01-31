@@ -2,6 +2,11 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add support for the phidgets_ik (Phidgets Interface Kit)
+* Contributors: Russel Howe, James Sarrett, Martin Günther
+
 0.7.4 (2017-10-04)
 ------------------
 * Fix typo and doxygen docs
