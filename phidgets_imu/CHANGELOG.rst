@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.5 (2018-01-31)
+------------------
 * phidgets_imu: Add roslaunch_add_file_check
 * phidgets_imu: Add diagnostic_aggregator dependency
 * phidgets_imu: Add missing install rule for config
