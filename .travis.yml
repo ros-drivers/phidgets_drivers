@@ -27,7 +27,13 @@ script:
   - catkin config --install
   # Build [and Install] packages
   - catkin build --limit-status-rate 0.1 --no-notify -DCMAKE_BUILD_TYPE=Release
+  # NOTE on testing: `catkin run_tests` will show the output of the tests
+  # (gtest, nosetest, etc..) but always returns 0 (success) even if a test
+  # fails. Running `catkin_test_results` aggregates all the results and returns
+  # non-zero when a test fails (which notifies the CI that the build failed).
   # Build tests
   - catkin build --limit-status-rate 0.1 --no-notify --make-args tests
   # Run tests
-  - catkin test
+  - catkin run_tests
+  # Verify test results
+  - catkin_test_results
