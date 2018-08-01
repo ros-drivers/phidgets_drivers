@@ -222,7 +222,7 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   // Ensure that we only publish strictly ordered timestamps,
   // also in case a time reset happened.
   if (time_now <= last_published_time_) {
-    ROS_WARN_THROTTLE(MAX_TIMEDIFF_SECONDS, "Ignoring data with to out-of-order time.");
+    ROS_WARN_THROTTLE(MAX_TIMEDIFF_SECONDS, "Ignoring data with out-of-order time.");
     return;
   }
 
