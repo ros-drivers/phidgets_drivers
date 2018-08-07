@@ -204,9 +204,9 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   ros::Time time_now = time_zero_ + time_imu;
 
-  double timediff = time_now.toSec() - ros::Time::now().toSec();
-  if (fabs(timediff) > 0.1) {
-    ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
+  double timediff_seconds = time_now.toSec() - ros::Time::now().toSec();
+  if (fabs(timediff_seconds) > MAX_TIMEDIFF_SECONDS) {
+    ROS_WARN("IMU time differs by %f seconds, resetting IMU time offset!", timediff_seconds);
     time_zero_ = ros::Time::now() - time_imu;
     time_now = ros::Time::now();
   }
@@ -217,6 +217,13 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   {
     last_imu_time_ = time_now;
     initialized_ = true;
+  }
+
+  // Ensure that we only publish strictly ordered timestamps,
+  // also in case a time reset happened.
+  if (time_now <= last_published_time_) {
+    ROS_WARN_THROTTLE(MAX_TIMEDIFF_SECONDS, "Ignoring data with out-of-order time.");
+    return;
   }
 
   // **** create and publish imu message
@@ -266,6 +273,8 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   // diagnostics
   diag_updater_.update();
+
+  last_published_time_ = time_now;
 }
 
 void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
