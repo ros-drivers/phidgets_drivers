@@ -52,9 +52,7 @@ class ImuRosI : public Imu
     int error_number_;
     double target_publish_freq_;
 
-    bool initialized_;
     boost::mutex mutex_;
-    ros::Time last_imu_time_;
     ros::Time last_published_time_;
     int serial_number_;
 

@@ -10,8 +10,7 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   is_connected_(false),
   serial_number_(-1),
   error_number_(0),
-  target_publish_freq_(0.0),
-  initialized_(false)
+  target_publish_freq_(0.0)
 {
   ROS_INFO ("Starting Phidgets IMU");
 
@@ -209,14 +208,6 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
     ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
     time_zero_ = ros::Time::now() - time_imu;
     time_now = ros::Time::now();
-  }
-
-  // **** initialize if needed
-
-  if (!initialized_)
-  {
-    last_imu_time_ = time_now;
-    initialized_ = true;
   }
 
   // Ensure that we only publish strictly ordered timestamps,
