@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.6 (2018-08-09)
+------------------
 * phidgets_imu: Ensure strictly ordered timestamps (`#26 <https://github.com/ros-drivers/phidgets_drivers/issues/26>`_)
   Fixes `#17 <https://github.com/ros-drivers/phidgets_drivers/issues/17>`_.
 * Contributors: Michael Grupp, Martin Günther

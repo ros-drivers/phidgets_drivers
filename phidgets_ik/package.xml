@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>phidgets_ik</name>
-  <version>0.7.5</version>
+  <version>0.7.6</version>
   <description>Driver for the Phidgets InterfaceKit devices</description>
 
   <maintainer email="russel@appliedinvention.com">Russel Howe</maintainer>
