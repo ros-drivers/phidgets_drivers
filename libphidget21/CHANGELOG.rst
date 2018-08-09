@@ -2,6 +2,11 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* libphidget21: Disable warning in CFLAGS
+* Contributors: Martin Günther
+
 0.7.5 (2018-01-31)
 ------------------
 
