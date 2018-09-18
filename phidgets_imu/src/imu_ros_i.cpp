@@ -29,6 +29,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   if (nh_private_.getParam ("serial_number", serial_number_)) // optional param serial_number, default is -1
     ROS_INFO_STREAM("Searching for device with serial number: " << serial_number_);
 
+  nh_private_.param("use_imu_time", use_imu_time_, true);
+
   bool has_compass_params =
       nh_private_.getParam ("cc_mag_field", cc_mag_field_)
       && nh_private_.getParam ("cc_offset0", cc_offset0_)
@@ -203,18 +205,22 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   ros::Time time_now = time_zero_ + time_imu;
 
-  double timediff = time_now.toSec() - ros::Time::now().toSec();
-  if (fabs(timediff) > MAX_TIMEDIFF_SECONDS) {
-    ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
-    time_zero_ = ros::Time::now() - time_imu;
-    time_now = ros::Time::now();
-  }
+  if (use_imu_time_) {
+    double timediff = time_now.toSec() - ros::Time::now().toSec();
+    if (fabs(timediff) > MAX_TIMEDIFF_SECONDS) {
+      ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
+      time_zero_ = ros::Time::now() - time_imu;
+      time_now = ros::Time::now();
+    }
 
-  // Ensure that we only publish strictly ordered timestamps,
-  // also in case a time reset happened.
-  if (time_now <= last_published_time_) {
-    ROS_WARN_THROTTLE(1.0, "Ignoring data with out-of-order time.");
-    return;
+    // Ensure that we only publish strictly ordered timestamps,
+    // also in case a time reset happened.
+    if (time_now <= last_published_time_) {
+      ROS_WARN_THROTTLE(1.0, "Ignoring data with out-of-order time.");
+      return;
+    }
+  } else {
+    time_now = ros::Time::now();
   }
 
   // **** create and publish imu message
