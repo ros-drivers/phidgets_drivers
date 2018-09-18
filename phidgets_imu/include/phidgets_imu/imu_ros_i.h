@@ -69,6 +69,7 @@ class ImuRosI : public Imu
     double angular_velocity_stdev_;
     double linear_acceleration_stdev_;
     double magnetic_field_stdev_;
+    bool use_imu_time_;
 
     // compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
     double cc_mag_field_;
