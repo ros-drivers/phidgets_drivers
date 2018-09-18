@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.7 (2018-09-18)
+------------------
 * Add parameter use_imu_time (default true) (`#27 <https://github.com/ros-drivers/phidgets_drivers/issues/27>`_)
   Setting use_imu_time to false will disable the imu time calibration and
   always use the Host time, i.e. ros::Time::now().
