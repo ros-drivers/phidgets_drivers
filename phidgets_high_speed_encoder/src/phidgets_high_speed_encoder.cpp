@@ -149,8 +149,8 @@ int main(int argc, char *argv[])
   ros::NodeHandle n;
   ros::NodeHandle nh("~");
 
-  std::vector<std::string> joint_names = { "joint0", "joint1", "joint2", "joint3"};
-  std::vector<double>      joint_tick2rad = { 4, 1.0};
+  std::vector<std::string> joint_names = { "joint0", "joint1", "joint2", "joint3" };
+  std::vector<double>      joint_tick2rad = { 1.0, 1.0, 1.0, 1.0 };
   for (unsigned int i = 0; i < joint_names.size(); i++)
   {
     char str[100];
