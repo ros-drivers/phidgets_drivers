@@ -2,7 +2,7 @@ Phidgets drivers for ROS
 ========================
 
 Overview
----------------------------------------------
+--------
 
 Drivers for the Phidgets devices. This Catkin metapackage includes:
 
@@ -18,7 +18,7 @@ Drivers for the Phidgets devices. This Catkin metapackage includes:
   - `phidgets_ik`
 
 Installing
----------------------------------------------
+----------
 
 ### From source ###
 
@@ -52,15 +52,20 @@ Compile your catkin workspace:
     cd ~/catkin_ws
     catkin_make
 
-### Udev rules setup: ###
+### Udev rules setup ###
+
+**Note:** The following steps are only required when installing the package
+from source. When installing a binary debian package of `phidgets_api` >= 0.7.8,
+the udev rules are set up automatically.
 
 Make sure your catkin workspace has been successfully compiled.
 To set up the udev rules for the Phidgets USB devices, run the following commands:
 
-    cd ~/catkin_ws
-    sh src/phidgets_drivers/phidgets_api/share/setup-udev.sh
+    roscd phidgets_api
+    sudo cp debian/udev /etc/udev/rules.d/99-phidgets.rules
+    sudo udevadm control --reload-rules
 
-You will be prompted to type in your password.
+Afterwards, disconnect the USB cable and plug it in again (or run `sudo udevadm trigger`).
 
 
 For documentation regarding nodes, topics, etc:
