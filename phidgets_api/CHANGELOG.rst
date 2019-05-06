@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.8 (2019-05-06)
+------------------
 * Install udev rules on binary package installation
 * Contributors: Martin Günther
 
