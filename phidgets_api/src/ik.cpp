@@ -17,6 +17,7 @@ IK::IK():
 
   // register ik data callback
   CPhidgetInterfaceKit_set_OnSensorChange_Handler(ik_handle_, SensorHandler, this);
+  CPhidgetInterfaceKit_set_OnInputChange_Handler(ik_handle_, InputHandler, this);
 }
 
 
