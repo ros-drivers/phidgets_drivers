@@ -100,6 +100,6 @@ class ImuRosI : public Imu
     void phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat);
 };
 
-} //namespace phidgets
+} // namespace phidgets
 
 #endif // PHIDGETS_IMU_IMU_ROS_I_H

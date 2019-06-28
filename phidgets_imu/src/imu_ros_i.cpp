@@ -17,17 +17,29 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   // **** get parameters
 
   if (!nh_private_.getParam ("period", period_))
+  {
     period_ = 8; // 8 ms
+  }
   if (!nh_private_.getParam ("frame_id", frame_id_))
+  {
     frame_id_ = "imu";
+  }
   if (!nh_private_.getParam ("angular_velocity_stdev", angular_velocity_stdev_))
+  {
     angular_velocity_stdev_ = 0.02 * (M_PI / 180.0); // 0.02 deg/s resolution, as per manual
+  }
   if (!nh_private_.getParam ("linear_acceleration_stdev", linear_acceleration_stdev_))
+  {
     linear_acceleration_stdev_ = 300.0 * 1e-6 * G; // 300 ug as per manual
+  }
   if (!nh_private_.getParam ("magnetic_field_stdev", magnetic_field_stdev_))
+  {
     magnetic_field_stdev_ = 0.095 * (M_PI / 180.0); // 0.095°/s as per manual
+  }
   if (nh_private_.getParam ("serial_number", serial_number_)) // optional param serial_number, default is -1
+  {
     ROS_INFO_STREAM("Searching for device with serial number: " << serial_number_);
+  }
 
   nh_private_.param("use_imu_time", use_imu_time_, true);
 
@@ -86,19 +98,21 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   double lin_acc_var = linear_acceleration_stdev_ * linear_acceleration_stdev_;
 
   for (int i = 0; i < 3; ++i)
-  for (int j = 0; j < 3; ++j)
   {
-    int idx = j*3 +i;
+    for (int j = 0; j < 3; ++j)
+    {
+      int idx = j*3 +i;
 
-    if (i == j)
-    {
-      imu_msg_.angular_velocity_covariance[idx]    = ang_vel_var;
-      imu_msg_.linear_acceleration_covariance[idx] = lin_acc_var;
-    }
-    else
-    {
-      imu_msg_.angular_velocity_covariance[idx]    = 0.0;
-      imu_msg_.linear_acceleration_covariance[idx] = 0.0;
+      if (i == j)
+      {
+        imu_msg_.angular_velocity_covariance[idx]    = ang_vel_var;
+        imu_msg_.linear_acceleration_covariance[idx] = lin_acc_var;
+      }
+      else
+      {
+        imu_msg_.angular_velocity_covariance[idx]    = 0.0;
+        imu_msg_.linear_acceleration_covariance[idx] = 0.0;
+      }
     }
   }
 
@@ -111,17 +125,19 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   double mag_field_var = magnetic_field_stdev_ * magnetic_field_stdev_;
 
   for (int i = 0; i < 3; ++i)
-  for (int j = 0; j < 3; ++j)
   {
-    int idx = j * 3 + i;
+    for (int j = 0; j < 3; ++j)
+    {
+      int idx = j * 3 + i;
 
-    if (i == j)
-    {
-      mag_msg_.magnetic_field_covariance[idx] = mag_field_var;
-    }
-    else
-    {
-      mag_msg_.magnetic_field_covariance[idx] = 0.0;
+      if (i == j)
+      {
+        mag_msg_.magnetic_field_covariance[idx] = mag_field_var;
+      }
+      else
+      {
+        mag_msg_.magnetic_field_covariance[idx] = 0.0;
+      }
     }
   }
 
@@ -151,21 +167,21 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
 void ImuRosI::initDevice()
 {
-	ROS_INFO_STREAM("Opening device");
+  ROS_INFO_STREAM("Opening device");
 
-	open(serial_number_); // optional param serial_number, default is -1
+  open(serial_number_); // optional param serial_number, default is -1
 
-	ROS_INFO("Waiting for IMU to be attached...");
-	int result = waitForAttachment(10000);
-	if(result)
-	{
-		is_connected_ = false;
-		error_number_ = result;
-		diag_updater_.force_update();
-		const char *err;
-		CPhidget_getErrorDescription(result, &err);
-		ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err);
-	}
+  ROS_INFO("Waiting for IMU to be attached...");
+  int result = waitForAttachment(10000);
+  if (result)
+  {
+    is_connected_ = false;
+    error_number_ = result;
+    diag_updater_.force_update();
+    const char *err;
+    CPhidget_getErrorDescription(result, &err);
+    ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err);
+  }
 
   // calibrate on startup
   calibrate();
@@ -205,9 +221,11 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   ros::Time time_now = time_zero_ + time_imu;
 
-  if (use_imu_time_) {
+  if (use_imu_time_)
+  {
     double timediff = time_now.toSec() - ros::Time::now().toSec();
-    if (fabs(timediff) > MAX_TIMEDIFF_SECONDS) {
+    if (fabs(timediff) > MAX_TIMEDIFF_SECONDS)
+    {
       ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
       time_zero_ = ros::Time::now() - time_imu;
       time_now = ros::Time::now();
@@ -215,11 +233,14 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
     // Ensure that we only publish strictly ordered timestamps,
     // also in case a time reset happened.
-    if (time_now <= last_published_time_) {
+    if (time_now <= last_published_time_)
+    {
       ROS_WARN_THROTTLE(1.0, "Ignoring data with out-of-order time.");
       return;
     }
-  } else {
+  }
+  else
+  {
     time_now = ros::Time::now();
   }
 
@@ -276,8 +297,10 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
 void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
 {
-  for(int i = 0; i < count; i++)
+  for (int i = 0; i < count; i++)
+  {
     processImuData(data, i);
+  }
 }
 
 void ImuRosI::attachHandler()
@@ -329,4 +352,3 @@ void ImuRosI::phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &s
 }
 
 } // namespace phidgets
-

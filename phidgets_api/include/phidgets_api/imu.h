@@ -12,9 +12,9 @@ class Imu: public Phidget
     Imu();
 
   protected:
- 
+
     CPhidgetSpatialHandle imu_handle_;
-    
+
     void zero();
     void setDataRate(int rate);
 
@@ -25,6 +25,6 @@ class Imu: public Phidget
     static int SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count);
 };
 
-} //namespace phidgets
+} // namespace phidgets
 
 #endif // PHIDGETS_API_IMU_H

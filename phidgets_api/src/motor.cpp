@@ -250,4 +250,4 @@ void MotorController::currentUpdateHandler(int /* index */, double /* current */
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-} //namespace phidgets
+} // namespace phidgets

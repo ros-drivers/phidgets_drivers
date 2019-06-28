@@ -65,80 +65,85 @@ std::mutex  encoder_states_mux;
 /** Derived type from Encoder so we can override virtual event handlers. */
 class EncoderNode : public phidgets::Encoder
 {
-public:
-  EncoderNode() : phidgets::Encoder()
-  {
-  }
 
-  void display_properties()
-  {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const int version = Phidget::getDeviceVersion();
-    const int num_encoders = Encoder::getEncoderCount();
-    const std::string dev_type = Phidget::getDeviceType();
-    const int num_inputs = Encoder::getInputCount();
+  public:
 
-    ROS_INFO("Device type       : %s", dev_type.c_str());
-    ROS_INFO("Device serial     : %d", serial_number);
-    ROS_INFO("Device version    : %d", version);
-    ROS_INFO("Number of encoders: %d", num_encoders);
-    ROS_INFO("Number of inputs  : %d", num_inputs);
-  }
-
-protected:
-  void attachHandler() override
-  {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const std::string name = Phidget::getDeviceName();
-    const int inputcount = Encoder::getEncoderCount();
-
+    EncoderNode() : phidgets::Encoder()
     {
+    }
+
+    void display_properties()
+    {
+      const int serial_number = Phidget::getDeviceSerialNumber();
+      const int version = Phidget::getDeviceVersion();
+      const int num_encoders = Encoder::getEncoderCount();
+      const std::string dev_type = Phidget::getDeviceType();
+      const int num_inputs = Encoder::getInputCount();
+
+      ROS_INFO("Device type       : %s", dev_type.c_str());
+      ROS_INFO("Device serial     : %d", serial_number);
+      ROS_INFO("Device version    : %d", version);
+      ROS_INFO("Number of encoders: %d", num_encoders);
+      ROS_INFO("Number of inputs  : %d", num_inputs);
+    }
+
+  protected:
+
+    void attachHandler() override
+    {
+      const int serial_number = Phidget::getDeviceSerialNumber();
+      const std::string name = Phidget::getDeviceName();
+      const int inputcount = Encoder::getEncoderCount();
+
+      {
+        std::lock_guard<std::mutex> lock(encoder_states_mux);
+        encoder_states.resize(inputcount);
+      }
+      ROS_INFO("%s Serial number %d attached with %d encoders!",
+               name.c_str(), serial_number, inputcount);
+
+      // the 1047 requires enabling of the encoder inputs, so enable them if this is a 1047
+      for (int i = 0 ; i < inputcount ; i++)
+      {
+        Encoder::setEnabled(i, true);
+      }
+    }
+
+    void detachHandler() override
+    {
+      const int serial_number = Phidget::getDeviceSerialNumber();
+      const std::string name = Phidget::getDeviceName();
+      ROS_INFO("%s Serial number %d detached!",
+               name.c_str(), serial_number);
+    }
+
+    void errorHandler(int ErrorCode) override
+    {
+      ROS_ERROR("Error handled. %d - %s", ErrorCode,
+                Phidget::getErrorDescription(ErrorCode).c_str());
+    }
+
+    void positionChangeHandler(int index, int time, int positionChange) override
+    {
+      const int Position = Encoder::getPosition(index);
+      ROS_DEBUG("Encoder %d Count %d", index, Position);
+
       std::lock_guard<std::mutex> lock(encoder_states_mux);
-      encoder_states.resize(inputcount);
+      if (index < (int)encoder_states.size())
+      {
+        TStatePerChannel &spc = encoder_states[index];
+        spc.tickPos = Position;
+        spc.instantaneousSpeed = positionChange / (time * 1e-6);
+        spc.speeds_buffer.push_back(spc.instantaneousSpeed);
+        spc.speed_buffer_updated = true;
+        spc.loops_without_update_speed_buffer = 0;
+      }
     }
-    ROS_INFO("%s Serial number %d attached with %d encoders!",
-             name.c_str(), serial_number, inputcount);
 
-    //the 1047 requires enabling of the encoder inputs, so enable them if this is a 1047
-    for (int i = 0 ; i < inputcount ; i++)
-      Encoder::setEnabled(i, true);
-  }
-
-  void detachHandler() override
-  {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const std::string name = Phidget::getDeviceName();
-    ROS_INFO("%s Serial number %d detached!",
-             name.c_str(), serial_number);
-  }
-
-  void errorHandler(int ErrorCode) override
-  {
-    ROS_ERROR("Error handled. %d - %s", ErrorCode,
-              Phidget::getErrorDescription(ErrorCode).c_str());
-  }
-
-  void positionChangeHandler(int index, int time, int positionChange) override
-  {
-    const int Position = Encoder::getPosition(index);
-    ROS_DEBUG("Encoder %d Count %d", index, Position);
-
-    std::lock_guard<std::mutex> lock(encoder_states_mux);
-    if (index < (int)encoder_states.size())
+    void indexHandler(int index, int indexPosition) override
     {
-      TStatePerChannel &spc = encoder_states[index];
-      spc.tickPos = Position;
-      spc.instantaneousSpeed = positionChange / (time * 1e-6);
-      spc.speeds_buffer.push_back(spc.instantaneousSpeed);
-      spc.speed_buffer_updated = true;
-      spc.loops_without_update_speed_buffer = 0;
+
     }
-  }
-
-  void indexHandler(int index, int indexPosition) override
-  {
-
-  }
 
 
 }; // end EncoderNode

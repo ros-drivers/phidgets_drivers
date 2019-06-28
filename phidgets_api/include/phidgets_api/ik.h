@@ -35,6 +35,6 @@ class IK: public Phidget
       int inputValue);
 };
 
-} //namespace phidgets
+} // namespace phidgets
 
 #endif // PHIDGETS_API_IK_H

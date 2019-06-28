@@ -1,10 +1,11 @@
 #include "phidgets_api/phidget.h"
 
+#include <cstdio>
+
 namespace phidgets {
 
 Phidget::Phidget()
 {
-
 }
 
 Phidget::~Phidget()
@@ -15,8 +16,8 @@ Phidget::~Phidget()
 
 void Phidget::registerHandlers()
 {
-  CPhidget_set_OnAttach_Handler(handle_, &Phidget::AttachHandler, this); 
-  CPhidget_set_OnDetach_Handler(handle_, &Phidget::DetachHandler, this); 
+  CPhidget_set_OnAttach_Handler(handle_, &Phidget::AttachHandler, this);
+  CPhidget_set_OnDetach_Handler(handle_, &Phidget::DetachHandler, this);
   CPhidget_set_OnError_Handler (handle_, &Phidget::ErrorHandler,  this);
 }
 
@@ -64,7 +65,8 @@ std::string Phidget::getDeviceLabel()
   return std::string(deviceptr);
 }
 
-std::string Phidget::getLibraryVersion(){
+std::string Phidget::getLibraryVersion()
+{
   char a[1000];
   const char * deviceptr = a;
   CPhidget_getLibraryVersion(&deviceptr);
@@ -95,17 +97,17 @@ std::string Phidget::getErrorDescription(int errorCode)
 
 void Phidget::attachHandler()
 {
-	printf("Phidget attached (serial# %d)\n", getDeviceSerialNumber());
+  printf("Phidget attached (serial# %d)\n", getDeviceSerialNumber());
 }
 
 void Phidget::detachHandler()
 {
-	printf("Phidget detached (serial# %d)\n", getDeviceSerialNumber());
+  printf("Phidget detached (serial# %d)\n", getDeviceSerialNumber());
 }
 
 void Phidget::errorHandler(int error)
 {
-	printf("Phidget error [%d]: %s\n", error, getErrorDescription(error).c_str());
+  printf("Phidget error [%d]: %s\n", error, getErrorDescription(error).c_str());
 }
 
 int Phidget::AttachHandler(CPhidgetHandle /* handle */, void *userptr)
@@ -126,4 +128,4 @@ int Phidget::ErrorHandler(CPhidgetHandle /* handle */, void *userptr, int ErrorC
   return 0;
 }
 
-} //namespace phidgets
+} // namespace phidgets

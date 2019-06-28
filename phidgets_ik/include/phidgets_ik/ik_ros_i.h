@@ -12,12 +12,17 @@
 
 namespace phidgets {
 
-class OutputSetter {
+class OutputSetter
+{
+
   public:
+
     OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
     virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
     ros::Subscriber subscription;
+
   protected:
+
     int index;
     CPhidgetInterfaceKitHandle ik_handle_;
 };
@@ -53,6 +58,6 @@ class IKRosI : public IK
     bool set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req, phidgets_ik::SetDigitalOutput::Response &res);
 };
 
-} //namespace phidgets
+} // namespace phidgets
 
 #endif // PHIDGETS_IK_IK_ROS_I_H

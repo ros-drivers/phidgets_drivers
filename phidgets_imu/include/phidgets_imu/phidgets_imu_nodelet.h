@@ -10,10 +10,13 @@ namespace phidgets {
 
 class PhidgetsImuNodelet : public nodelet::Nodelet
 {
+
   public:
+
     virtual void onInit();
 
   private:
+
     Imu * imu_;  // FIXME: change to smart pointer
 };
 

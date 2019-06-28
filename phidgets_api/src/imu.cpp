@@ -1,5 +1,7 @@
 #include "phidgets_api/imu.h"
 
+#include <cstdio>
+
 namespace phidgets {
 
 Imu::Imu():
@@ -14,14 +16,14 @@ Imu::Imu():
 
   // register base class callbacks
   Phidget::registerHandlers();
-  
+
   // register imu data callback
-	CPhidgetSpatial_set_OnSpatialData_Handler(imu_handle_, SpatialDataHandler, this);
+  CPhidgetSpatial_set_OnSpatialData_Handler(imu_handle_, SpatialDataHandler, this);
 }
 
 void Imu::setDataRate(int rate)
 {
-	CPhidgetSpatial_setDataRate(imu_handle_, rate);
+  CPhidgetSpatial_setDataRate(imu_handle_, rate);
 }
 
 void Imu::zero()

@@ -2,10 +2,10 @@
  * Copyright (c) 2009, Tully Foote
  * Copyright (c) 2011, Ivan Dryanovski
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -14,7 +14,7 @@
  *     * Neither the name of the Willow Garage, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,10 +51,10 @@ class Phidget
     /**@brief Open a connection to a Phidget
      * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)*/
     int open(int serial_number);
-    
+
     /**@brief Close the connection to the phidget */
     int close();
-    
+
     /** @brief Block until the unit is attached or timeout occurs
      * @param timeout Milliseconds to wait before timing out
      * @return 0 on success */
@@ -69,23 +69,23 @@ class Phidget
     /** @brief Get the device label string */
     std::string getDeviceLabel();
 
-    /** @brief Get the library version string */ 
+    /** @brief Get the library version string */
     std::string getLibraryVersion();
 
     /** @brief Get the Phidget's serial number */
     int getDeviceSerialNumber();
-    
+
     /** @brief Get the Phidget's version */
     int getDeviceVersion();
-    
-    /** @brief Lookup the string for a CPhidget Error Code 
+
+    /** @brief Lookup the string for a CPhidget Error Code
      *@param errorCode The error code returned from the CPhidget API */
     static std::string getErrorDescription(int errorCode);
-    
+
   protected:
 
     CPhidgetHandle handle_;
-    
+
     void init(CPhidgetHandle handle);
 
     virtual void registerHandlers();
@@ -103,4 +103,3 @@ class Phidget
 } // namespace phidgets
 
 #endif // PHIDGETS_API_PHIDGET_H
-

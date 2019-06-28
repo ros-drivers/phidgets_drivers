@@ -2,8 +2,7 @@
 
 #include <cassert>
 
-namespace phidgets
-{
+namespace phidgets {
 
 Encoder::Encoder():
   Phidget(),
@@ -135,5 +134,4 @@ void Encoder::indexHandler(int /* index */, int /* indexPosition */)
 }
 
 
-} //namespace phidgets
-
+} // namespace phidgets

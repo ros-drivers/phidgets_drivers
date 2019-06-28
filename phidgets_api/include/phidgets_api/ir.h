@@ -12,26 +12,26 @@ class IR: public Phidget
     IR();
 
   protected:
- 
+
     CPhidgetIRHandle ir_handle_;
-    
+
     virtual void codeHandler(
-      unsigned char *data, 
-      int dataLength, 
-      int bitCount, 
+      unsigned char *data,
+      int dataLength,
+      int bitCount,
       int repeat);
 
   private:
 
     static int CodeHandler(
-      CPhidgetIRHandle ir, 
-      void *userPtr, 
-      unsigned char *data, 
-      int dataLength, 
-      int bitCount, 
+      CPhidgetIRHandle ir,
+      void *userPtr,
+      unsigned char *data,
+      int dataLength,
+      int bitCount,
       int repeat);
 };
 
-} //namespace phidgets
+} // namespace phidgets
 
 #endif // PHIDGETS_API_IR_H
