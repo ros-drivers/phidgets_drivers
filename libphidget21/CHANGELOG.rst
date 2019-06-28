@@ -2,8 +2,8 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.9 (2019-06-28)
+------------------
 * Update libphidget to version 2.1.9.20190409 (`#34 <https://github.com/ros-drivers/phidgets_drivers/issues/34>`_)
 * Contributors: Tim Fanselow
 
