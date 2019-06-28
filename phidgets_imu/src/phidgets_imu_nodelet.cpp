@@ -7,7 +7,7 @@ PLUGINLIB_EXPORT_CLASS(PhidgetsImuNodelet, nodelet::Nodelet)
 void PhidgetsImuNodelet::onInit()
 {
   NODELET_INFO("Initializing Phidgets IMU Nodelet");
-  
+
   // TODO: Do we want the single threaded or multithreaded NH?
   ros::NodeHandle nh         = getMTNodeHandle();
   ros::NodeHandle nh_private = getMTPrivateNodeHandle();

@@ -6,10 +6,10 @@ find_package(catkin REQUIRED COMPONENTS diagnostic_msgs diagnostic_updater nodel
 find_package(Boost REQUIRED COMPONENTS thread)
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES phidgets_imu 
-  DEPENDS Boost
-  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
+    INCLUDE_DIRS include
+    LIBRARIES phidgets_imu
+    DEPENDS Boost
+    CATKIN_DEPENDS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs tf
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
@@ -28,25 +28,26 @@ target_link_libraries(phidgets_imu_nodelet ${catkin_LIBRARIES} phidgets_imu)
 target_link_libraries(phidgets_imu_node ${catkin_LIBRARIES} phidgets_imu)
 
 install(TARGETS phidgets_imu phidgets_imu_nodelet phidgets_imu_node
-   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.h"
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.h"
 )
 
 install(DIRECTORY config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(DIRECTORY launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(FILES phidgets_imu_nodelet.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 roslaunch_add_file_check(launch)
