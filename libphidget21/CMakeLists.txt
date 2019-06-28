@@ -8,8 +8,8 @@ file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
-    URL https://www.phidgets.com/downloads/phidget21/libraries/linux/libphidget/libphidget_2.1.8.20151217.tar.gz
-    URL_MD5 818ab2ff1de92ed9568a206e0e89657f
+    URL https://www.phidgets.com/downloads/phidget21/libraries/linux/libphidget/libphidget_2.1.9.20190409.tar.gz
+    URL_MD5 1149757d0b0483520c6b7525d2d62f7d
 
     CONFIGURE_COMMAND "./configure"
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
