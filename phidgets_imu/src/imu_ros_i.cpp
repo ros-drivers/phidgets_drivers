@@ -1,4 +1,3 @@
-#include <boost/make_shared.hpp>
 #include "phidgets_imu/imu_ros_i.h"
 
 namespace phidgets {
@@ -74,9 +73,9 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   // the header.stamp of the imu message and the real (ros) time
   // the maximum tolerable drift is +- 100ms
   target_publish_freq_ = 1000.0 / static_cast<double>(period_);
-  imu_publisher_diag_ptr_ = boost::make_shared<diagnostic_updater::TopicDiagnostic>(
+  imu_publisher_diag_ptr_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
         "imu/data_raw",
-        boost::ref(diag_updater_),
+        std::ref(diag_updater_),
         diagnostic_updater::FrequencyStatusParam(&target_publish_freq_, &target_publish_freq_, 0.1, 5),
         diagnostic_updater::TimeStampStatusParam(-0.1, 0.1)
         );
@@ -246,8 +245,8 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   // **** create and publish imu message
 
-  boost::shared_ptr<ImuMsg> imu_msg =
-    boost::make_shared<ImuMsg>(imu_msg_);
+  std::shared_ptr<ImuMsg> imu_msg =
+    std::make_shared<ImuMsg>(imu_msg_);
 
   imu_msg->header.stamp = time_now;
 
@@ -261,13 +260,13 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
   imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
 
-  imu_publisher_.publish(imu_msg);
+  imu_publisher_.publish(*imu_msg);
   imu_publisher_diag_ptr_->tick(time_now);
 
   // **** create and publish magnetic field message
 
-  boost::shared_ptr<MagMsg> mag_msg =
-    boost::make_shared<MagMsg>(mag_msg_);
+  std::shared_ptr<MagMsg> mag_msg =
+    std::make_shared<MagMsg>(mag_msg_);
 
   mag_msg->header.stamp = time_now;
 
@@ -287,7 +286,7 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
     mag_msg->magnetic_field.z = nan;
   }
 
-  mag_publisher_.publish(mag_msg);
+  mag_publisher_.publish(*mag_msg);
 
   // diagnostics
   diag_updater_.update();

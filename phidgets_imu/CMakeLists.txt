@@ -3,16 +3,13 @@ project(phidgets_imu)
 
 find_package(catkin REQUIRED COMPONENTS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp roslaunch sensor_msgs std_msgs std_srvs)
 
-find_package(Boost REQUIRED COMPONENTS thread)
-
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES phidgets_imu
-    DEPENDS Boost
     CATKIN_DEPENDS diagnostic_msgs diagnostic_updater nodelet pluginlib phidgets_api roscpp sensor_msgs std_msgs std_srvs
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(phidgets_imu src/imu_ros_i.cpp)
 add_library(phidgets_imu_nodelet src/phidgets_imu_nodelet.cpp)
@@ -23,7 +20,7 @@ add_dependencies(phidgets_imu ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_imu_nodelet ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_imu_node ${catkin_EXPORTED_TARGETS})
 
-target_link_libraries(phidgets_imu ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(phidgets_imu ${catkin_LIBRARIES})
 target_link_libraries(phidgets_imu_nodelet ${catkin_LIBRARIES} phidgets_imu)
 target_link_libraries(phidgets_imu_node ${catkin_LIBRARIES} phidgets_imu)
 

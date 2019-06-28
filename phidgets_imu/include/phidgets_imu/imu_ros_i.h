@@ -3,8 +3,6 @@
 
 #include <ros/ros.h>
 #include <ros/service_server.h>
-#include <boost/thread/mutex.hpp>
-#include <boost/shared_ptr.hpp>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/MagneticField.h>
 #include <std_srvs/Empty.h>
@@ -12,6 +10,9 @@
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
 #include <phidgets_api/imu.h>
+
+#include <memory>
+#include <mutex>
 
 using namespace std;
 
@@ -44,14 +45,13 @@ class ImuRosI : public Imu
     /**@brief updater object of class Update. Used to add diagnostic tasks, set ID etc. refer package API.
      * Added for diagnostics */
     diagnostic_updater::Updater diag_updater_;
-    boost::shared_ptr<diagnostic_updater::TopicDiagnostic> imu_publisher_diag_ptr_;
+    std::shared_ptr<diagnostic_updater::TopicDiagnostic> imu_publisher_diag_ptr_;
 
     // diagnostics
     bool is_connected_;
     int error_number_;
     double target_publish_freq_;
 
-    boost::mutex mutex_;
     ros::Time last_published_time_;
     int serial_number_;
 

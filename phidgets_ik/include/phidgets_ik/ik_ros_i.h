@@ -7,8 +7,8 @@
 #include <std_msgs/Float32.h>
 #include "phidgets_ik/SetDigitalOutput.h"
 
+#include <memory>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 
 namespace phidgets {
 
@@ -42,7 +42,7 @@ class IKRosI : public IK
     std::vector<ros::Publisher> in_pubs_;
     std::vector<ros::Publisher> sensor_pubs_;
     ros::ServiceServer out_srv_;
-    std::vector<boost::shared_ptr<OutputSetter> > out_subs_;
+    std::vector<std::shared_ptr<OutputSetter> > out_subs_;
 
   private:
 

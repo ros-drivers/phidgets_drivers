@@ -51,8 +51,8 @@ void IKRosI::initDevice()
   {
     char topicname[] = "digital_output00";
     snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
-    boost::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
-    s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s);
+    std::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
+    s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s.get());
     out_subs_.push_back(s);
   }
   out_srv_ = nh_.advertiseService("set_digital_output", &IKRosI::set_srv_callback, this);
