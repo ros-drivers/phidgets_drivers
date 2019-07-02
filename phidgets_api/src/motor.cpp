@@ -15,7 +15,7 @@ namespace phidgets
 
 MotorController::MotorController():
   Phidget(),
-  motor_handle_(0)
+  motor_handle_(nullptr)
 {
   // create the handle
   CPhidgetMotorControl_create(&motor_handle_);

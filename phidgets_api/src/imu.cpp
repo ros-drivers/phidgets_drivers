@@ -6,7 +6,7 @@ namespace phidgets {
 
 Imu::Imu():
   Phidget(),
-  imu_handle_(0)
+  imu_handle_(nullptr)
 {
   // create the handle
   CPhidgetSpatial_create(&imu_handle_);

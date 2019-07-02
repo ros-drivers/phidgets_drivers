@@ -6,7 +6,7 @@ namespace phidgets {
 
 IR::IR():
   Phidget(),
-  ir_handle_(0)
+  ir_handle_(nullptr)
 {
   // create the handle
   CPhidgetIR_create(&ir_handle_);

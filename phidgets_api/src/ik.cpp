@@ -4,7 +4,7 @@ namespace phidgets {
 
 IK::IK():
   Phidget(),
-  ik_handle_(0)
+  ik_handle_(nullptr)
 {
   // create the handle
   CPhidgetInterfaceKit_create(&ik_handle_);

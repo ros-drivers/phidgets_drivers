@@ -6,7 +6,7 @@ namespace phidgets {
 
 Encoder::Encoder():
   Phidget(),
-  encoder_handle_(0)
+  encoder_handle_(nullptr)
 {
   // create the handle
   CPhidgetEncoder_create(&encoder_handle_);
