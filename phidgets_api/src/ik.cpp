@@ -20,6 +20,9 @@ IK::IK():
   CPhidgetInterfaceKit_set_OnInputChange_Handler(ik_handle_, InputHandler, this);
 }
 
+IK::~IK()
+{
+}
 
 int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int sensorValue)
 {

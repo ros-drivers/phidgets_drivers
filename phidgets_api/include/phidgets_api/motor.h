@@ -11,6 +11,8 @@ class MotorController: public Phidget
 
     MotorController();
 
+    virtual ~MotorController();
+
     // Motor specific
     int    getMotorCount();
     double getVelocity(int index);

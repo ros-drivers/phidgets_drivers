@@ -46,7 +46,7 @@ class Phidget
   public:
 
     Phidget();
-    ~Phidget();
+    virtual ~Phidget();
 
     /**@brief Open a connection to a Phidget
      * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)*/

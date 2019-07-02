@@ -37,6 +37,10 @@ MotorController::MotorController():
   CPhidgetMotorControl_set_OnCurrentUpdate_Handler(motor_handle_, CurrentUpdateHandler, this);
 }
 
+MotorController::~MotorController()
+{
+}
+
 int MotorController::getMotorCount()
 {
   GAR(int, MotorCount);

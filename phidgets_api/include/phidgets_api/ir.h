@@ -11,6 +11,8 @@ class IR: public Phidget
 
     IR();
 
+    virtual ~IR();
+
   protected:
 
     CPhidgetIRHandle ir_handle_;

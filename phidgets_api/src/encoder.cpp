@@ -23,6 +23,10 @@ Encoder::Encoder():
   CPhidgetEncoder_set_OnIndex_Handler(encoder_handle_, IndexHandler, this);
 }
 
+Encoder::~Encoder()
+{
+}
+
 int Encoder::getInputCount()
 {
   int count;

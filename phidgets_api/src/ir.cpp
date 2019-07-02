@@ -21,6 +21,9 @@ IR::IR():
   CPhidgetIR_set_OnCode_Handler(ir_handle_, CodeHandler, this);
 }
 
+IR::~IR()
+{
+}
 
 int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr, unsigned char *data, int dataLength, int bitCount, int repeat)
 {

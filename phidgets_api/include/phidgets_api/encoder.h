@@ -11,6 +11,8 @@ class Encoder: public Phidget
 
     Encoder();
 
+    virtual ~Encoder();
+
     /**@brief Gets the number of digital input channels supported by this board */
     int getInputCount();
 

@@ -21,6 +21,10 @@ Imu::Imu():
   CPhidgetSpatial_set_OnSpatialData_Handler(imu_handle_, SpatialDataHandler, this);
 }
 
+Imu::~Imu()
+{
+}
+
 void Imu::setDataRate(int rate)
 {
   CPhidgetSpatial_setDataRate(imu_handle_, rate);

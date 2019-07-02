@@ -11,6 +11,8 @@ class IK: public Phidget
 
     IK();
 
+    virtual ~IK();
+
   protected:
 
     CPhidgetInterfaceKitHandle ik_handle_;

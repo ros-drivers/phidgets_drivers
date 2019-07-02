@@ -11,6 +11,8 @@ class Imu: public Phidget
 
     Imu();
 
+    virtual ~Imu();
+
   protected:
 
     CPhidgetSpatialHandle imu_handle_;
