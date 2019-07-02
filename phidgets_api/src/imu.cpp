@@ -44,7 +44,7 @@ int Imu::SpatialDataHandler(CPhidgetSpatialHandle /* handle */, void *userptr, C
 
 void Imu::dataHandler(CPhidgetSpatial_SpatialEventDataHandle * /* data */, int /* count */)
 {
-  printf("Empty data handler\n");
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
 } //namespace phidgets

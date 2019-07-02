@@ -32,7 +32,7 @@ int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int in
 
 void IK::sensorHandler(int index, int sensorValue)
 {
-  printf("index: %d, value: %d\n", index, sensorValue);
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
 int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int inputValue)
@@ -43,7 +43,7 @@ int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int ind
 
 void IK::inputHandler(int index, int inputValue)
 {
-  printf("index: %d, value: %d\n", index, inputValue);
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
 } // namespace phidgets

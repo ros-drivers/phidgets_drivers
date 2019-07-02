@@ -33,14 +33,7 @@ int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr, unsigned char *dat
 
 void IR::codeHandler(unsigned char *data, int dataLength, int bitCount, int repeat)
 {
-  int i;
-  printf("DataLength: %d, Bit Count: %d, Repeat: %d\n", dataLength, bitCount, repeat);
-  printf("Code: ");
-  for (i = 0; i < dataLength; i++)
-  {
-    printf("%02x", data[i]);
-  }
-  printf("\n");
+  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
 } // namespace phidgets
