@@ -1,0 +1,18 @@
+diff -urp libphidget22-1.4.20190605.orig/src/plat/linux/usblinux.c libphidget22-1.4.20190605/src/plat/linux/usblinux.c
+--- libphidget22-1.4.20190605.orig/src/plat/linux/usblinux.c	2019-06-05 16:06:29.000000000 -0400
++++ libphidget22-1.4.20190605/src/plat/linux/usblinux.c	2019-07-18 09:35:23.566476582 -0400
+@@ -62,11 +62,12 @@ static libusb_context *libusbContext;
+ static void
+ logBuffer(unsigned char *data, int dataLen, const char *message) {
+ 	Phidget_LogLevel ll;
++	PhidgetReturnCode ret;
+ 	char str[2000];
+ 	int i, j;
+ 
+-	PhidgetLog_getSourceLevel("phidget22usb", &ll);
+-	if (ll != PHIDGET_LOG_VERBOSE)
++	ret = PhidgetLog_getSourceLevel("phidget22usb", &ll);
++	if (ret != EPHIDGET_OK || ll != PHIDGET_LOG_VERBOSE)
+ 		return;
+ 
+ 	str[0]='\0';
