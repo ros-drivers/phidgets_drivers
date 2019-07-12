@@ -7,9 +7,9 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   nh_(nh),
   nh_private_(nh_private),
   is_connected_(false),
-  serial_number_(-1),
   error_number_(0),
-  target_publish_freq_(0.0)
+  target_publish_freq_(0.0),
+  serial_number_(-1)
 {
   ROS_INFO ("Starting Phidgets IMU");
 
@@ -194,6 +194,8 @@ void ImuRosI::initDevice()
 bool ImuRosI::calibrateService(std_srvs::Empty::Request  &req,
                                std_srvs::Empty::Response &res)
 {
+  (void)req;
+  (void)res;
   calibrate();
   return true;
 }
