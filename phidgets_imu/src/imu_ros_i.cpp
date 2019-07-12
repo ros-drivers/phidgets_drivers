@@ -148,14 +148,13 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   if (has_compass_params)
   {
-    int result = CPhidgetSpatial_setCompassCorrectionParameters(imu_handle_, cc_mag_field_,
+    int result = setCompassCorrectionParameters(cc_mag_field_,
           cc_offset0_, cc_offset1_, cc_offset2_, cc_gain0_, cc_gain1_, cc_gain2_,
           cc_T0_, cc_T1_, cc_T2_, cc_T3_, cc_T4_, cc_T5_);
     if (result)
     {
-      const char *err;
-      CPhidget_getErrorDescription(result, &err);
-      ROS_ERROR("Problem while trying to set compass correction params: '%s'.", err);
+      std::string err = Phidget::getErrorDescription(result);
+      ROS_ERROR("Problem while trying to set compass correction params: '%s'.", err.c_str());
     }
   }
   else
@@ -177,9 +176,8 @@ void ImuRosI::initDevice()
     is_connected_ = false;
     error_number_ = result;
     diag_updater_.force_update();
-    const char *err;
-    CPhidget_getErrorDescription(result, &err);
-    ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err);
+    std::string err = Phidget::getErrorDescription(result);
+    ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_api/share/setup-udev.sh script.", err.c_str());
   }
 
   // calibrate on startup
@@ -214,18 +212,17 @@ void ImuRosI::calibrate()
   cal_publisher_.publish(is_calibrated_msg);
 }
 
-void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i)
+void ImuRosI::dataHandler(const double acceleration[3], const double angularRate[3], const double magneticField[3], double timestamp)
 {
   // **** calculate time from timestamp
-  ros::Duration time_imu(data[i]->timestamp.seconds +
-                         data[i]->timestamp.microseconds * 1e-6);
+  ros::Duration time_imu(timestamp);
 
   ros::Time time_now = time_zero_ + time_imu;
 
   if (use_imu_time_)
   {
     double timediff = time_now.toSec() - ros::Time::now().toSec();
-    if (fabs(timediff) > MAX_TIMEDIFF_SECONDS)
+    if (::fabs(timediff) > MAX_TIMEDIFF_SECONDS)
     {
       ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
       time_zero_ = ros::Time::now() - time_imu;
@@ -253,14 +250,14 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   imu_msg->header.stamp = time_now;
 
   // set linear acceleration
-  imu_msg->linear_acceleration.x = - data[i]->acceleration[0] * G;
-  imu_msg->linear_acceleration.y = - data[i]->acceleration[1] * G;
-  imu_msg->linear_acceleration.z = - data[i]->acceleration[2] * G;
+  imu_msg->linear_acceleration.x = - acceleration[0] * G;
+  imu_msg->linear_acceleration.y = - acceleration[1] * G;
+  imu_msg->linear_acceleration.z = - acceleration[2] * G;
 
   // set angular velocities
-  imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
-  imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
-  imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
+  imu_msg->angular_velocity.x = angularRate[0] * (M_PI / 180.0);
+  imu_msg->angular_velocity.y = angularRate[1] * (M_PI / 180.0);
+  imu_msg->angular_velocity.z = angularRate[2] * (M_PI / 180.0);
 
   imu_publisher_.publish(*imu_msg);
   imu_publisher_diag_ptr_->tick(time_now);
@@ -272,12 +269,12 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
 
   mag_msg->header.stamp = time_now;
 
-  if (data[i]->magneticField[0] != PUNK_DBL)
+  if (magneticField[0] != PUNK_DBL)
   {
     // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-    mag_msg->magnetic_field.x = data[i]->magneticField[0] * 1e-4;
-    mag_msg->magnetic_field.y = data[i]->magneticField[1] * 1e-4;
-    mag_msg->magnetic_field.z = data[i]->magneticField[2] * 1e-4;
+    mag_msg->magnetic_field.x = magneticField[0] * 1e-4;
+    mag_msg->magnetic_field.y = magneticField[1] * 1e-4;
+    mag_msg->magnetic_field.z = magneticField[2] * 1e-4;
   }
   else
   {
@@ -296,20 +293,15 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   last_published_time_ = time_now;
 }
 
-void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
-{
-  for (int i = 0; i < count; i++)
-  {
-    processImuData(data, i);
-  }
-}
-
 void ImuRosI::attachHandler()
 {
   Imu::attachHandler();
   is_connected_ = true;
   // Reset error number to no error if the prev error was disconnect
-  if (error_number_ == 13) error_number_ = 0;
+  if (error_number_ == 13)
+  {
+    error_number_ = 0;
+  }
   diag_updater_.force_update();
 
   // Set device params. This is in attachHandler(), since it has to be repeated on reattachment.

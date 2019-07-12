@@ -30,16 +30,16 @@ void IKRosI::initDevice()
   int result = waitForAttachment(10000);
   if (result)
   {
-    const char *err;
-    CPhidget_getErrorDescription(result, &err);
-    ROS_FATAL("Problem waiting for IK attachment: %s", err);
+    std::string err = Phidget::getErrorDescription(result);
+    ROS_FATAL("Problem waiting for IK attachment: %s", err.c_str());
     ros::shutdown();
     return;
   }
 
-  CPhidgetInterfaceKit_getInputCount(ik_handle_, &n_in);
-  CPhidgetInterfaceKit_getOutputCount(ik_handle_, &n_out);
-  CPhidgetInterfaceKit_getSensorCount(ik_handle_, &n_sensors);
+  n_in = getInputCount();
+  n_out = getOutputCount();
+  n_sensors = getSensorCount();
+
   ROS_INFO("%d inputs, %d outputs, %d sensors", n_in, n_out, n_sensors);
   for (int i = 0; i < n_in; i++)
   {
@@ -51,7 +51,7 @@ void IKRosI::initDevice()
   {
     char topicname[] = "digital_output00";
     snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
-    std::shared_ptr<OutputSetter> s (new OutputSetter(ik_handle_, i));
+    std::shared_ptr<OutputSetter> s (new OutputSetter(this, i));
     s->subscription = nh_.subscribe(topicname, 1, &OutputSetter::set_msg_callback, s.get());
     out_subs_.push_back(s);
   }
@@ -69,8 +69,7 @@ void IKRosI::sensorHandler(int index, int sensorValue)
   // get rawsensorvalue and divide by 4096, which according to the documentation
   // for both the IK888 and IK222 are the maximum sensor value
   // Multiply by VREF=5.0V to get voltage
-  int rawval = 0;
-  CPhidgetInterfaceKit_getSensorRawValue(ik_handle_, index, &rawval);
+  int rawval = getSensorRawValue(index);
   std_msgs::Float32 msg;
   msg.data = VREF*float(rawval)/4095.0f;
   if ((static_cast<int>(sensor_pubs_.size()) > index) && (sensor_pubs_[index]))
@@ -93,20 +92,18 @@ bool IKRosI::set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req,
   phidgets_ik::SetDigitalOutput::Response &res)
 {
   ROS_INFO("Setting output %d to %d", req.index, req.state);
-  res.success = !CPhidgetInterfaceKit_setOutputState(ik_handle_, req.index, req.state);
+  res.success = !setOutputState(req.index, req.state);
   return true;
 }
 
 void OutputSetter::set_msg_callback(const std_msgs::Bool::ConstPtr& msg)
 {
-  ROS_INFO("Setting output %d to %d", index, msg->data);
-  CPhidgetInterfaceKit_setOutputState(ik_handle_, index, msg->data);
+  ROS_INFO("Setting output %d to %d", index_, msg->data);
+  ik_->setOutputState(index_, msg->data);
 }
 
-OutputSetter::OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index)
+OutputSetter::OutputSetter(IK * ik, int index) : ik_(ik), index_(index)
 {
-  this->ik_handle_ = ik_handle;
-  this->index = index;
 }
 
 } // namespace phidgets

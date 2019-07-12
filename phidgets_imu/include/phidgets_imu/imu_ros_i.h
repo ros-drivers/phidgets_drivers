@@ -87,11 +87,10 @@ class ImuRosI : public Imu
 
     void calibrate();
     void initDevice();
-    void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);
+    void dataHandler(const double acceleration[3], const double angularRate[3], const double magneticField[3], double timestamp) override;
     void attachHandler();
     void detachHandler();
     void errorHandler(int error);
-    void processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i);
 
     /**@brief Main diagnostic method that takes care of collecting diagnostic data.
      * @param stat The stat param is what is the diagnostic tasks are added two. Internally published by the

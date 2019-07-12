@@ -13,6 +13,12 @@ class IK: public Phidget
 
     virtual ~IK();
 
+    int getInputCount() const;
+    int getOutputCount() const;
+    int getSensorCount() const;
+    int getSensorRawValue(int index) const;
+    bool setOutputState(int index, bool state) const;
+
   protected:
 
     CPhidgetInterfaceKitHandle ik_handle_;

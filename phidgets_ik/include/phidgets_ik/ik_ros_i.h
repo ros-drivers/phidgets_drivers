@@ -17,14 +17,14 @@ class OutputSetter
 
   public:
 
-    OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
-    virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
+    explicit OutputSetter(IK * ik, int index);
+    void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
     ros::Subscriber subscription;
 
   protected:
 
-    int index;
-    CPhidgetInterfaceKitHandle ik_handle_;
+    IK *ik_;
+    int index_;
 };
 
 class IKRosI : public IK
