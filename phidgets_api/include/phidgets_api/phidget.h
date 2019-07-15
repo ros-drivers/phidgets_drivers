@@ -45,16 +45,14 @@ class Phidget
     virtual ~Phidget();
 
     /**@brief Open a connection to a Phidget
-     * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)*/
-    int open(int serial_number);
+     * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)
+     * @param timeout Milliseconds to wait before timing out
+     * @return 0 on success
+     */
+    int openAndWaitForAttachment(int serial_number, int timeout);
 
     /**@brief Close the connection to the phidget */
     int close();
-
-    /** @brief Block until the unit is attached or timeout occurs
-     * @param timeout Milliseconds to wait before timing out
-     * @return 0 on success */
-    int waitForAttachment(int timeout);
 
     /** @brief Get the device type string */
     std::string getDeviceType();

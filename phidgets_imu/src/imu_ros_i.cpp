@@ -167,10 +167,8 @@ void ImuRosI::initDevice()
 {
   ROS_INFO_STREAM("Opening device");
 
-  open(serial_number_); // optional param serial_number, default is -1
-
   ROS_INFO("Waiting for IMU to be attached...");
-  int result = waitForAttachment(10000);
+  int result = openAndWaitForAttachment(serial_number_, 10000); // optional param serial_number, default is -1
   if (result)
   {
     is_connected_ = false;

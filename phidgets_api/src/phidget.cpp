@@ -26,19 +26,20 @@ void Phidget::init(CPhidgetHandle handle)
   handle_ = handle;
 }
 
-int Phidget::open(int serial_number)
+int Phidget::openAndWaitForAttachment(int serial_number, int timeout)
 {
-  return CPhidget_open(handle_, serial_number);
+  int ret = CPhidget_open(handle_, serial_number);
+  if (ret != EPHIDGET_OK)
+  {
+    return ret;
+  }
+
+  return CPhidget_waitForAttachment(handle_, timeout);
 }
 
 int Phidget::close()
 {
   return CPhidget_close(handle_);
-}
-
-int Phidget::waitForAttachment(int timeout)
-{
-  return CPhidget_waitForAttachment(handle_, timeout);
 }
 
 std::string Phidget::getDeviceType()

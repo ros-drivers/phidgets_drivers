@@ -24,10 +24,8 @@ void IKRosI::initDevice()
   {
     serial_num = -1; // default open any device
   }
-  open(serial_num);
-
   ROS_INFO("Waiting for IK %d to be attached...", serial_num);
-  int result = waitForAttachment(10000);
+  int result = openAndWaitForAttachment(serial_num, 10000);
   if (result)
   {
     std::string err = Phidget::getErrorDescription(result);

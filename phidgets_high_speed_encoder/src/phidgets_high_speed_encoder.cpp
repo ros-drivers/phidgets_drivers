@@ -189,10 +189,7 @@ int main(int argc, char *argv[])
   std::vector<ros::Publisher> encoder_decimspeed_pubs;
 
   // The encoder object instance:
-  EncoderNode  encoder_node;
-
-  // open the device:
-  encoder_node.open(serial_number);
+  EncoderNode encoder_node;
 
   // get the program to wait for an encoder device to be attached
   if (serial_number == -1)
@@ -205,7 +202,8 @@ int main(int argc, char *argv[])
              serial_number);
   }
 
-  const int result = encoder_node.waitForAttachment(10000);
+  // open the device:
+  const int result = encoder_node.openAndWaitForAttachment(serial_number, 10000);
 
   if (result != 0)
   {
