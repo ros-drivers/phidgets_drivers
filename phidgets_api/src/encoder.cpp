@@ -20,7 +20,6 @@ Encoder::Encoder():
   // register encoder data callbacks
   CPhidgetEncoder_set_OnInputChange_Handler(encoder_handle_, InputChangeHandler, this);
   CPhidgetEncoder_set_OnPositionChange_Handler(encoder_handle_, PositionChangeHandler, this);
-  CPhidgetEncoder_set_OnIndex_Handler(encoder_handle_, IndexHandler, this);
 }
 
 Encoder::~Encoder()
@@ -116,12 +115,6 @@ int Encoder::PositionChangeHandler(CPhidgetEncoderHandle /* phid */, void *userP
   return 0;
 }
 
-int Encoder::IndexHandler(CPhidgetEncoderHandle /* phid */, void *userPtr, int index, int indexPosition)
-{
-  ((Encoder*)userPtr)->indexHandler(index, indexPosition);
-  return 0;
-}
-
 void Encoder::inputChangeHandler(int /* index */, int /* inputState */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
@@ -132,10 +125,4 @@ void Encoder::positionChangeHandler(int /* index */, int /* time */, int /* posi
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
 
-void Encoder::indexHandler(int /* index */, int /* indexPosition */)
-{
-  // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-
-} // namespace phidgets
+}  // namespace phidgets

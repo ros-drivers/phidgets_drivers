@@ -51,7 +51,6 @@ class Encoder: public Phidget
 
     virtual void inputChangeHandler(int index, int inputState);
     virtual void positionChangeHandler(int index, int time, int positionChange);
-    virtual void indexHandler(int index, int indexPosition);
 
   private:
 
@@ -59,7 +58,6 @@ class Encoder: public Phidget
 
     static int InputChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState);
     static int PositionChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange);
-    static int IndexHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int indexPosition);
 };
 
 } // namespace phidgets
