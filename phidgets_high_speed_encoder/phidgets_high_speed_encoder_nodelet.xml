@@ -1,0 +1,9 @@
+<!-- Phidgets High Speed Encoder nodelet publisher -->
+<library path="lib/libphidgets_high_speed_encoder_nodelet">
+  <class name="phidgets_high_speed_encoder/PhidgetsHighSpeedEncoderNodelet" type="PhidgetsHighSpeedEncoderNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets High Speed Encoder nodelet publisher.
+    </description>
+  </class>
+</library>

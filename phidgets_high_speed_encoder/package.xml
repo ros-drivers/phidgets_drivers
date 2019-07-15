@@ -13,8 +13,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>libphidget21</depend>
+  <depend>nodelet</depend>
   <depend>phidgets_api</depend>
+  <depend>pluginlib</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
@@ -22,4 +23,8 @@
   <build_depend>message_generation</build_depend>
 
   <exec_depend>message_runtime</exec_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_high_speed_encoder_nodelet.xml" />
+  </export>
 </package>
