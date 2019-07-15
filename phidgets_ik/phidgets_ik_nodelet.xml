@@ -1,0 +1,9 @@
+<!-- Phidgets IK nodelet publisher -->
+<library path="lib/libphidgets_ik_nodelet">
+  <class name="phidgets_ik/PhidgetsIKNodelet" type="PhidgetsIKNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets IK nodelet publisher.
+    </description>
+  </class>
+</library>
