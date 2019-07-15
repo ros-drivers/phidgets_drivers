@@ -49,13 +49,13 @@ class Encoder: public Phidget
 
   protected:
 
-    CPhidgetEncoderHandle encoder_handle_;
-
     virtual void inputChangeHandler(int index, int inputState);
     virtual void positionChangeHandler(int index, int time, int positionChange);
     virtual void indexHandler(int index, int indexPosition);
 
   private:
+
+    CPhidgetEncoderHandle encoder_handle_;
 
     static int InputChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int inputState);
     static int PositionChangeHandler(CPhidgetEncoderHandle phid, void *userPtr, int index, int time, int positionChange);

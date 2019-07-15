@@ -33,11 +33,7 @@
 
 #include <libphidget21/phidget21.h>
 
-#include <iostream>
-#include <algorithm>
 #include <string>
-#include <cstring>
-#include <stdio.h>
 
 namespace phidgets {
 
@@ -84,16 +80,16 @@ class Phidget
 
   protected:
 
-    CPhidgetHandle handle_;
-
     void init(CPhidgetHandle handle);
 
-    virtual void registerHandlers();
+    void registerHandlers();
     virtual void attachHandler();
     virtual void detachHandler();
     virtual void errorHandler(int error);
 
   private:
+
+    CPhidgetHandle handle_;
 
     static int AttachHandler(CPhidgetHandle handle, void *userptr);
     static int DetachHandler(CPhidgetHandle handle, void *userptr);

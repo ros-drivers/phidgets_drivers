@@ -63,7 +63,7 @@ std::vector<TStatePerChannel>  encoder_states;
 std::mutex  encoder_states_mux;
 
 /** Derived type from Encoder so we can override virtual event handlers. */
-class EncoderNode : public phidgets::Encoder
+class EncoderNode final : public phidgets::Encoder
 {
 
   public:
@@ -87,7 +87,7 @@ class EncoderNode : public phidgets::Encoder
       ROS_INFO("Number of inputs  : %d", num_inputs);
     }
 
-  protected:
+  private:
 
     void attachHandler() override
     {
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
   // The encoder object instance:
   EncoderNode  encoder_node;
 
-  //open the device:
+  // open the device:
   encoder_node.open(serial_number);
 
   // get the program to wait for an encoder device to be attached

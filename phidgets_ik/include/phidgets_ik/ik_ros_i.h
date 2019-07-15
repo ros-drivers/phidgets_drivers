@@ -27,14 +27,14 @@ class OutputSetter
     int index_;
 };
 
-class IKRosI : public IK
+class IKRosI final : public IK
 {
 
   public:
 
-    IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+    explicit IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
-  protected:
+  private:
 
     int n_in;
     int n_out;
@@ -44,20 +44,18 @@ class IKRosI : public IK
     ros::ServiceServer out_srv_;
     std::vector<std::shared_ptr<OutputSetter> > out_subs_;
 
-  private:
-
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
 
     const float VREF;
 
     void initDevice();
-    void sensorHandler(int index, int sensorValue);
-    void inputHandler(int index, int inputValue);
+    void sensorHandler(int index, int sensorValue) override;
+    void inputHandler(int index, int inputValue) override;
 
     bool set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req, phidgets_ik::SetDigitalOutput::Response &res);
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
 #endif // PHIDGETS_IK_IK_ROS_I_H

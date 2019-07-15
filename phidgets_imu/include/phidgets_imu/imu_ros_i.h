@@ -14,21 +14,19 @@
 #include <memory>
 #include <mutex>
 
-using namespace std;
-
 namespace phidgets {
 
 const float G = 9.81;
 const float MAX_TIMEDIFF_SECONDS = 0.1;
 
-class ImuRosI : public Imu
+class ImuRosI final : public Imu
 {
   typedef sensor_msgs::Imu              ImuMsg;
   typedef sensor_msgs::MagneticField    MagMsg;
 
   public:
 
-    ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+    explicit ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
     bool calibrateService(std_srvs::Empty::Request  &req,
                           std_srvs::Empty::Response &res);
@@ -88,9 +86,9 @@ class ImuRosI : public Imu
     void calibrate();
     void initDevice();
     void dataHandler(const double acceleration[3], const double angularRate[3], const double magneticField[3], double timestamp) override;
-    void attachHandler();
-    void detachHandler();
-    void errorHandler(int error);
+    void attachHandler() override;
+    void detachHandler() override;
+    void errorHandler(int error) override;
 
     /**@brief Main diagnostic method that takes care of collecting diagnostic data.
      * @param stat The stat param is what is the diagnostic tasks are added two. Internally published by the
@@ -99,6 +97,6 @@ class ImuRosI : public Imu
     void phidgetsDiagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat);
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
 #endif // PHIDGETS_IMU_IMU_ROS_I_H

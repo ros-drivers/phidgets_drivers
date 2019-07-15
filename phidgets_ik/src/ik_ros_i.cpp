@@ -22,7 +22,7 @@ void IKRosI::initDevice()
   int serial_num;
   if (!nh_private_.getParam("serial", serial_num))
   {
-    serial_num = -1; //default open any device
+    serial_num = -1; // default open any device
   }
   open(serial_num);
 

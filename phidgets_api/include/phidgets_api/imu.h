@@ -15,8 +15,6 @@ class Imu: public Phidget
 
   protected:
 
-    CPhidgetSpatialHandle imu_handle_;
-
     void zero();
     void setDataRate(int rate);
 
@@ -27,6 +25,8 @@ class Imu: public Phidget
     virtual void dataHandler(const double acceleration[3], const double angularRate[3], const double magneticField[3], double timestamp);
 
   private:
+
+    CPhidgetSpatialHandle imu_handle_;
 
     static int SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count);
 };

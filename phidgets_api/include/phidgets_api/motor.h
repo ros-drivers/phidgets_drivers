@@ -52,8 +52,6 @@ class MotorController: public Phidget
 
 
   protected:
-    CPhidgetMotorControlHandle motor_handle_;
-
     virtual void velocityChangeHandler(int index, double velocity);
     virtual void currentChangeHandler(int index, double current);
     virtual void inputChangeHandler(int index, int inputState);
@@ -65,6 +63,8 @@ class MotorController: public Phidget
 
   private:
 
+    CPhidgetMotorControlHandle motor_handle_;
+
     static int VelocityChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double velocity);
     static int CurrentChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current);
     static int InputChangeHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, int inputState);
@@ -75,6 +75,6 @@ class MotorController: public Phidget
     static int CurrentUpdateHandler(CPhidgetMotorControlHandle phid, void *userPtr, int index, double current);
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
 #endif // PHIDGETS_API_MOTOR_H
