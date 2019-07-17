@@ -1,11 +1,11 @@
 #ifndef PHIDGETS_API_IMU_H
 #define PHIDGETS_API_IMU_H
 
-#include "phidgets_api/phidget.h"
+#include "phidgets_api/phidget21.h"
 
 namespace phidgets {
 
-class Imu : public Phidget
+class Imu : public Phidget21
 {
   public:
     Imu();

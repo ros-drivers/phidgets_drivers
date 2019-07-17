@@ -24,16 +24,16 @@
 
 namespace phidgets {
 
-MotorController::MotorController() : Phidget(), motor_handle_(nullptr)
+MotorController::MotorController() : Phidget21(), motor_handle_(nullptr)
 {
     // create the handle
     CPhidgetMotorControl_create(&motor_handle_);
 
     // pass handle to base class
-    Phidget::init((CPhidgetHandle)motor_handle_);
+    Phidget21::init((CPhidgetHandle)motor_handle_);
 
     // register base class callbacks
-    Phidget::registerHandlers();
+    Phidget21::registerHandlers();
 
     // register motor data callbacks
     CPhidgetMotorControl_set_OnVelocityChange_Handler(

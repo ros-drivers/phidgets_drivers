@@ -63,7 +63,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
 
     if (result != 0)
     {
-        std::string sError = Phidget::getErrorDescription(result);
+        std::string sError = Phidget21::getErrorDescription(result);
         ROS_FATAL("Problem waiting for attachment: %s", sError.c_str());
         ros::shutdown();
         return;
@@ -153,10 +153,10 @@ void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent & /* event */)
 
 void HighSpeedEncoderRosI::display_properties()
 {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const int version = Phidget::getDeviceVersion();
+    const int serial_number = Phidget21::getDeviceSerialNumber();
+    const int version = Phidget21::getDeviceVersion();
     const int num_encoders = Encoder::getEncoderCount();
-    const std::string dev_type = Phidget::getDeviceType();
+    const std::string dev_type = Phidget21::getDeviceType();
     const int num_inputs = Encoder::getInputCount();
 
     ROS_INFO("Device type       : %s", dev_type.c_str());
@@ -168,8 +168,8 @@ void HighSpeedEncoderRosI::display_properties()
 
 void HighSpeedEncoderRosI::attachHandler()
 {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const std::string name = Phidget::getDeviceName();
+    const int serial_number = Phidget21::getDeviceSerialNumber();
+    const std::string name = Phidget21::getDeviceName();
     const int inputcount = Encoder::getEncoderCount();
     const std::string topic_path = "joint_states";
 
@@ -202,8 +202,8 @@ void HighSpeedEncoderRosI::attachHandler()
 
 void HighSpeedEncoderRosI::detachHandler()
 {
-    const int serial_number = Phidget::getDeviceSerialNumber();
-    const std::string name = Phidget::getDeviceName();
+    const int serial_number = Phidget21::getDeviceSerialNumber();
+    const std::string name = Phidget21::getDeviceName();
     ROS_INFO("%s Serial number %d detached!", name.c_str(), serial_number);
 
     std::lock_guard<std::mutex> lock(encoder_states_mutex_);
@@ -214,7 +214,7 @@ void HighSpeedEncoderRosI::detachHandler()
 void HighSpeedEncoderRosI::errorHandler(int errorCode)
 {
     ROS_ERROR("Error handled. %d - %s", errorCode,
-              Phidget::getErrorDescription(errorCode).c_str());
+              Phidget21::getErrorDescription(errorCode).c_str());
 }
 
 void HighSpeedEncoderRosI::positionChangeHandler(int index, int time,

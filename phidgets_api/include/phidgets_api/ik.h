@@ -1,11 +1,11 @@
 #ifndef PHIDGETS_API_IK_H
 #define PHIDGETS_API_IK_H
 
-#include "phidgets_api/phidget.h"
+#include "phidgets_api/phidget21.h"
 
 namespace phidgets {
 
-class IK : public Phidget
+class IK : public Phidget21
 {
   public:
     IK();

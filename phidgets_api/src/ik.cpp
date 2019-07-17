@@ -2,16 +2,16 @@
 
 namespace phidgets {
 
-IK::IK() : Phidget(), ik_handle_(nullptr)
+IK::IK() : Phidget21(), ik_handle_(nullptr)
 {
     // create the handle
     CPhidgetInterfaceKit_create(&ik_handle_);
 
     // pass handle to base class
-    Phidget::init((CPhidgetHandle)ik_handle_);
+    Phidget21::init((CPhidgetHandle)ik_handle_);
 
     // register base class callbacks
-    Phidget::registerHandlers();
+    Phidget21::registerHandlers();
 
     // register ik data callback
     CPhidgetInterfaceKit_set_OnSensorChange_Handler(ik_handle_, SensorHandler,

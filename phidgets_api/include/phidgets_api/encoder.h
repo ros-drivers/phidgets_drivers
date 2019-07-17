@@ -1,11 +1,11 @@
 #ifndef PHIDGETS_API_ENCODER_H
 #define PHIDGETS_API_ENCODER_H
 
-#include "phidgets_api/phidget.h"
+#include "phidgets_api/phidget21.h"
 
 namespace phidgets {
 
-class Encoder : public Phidget
+class Encoder : public Phidget21
 {
   public:
     Encoder();

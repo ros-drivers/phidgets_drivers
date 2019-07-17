@@ -31,7 +31,7 @@ add_library(phidgets_api src/encoder.cpp
                          src/ik.cpp
                          src/ir.cpp
                          src/motor.cpp
-                         src/phidget.cpp)
+                         src/phidget21.cpp)
 
 add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
 

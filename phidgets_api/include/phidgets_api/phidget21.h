@@ -28,8 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_PHIDGET_H
-#define PHIDGETS_API_PHIDGET_H
+#ifndef PHIDGETS_API_PHIDGET21_H
+#define PHIDGETS_API_PHIDGET21_H
 
 #include <libphidget21/phidget21.h>
 
@@ -37,11 +37,11 @@
 
 namespace phidgets {
 
-class Phidget
+class Phidget21
 {
   public:
-    Phidget();
-    virtual ~Phidget();
+    Phidget21();
+    virtual ~Phidget21();
 
     /**@brief Open a connection to a Phidget
      * @param serial_number The serial number of the phidget to which to attach
@@ -95,4 +95,4 @@ class Phidget
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_PHIDGET_H
+#endif  // PHIDGETS_API_PHIDGET21_H

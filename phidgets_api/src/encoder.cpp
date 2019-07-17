@@ -4,16 +4,16 @@
 
 namespace phidgets {
 
-Encoder::Encoder() : Phidget(), encoder_handle_(nullptr)
+Encoder::Encoder() : Phidget21(), encoder_handle_(nullptr)
 {
     // create the handle
     CPhidgetEncoder_create(&encoder_handle_);
 
     // pass handle to base class
-    Phidget::init((CPhidgetHandle)encoder_handle_);
+    Phidget21::init((CPhidgetHandle)encoder_handle_);
 
     // register base class callbacks
-    Phidget::registerHandlers();
+    Phidget21::registerHandlers();
 
     // register encoder data callbacks
     CPhidgetEncoder_set_OnInputChange_Handler(encoder_handle_,

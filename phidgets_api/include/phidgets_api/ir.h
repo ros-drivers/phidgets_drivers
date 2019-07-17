@@ -1,11 +1,11 @@
 #ifndef PHIDGETS_API_IR_H
 #define PHIDGETS_API_IR_H
 
-#include "phidgets_api/phidget.h"
+#include "phidgets_api/phidget21.h"
 
 namespace phidgets {
 
-class IR : public Phidget
+class IR : public Phidget21
 {
   public:
     IR();

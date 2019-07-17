@@ -28,7 +28,7 @@ void IKRosI::initDevice()
     int result = openAndWaitForAttachment(serial_num, 10000);
     if (result)
     {
-        std::string err = Phidget::getErrorDescription(result);
+        std::string err = Phidget21::getErrorDescription(result);
         ROS_FATAL("Problem waiting for IK attachment: %s", err.c_str());
         ros::shutdown();
         return;

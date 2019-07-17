@@ -4,16 +4,16 @@
 
 namespace phidgets {
 
-IR::IR() : Phidget(), ir_handle_(nullptr)
+IR::IR() : Phidget21(), ir_handle_(nullptr)
 {
     // create the handle
     CPhidgetIR_create(&ir_handle_);
 
     // pass handle to base class
-    Phidget::init((CPhidgetHandle)ir_handle_);
+    Phidget21::init((CPhidgetHandle)ir_handle_);
 
     // register base class callbacks
-    Phidget::registerHandlers();
+    Phidget21::registerHandlers();
 
     // register ir data callback
     CPhidgetIR_set_OnCode_Handler(ir_handle_, CodeHandler, this);

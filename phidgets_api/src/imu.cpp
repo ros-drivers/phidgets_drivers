@@ -2,16 +2,16 @@
 
 namespace phidgets {
 
-Imu::Imu() : Phidget(), imu_handle_(nullptr)
+Imu::Imu() : Phidget21(), imu_handle_(nullptr)
 {
     // create the handle
     CPhidgetSpatial_create(&imu_handle_);
 
     // pass handle to base class
-    Phidget::init((CPhidgetHandle)imu_handle_);
+    Phidget21::init((CPhidgetHandle)imu_handle_);
 
     // register base class callbacks
-    Phidget::registerHandlers();
+    Phidget21::registerHandlers();
 
     // register imu data callback
     CPhidgetSpatial_set_OnSpatialData_Handler(imu_handle_, SpatialDataHandler,

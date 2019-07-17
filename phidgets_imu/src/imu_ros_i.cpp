@@ -159,7 +159,7 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             cc_T5_);
         if (result)
         {
-            std::string err = Phidget::getErrorDescription(result);
+            std::string err = Phidget21::getErrorDescription(result);
             ROS_ERROR(
                 "Problem while trying to set compass correction params: '%s'.",
                 err.c_str());
@@ -182,7 +182,7 @@ void ImuRosI::initDevice()
         is_connected_ = false;
         error_number_ = result;
         diag_updater_.force_update();
-        std::string err = Phidget::getErrorDescription(result);
+        std::string err = Phidget21::getErrorDescription(result);
         ROS_FATAL(
             "Problem waiting for IMU attachment: %s Make sure the USB cable is "
             "connected and you have executed the "

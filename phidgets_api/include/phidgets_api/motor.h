@@ -1,11 +1,11 @@
 #ifndef PHIDGETS_API_MOTOR_H
 #define PHIDGETS_API_MOTOR_H
 
-#include "phidgets_api/phidget.h"
+#include "phidgets_api/phidget21.h"
 
 namespace phidgets {
 
-class MotorController : public Phidget
+class MotorController : public Phidget21
 {
   public:
     MotorController();
