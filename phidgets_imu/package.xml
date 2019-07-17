@@ -26,7 +26,6 @@
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
-  <depend>tf</depend>
 
   <build_depend>roslaunch</build_depend>
 

@@ -5,7 +5,6 @@
 #include <ros/service_server.h>
 #include <boost/thread/mutex.hpp>
 #include <boost/shared_ptr.hpp>
-#include <tf/transform_datatypes.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/MagneticField.h>
 #include <std_srvs/Empty.h>
