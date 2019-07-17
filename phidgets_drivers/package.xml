@@ -24,6 +24,7 @@
 
   <exec_depend>libphidget21</exec_depend>
   <exec_depend>phidgets_api</exec_depend>
+  <exec_depend>phidgets_ik</exec_depend>
   <exec_depend>phidgets_high_speed_encoder</exec_depend>
   <exec_depend>phidgets_imu</exec_depend>
 
