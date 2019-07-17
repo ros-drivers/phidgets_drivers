@@ -5,7 +5,7 @@
 #include <sensor_msgs/JointState.h>
 
 #include "phidgets_high_speed_encoder/high_speed_encoder_ros_i.h"
-#include "phidgets_high_speed_encoder/EncoderDecimatedSpeed.h"
+#include "phidgets_msgs/EncoderDecimatedSpeed.h"
 
 namespace phidgets {
 
@@ -114,7 +114,7 @@ void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent & event)
       {
         if (++spc.loops_without_update_speed_buffer >= speed_filter_idle_iter_loops_before_reset_)
         {
-          phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
+          phidgets_msgs::EncoderDecimatedSpeed e;
           e.header.stamp = ros::Time::now();
           e.header.frame_id = frame_id_;
           e.avr_speed = .0;
@@ -130,7 +130,7 @@ void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent & event)
           const double avrg = std::accumulate(spc.speeds_buffer.begin(), spc.speeds_buffer.end(), 0.0) / spc.speeds_buffer.size();
           spc.speeds_buffer.clear();
 
-          phidgets_high_speed_encoder::EncoderDecimatedSpeed e;
+          phidgets_msgs::EncoderDecimatedSpeed e;
           e.header.stamp = ros::Time::now();
           e.header.frame_id = frame_id_;
           e.avr_speed = avrg * joint_tick2rad_[i];
@@ -177,7 +177,7 @@ void HighSpeedEncoderRosI::attachHandler()
       s += buf;
       ROS_INFO("Publishing decimated speed of channel %u to topic: %s", i, s.c_str());
       encoder_decimspeed_pubs_[i] =
-        nh_.advertise<phidgets_high_speed_encoder::EncoderDecimatedSpeed>(s, 10);
+        nh_.advertise<phidgets_msgs::EncoderDecimatedSpeed>(s, 10);
     }
   }
   ROS_INFO("%s Serial number %d attached with %d encoders!",

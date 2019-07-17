@@ -6,21 +6,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     add_compile_options(-Wall)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api pluginlib roscpp sensor_msgs std_msgs message_generation)
-
-add_service_files (
-    FILES
-    SetDigitalOutput.srv
-)
-
-generate_messages(
-    DEPENDENCIES
-)
+find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs pluginlib roscpp sensor_msgs std_msgs)
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES phidgets_ik
-    CATKIN_DEPENDS nodelet phidgets_api pluginlib roscpp sensor_msgs std_msgs message_runtime
+    CATKIN_DEPENDS nodelet phidgets_api phidgets_msgs pluginlib roscpp sensor_msgs std_msgs
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})

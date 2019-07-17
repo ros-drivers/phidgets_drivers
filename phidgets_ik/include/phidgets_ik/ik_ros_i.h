@@ -5,7 +5,7 @@
 #include <phidgets_api/ik.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
-#include "phidgets_ik/SetDigitalOutput.h"
+#include "phidgets_msgs/SetDigitalOutput.h"
 
 #include <memory>
 #include <vector>
@@ -53,7 +53,7 @@ class IKRosI final : public IK
     void sensorHandler(int index, int sensorValue) override;
     void inputHandler(int index, int inputValue) override;
 
-    bool set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req, phidgets_ik::SetDigitalOutput::Response &res);
+    bool set_srv_callback(phidgets_msgs::SetDigitalOutput::Request& req, phidgets_msgs::SetDigitalOutput::Response &res);
 };
 
 }  // namespace phidgets

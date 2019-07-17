@@ -18,14 +18,11 @@
 
   <depend>nodelet</depend>
   <depend>phidgets_api</depend>
+  <depend>phidgets_msgs</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
-
-  <build_depend>message_generation</build_depend>
-
-  <exec_depend>message_runtime</exec_depend>
 
   <export>
     <nodelet plugin="${prefix}/phidgets_ik_nodelet.xml" />

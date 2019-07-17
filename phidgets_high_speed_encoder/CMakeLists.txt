@@ -16,20 +16,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 
-find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api pluginlib roscpp std_msgs message_generation sensor_msgs)
-
-add_message_files(
-    FILES
-    EncoderDecimatedSpeed.msg
-)
-
-generate_messages(
-    DEPENDENCIES
-    std_msgs
-)
+find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs pluginlib roscpp std_msgs sensor_msgs)
 
 catkin_package(
-    CATKIN_DEPENDS nodelet phidgets_api pluginlib roscpp std_msgs message_runtime sensor_msgs
+    CATKIN_DEPENDS nodelet phidgets_api phidgets_msgs pluginlib roscpp std_msgs sensor_msgs
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
