@@ -6,7 +6,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     add_compile_options(-Wall)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs message_generation tf)
+find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api roscpp sensor_msgs std_msgs message_generation)
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
@@ -23,7 +23,7 @@ catkin_package(
     INCLUDE_DIRS include
     LIBRARIES phidgets_ik
     DEPENDS Boost
-    CATKIN_DEPENDS geometry_msgs nodelet phidgets_api roscpp sensor_msgs std_msgs message_runtime tf
+    CATKIN_DEPENDS nodelet phidgets_api roscpp sensor_msgs std_msgs message_runtime
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})

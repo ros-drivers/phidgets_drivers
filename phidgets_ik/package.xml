@@ -16,13 +16,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>geometry_msgs</depend>
   <depend>nodelet</depend>
   <depend>phidgets_api</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
-  <depend>tf</depend>
 
   <build_depend>message_generation</build_depend>
 
