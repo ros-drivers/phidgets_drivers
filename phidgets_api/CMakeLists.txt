@@ -26,7 +26,9 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_library(phidgets_api src/digital_output.cpp
+add_library(phidgets_api src/digital_input.cpp
+                         src/digital_inputs.cpp
+                         src/digital_output.cpp
                          src/digital_outputs.cpp
                          src/encoder.cpp
                          src/imu.cpp
