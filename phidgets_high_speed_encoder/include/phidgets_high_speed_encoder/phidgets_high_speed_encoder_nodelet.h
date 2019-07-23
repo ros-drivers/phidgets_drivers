@@ -10,16 +10,13 @@ namespace phidgets {
 
 class PhidgetsHighSpeedEncoderNodelet : public nodelet::Nodelet
 {
-
   public:
-
     virtual void onInit();
 
   private:
-
-    Encoder * enc_;  // FIXME: change to smart pointer
+    Encoder* enc_;  // FIXME: change to smart pointer
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_HIGH_SPEED_ENCODER_PHIDGETS_HIGH_SPEED_ENCODER_NODELET_H
+#endif  // PHIDGETS_HIGH_SPEED_ENCODER_PHIDGETS_HIGH_SPEED_ENCODER_NODELET_H
