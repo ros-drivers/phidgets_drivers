@@ -62,7 +62,7 @@ void IKRosI::initDevice()
   }
 }
 
-void IKRosI::sensorHandler(int index, int sensorValue)
+void IKRosI::sensorHandler(int index, int /* sensorValue */)
 {
   // get rawsensorvalue and divide by 4096, which according to the documentation
   // for both the IK888 and IK222 are the maximum sensor value

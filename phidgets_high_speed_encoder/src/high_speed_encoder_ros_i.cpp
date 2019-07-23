@@ -71,7 +71,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh, ros::NodeHandle n
   timer_ = nh_.createTimer(ros::Duration(1.0/publish_rate), &HighSpeedEncoderRosI::timerCallback, this);
 }
 
-void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent & event)
+void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent & /* event */)
 {
   size_t N;
   {

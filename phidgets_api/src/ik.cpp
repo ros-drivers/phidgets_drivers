@@ -63,7 +63,7 @@ int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int in
   return 0;
 }
 
-void IK::sensorHandler(int index, int sensorValue)
+void IK::sensorHandler(int /* index */, int /* sensorValue */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
@@ -74,7 +74,7 @@ int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int ind
   return 0;
 }
 
-void IK::inputHandler(int index, int inputValue)
+void IK::inputHandler(int /* index */, int /* inputValue */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }

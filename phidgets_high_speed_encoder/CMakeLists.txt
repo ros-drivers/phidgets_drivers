@@ -11,10 +11,9 @@ else()
 endif()
 
 # High level of warnings:
-if (CMAKE_COMPILER_IS_GNUCXX)
-    add_compile_options(-Wall)
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wall -Wextra)
 endif()
-
 
 find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs pluginlib roscpp std_msgs sensor_msgs)
 

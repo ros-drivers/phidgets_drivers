@@ -31,7 +31,7 @@ int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr, unsigned char *dat
   return 0;
 }
 
-void IR::codeHandler(unsigned char *data, int dataLength, int bitCount, int repeat)
+void IR::codeHandler(unsigned char */* data */, int /* dataLength */, int /* bitCount */, int /* repeat */)
 {
   // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
 }
