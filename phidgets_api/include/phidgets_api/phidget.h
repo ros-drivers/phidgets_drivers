@@ -40,12 +40,12 @@ namespace phidgets {
 class Phidget
 {
   public:
-
     Phidget();
     virtual ~Phidget();
 
     /**@brief Open a connection to a Phidget
-     * @param serial_number The serial number of the phidget to which to attach (-1 will connect to any)
+     * @param serial_number The serial number of the phidget to which to attach
+     * (-1 will connect to any)
      * @param timeout Milliseconds to wait before timing out
      * @return 0 on success
      */
@@ -77,7 +77,6 @@ class Phidget
     static std::string getErrorDescription(int errorCode);
 
   protected:
-
     void init(CPhidgetHandle handle);
 
     void registerHandlers();
@@ -86,14 +85,14 @@ class Phidget
     virtual void errorHandler(int error);
 
   private:
-
     CPhidgetHandle handle_;
 
     static int AttachHandler(CPhidgetHandle handle, void *userptr);
     static int DetachHandler(CPhidgetHandle handle, void *userptr);
-    static int ErrorHandler (CPhidgetHandle handle, void *userptr, int ErrorCode, const char *unknown);
+    static int ErrorHandler(CPhidgetHandle handle, void *userptr, int ErrorCode,
+                            const char *unknown);
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_API_PHIDGET_H
+#endif  // PHIDGETS_API_PHIDGET_H

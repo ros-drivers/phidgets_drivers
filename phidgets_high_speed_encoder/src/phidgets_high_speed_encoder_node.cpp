@@ -37,10 +37,10 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "phidgets_high_speed_encoder");
-  ros::NodeHandle nh;
-  ros::NodeHandle nh_private("~");
-  phidgets::HighSpeedEncoderRosI hs(nh, nh_private);
-  ros::spin();
-  return 0;
+    ros::init(argc, argv, "phidgets_high_speed_encoder");
+    ros::NodeHandle nh;
+    ros::NodeHandle nh_private("~");
+    phidgets::HighSpeedEncoderRosI hs(nh, nh_private);
+    ros::spin();
+    return 0;
 }

@@ -10,16 +10,13 @@ namespace phidgets {
 
 class PhidgetsIKNodelet : public nodelet::Nodelet
 {
-
   public:
-
     virtual void onInit();
 
   private:
-
-    IK * ik_;  // FIXME: change to smart pointer
+    IK* ik_;  // FIXME: change to smart pointer
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_IK_PHIDGETS_IK_NODELET_H
+#endif  // PHIDGETS_IK_PHIDGETS_IK_NODELET_H

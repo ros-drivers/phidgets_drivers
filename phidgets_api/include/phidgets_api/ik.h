@@ -5,10 +5,9 @@
 
 namespace phidgets {
 
-class IK: public Phidget
+class IK : public Phidget
 {
   public:
-
     IK();
 
     virtual ~IK();
@@ -20,29 +19,17 @@ class IK: public Phidget
     bool setOutputState(int index, bool state) const;
 
   protected:
-
-    virtual void sensorHandler(
-      int index,
-      int sensorValue);
-    virtual void inputHandler(
-      int index,
-      int inputValue);
+    virtual void sensorHandler(int index, int sensorValue);
+    virtual void inputHandler(int index, int inputValue);
 
   private:
-
     CPhidgetInterfaceKitHandle ik_handle_;
-    static int SensorHandler(
-      CPhidgetInterfaceKitHandle ik,
-      void * userptr,
-      int index,
-      int sensorValue);
-    static int InputHandler(
-      CPhidgetInterfaceKitHandle ik,
-      void * userptr,
-      int index,
-      int inputValue);
+    static int SensorHandler(CPhidgetInterfaceKitHandle ik, void* userptr,
+                             int index, int sensorValue);
+    static int InputHandler(CPhidgetInterfaceKitHandle ik, void* userptr,
+                            int index, int inputValue);
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_API_IK_H
+#endif  // PHIDGETS_API_IK_H
