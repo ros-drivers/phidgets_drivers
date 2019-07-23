@@ -1,7 +1,7 @@
 FROM ros:melodic-ros-core
 
 RUN apt-get update && apt-get install -y \
-    build-essential python-catkin-tools
+    build-essential clang-format python-catkin-tools
 
 # Create ROS workspace
 COPY . /ws/src/phidgets_drivers
