@@ -11,6 +11,7 @@ WORKDIR /ws
 RUN rosdep install --from-paths src -i -y --rosdistro melodic
 
 RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && \
+    python3 clang-check-style.py && \
     catkin init && \
     catkin config --install -j 1 -p 1 && \
     catkin build --limit-status-rate 0.1 --no-notify && \
