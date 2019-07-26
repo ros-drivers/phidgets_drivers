@@ -16,12 +16,12 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS libphidget21)
+find_package(catkin REQUIRED COMPONENTS libphidget21 libphidget22)
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES phidgets_api
-    CATKIN_DEPENDS libphidget21
+    CATKIN_DEPENDS libphidget21 libphidget22
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -31,7 +31,8 @@ add_library(phidgets_api src/encoder.cpp
                          src/ik.cpp
                          src/ir.cpp
                          src/motor.cpp
-                         src/phidget21.cpp)
+                         src/phidget21.cpp
+                         src/phidget22.cpp)
 
 add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
 

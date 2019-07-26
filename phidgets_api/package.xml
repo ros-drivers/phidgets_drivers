@@ -19,5 +19,6 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>libphidget21</depend>
+  <depend>libphidget22</depend>
 
 </package>
