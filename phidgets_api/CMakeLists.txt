@@ -37,6 +37,7 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/gyroscope.cpp
                          src/imu.cpp
                          src/ir.cpp
+                         src/magnetometer.cpp
                          src/motor.cpp
                          src/phidget21.cpp
                          src/phidget22.cpp

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_magnetometer</name>
+  <version>0.7.9</version>
+  <description>Driver for the Phidgets Magnetometer devices</description>
+
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author>Chris Lalancette</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>nodelet</depend>
+  <depend>phidgets_api</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_magnetometer_nodelet.xml" />
+  </export>
+</package>
