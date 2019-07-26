@@ -15,10 +15,10 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs pluginlib roscpp std_msgs sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs pluginlib roscpp sensor_msgs)
 
 catkin_package(
-    CATKIN_DEPENDS nodelet phidgets_api phidgets_msgs pluginlib roscpp std_msgs sensor_msgs
+    CATKIN_DEPENDS nodelet phidgets_api phidgets_msgs pluginlib roscpp sensor_msgs
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
