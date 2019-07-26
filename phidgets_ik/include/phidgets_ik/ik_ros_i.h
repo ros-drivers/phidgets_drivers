@@ -1,54 +1,69 @@
 #ifndef PHIDGETS_IK_IK_ROS_I_H
 #define PHIDGETS_IK_IK_ROS_I_H
 
-#include <phidgets_api/ik.h>
+#include <memory>
+#include <mutex>
+#include <vector>
+
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <std_msgs/Float32.h>
-#include "phidgets_msgs/SetDigitalOutput.h"
 
-#include <memory>
-#include <vector>
+#include "phidgets_api/analog_inputs.h"
+#include "phidgets_api/digital_inputs.h"
+#include "phidgets_api/digital_outputs.h"
+#include "phidgets_msgs/SetDigitalOutput.h"
 
 namespace phidgets {
 
-class OutputSetter
+class IKDigitalOutputSetter
 {
   public:
-    explicit OutputSetter(IK* ik, int index);
-    void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
-    ros::Subscriber subscription;
+    explicit IKDigitalOutputSetter(DigitalOutputs* dos, int index,
+                                   ros::NodeHandle nh,
+                                   const std::string& topicname);
 
   protected:
-    IK* ik_;
+    void setMsgCallback(const std_msgs::Bool::ConstPtr& msg);
+    ros::Subscriber subscription_;
+    DigitalOutputs* dos_;
     int index_;
 };
 
-class IKRosI final : public IK
+class IKRosI final
 {
   public:
     explicit IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
   private:
-    int n_in;
-    int n_out;
-    int n_sensors;
-    std::vector<ros::Publisher> in_pubs_;
-    std::vector<ros::Publisher> sensor_pubs_;
-    ros::ServiceServer out_srv_;
-    std::vector<std::shared_ptr<OutputSetter> > out_subs_;
+    std::mutex ik_mutex_;
+    std::vector<bool> last_di_vals_;
+    std::vector<double> last_ai_vals_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
+    void timerCallback(const ros::TimerEvent& event);
+    ros::Timer timer_;
+    int publish_rate_;
 
-    const float VREF;
+    // Digital inputs
+    std::unique_ptr<DigitalInputs> dis_;
+    std::vector<ros::Publisher> di_pubs_;
+    void stateChangeCallback(int index, int input_value);
+    void publishLatestDI(int index);
 
-    void initDevice();
-    void sensorHandler(int index, int sensorValue) override;
-    void inputHandler(int index, int inputValue) override;
+    // Digital outputs
+    std::unique_ptr<DigitalOutputs> dos_;
+    ros::ServiceServer out_srv_;
+    std::vector<std::unique_ptr<IKDigitalOutputSetter>> out_subs_;
 
-    bool set_srv_callback(phidgets_msgs::SetDigitalOutput::Request& req,
-                          phidgets_msgs::SetDigitalOutput::Response& res);
+    bool setSrvCallback(phidgets_msgs::SetDigitalOutput::Request& req,
+                        phidgets_msgs::SetDigitalOutput::Response& res);
+
+    // Analog inputs
+    std::unique_ptr<AnalogInputs> ais_;
+    std::vector<ros::Publisher> ai_pubs_;
+    void sensorChangeCallback(int index, double sensor_value);
+    void publishLatestAI(int index);
 };
 
 }  // namespace phidgets

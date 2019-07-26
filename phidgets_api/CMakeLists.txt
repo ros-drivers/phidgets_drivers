@@ -34,7 +34,6 @@ add_library(phidgets_api src/analog_input.cpp
                          src/digital_outputs.cpp
                          src/encoder.cpp
                          src/imu.cpp
-                         src/ik.cpp
                          src/ir.cpp
                          src/motor.cpp
                          src/phidget21.cpp

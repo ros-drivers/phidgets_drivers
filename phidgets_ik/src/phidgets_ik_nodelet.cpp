@@ -1,3 +1,10 @@
+#include <memory>
+
+#include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
+#include <ros/ros.h>
+
+#include "phidgets_ik/ik_ros_i.h"
 #include "phidgets_ik/phidgets_ik_nodelet.h"
 
 typedef phidgets::PhidgetsIKNodelet PhidgetsIKNodelet;
@@ -12,5 +19,5 @@ void PhidgetsIKNodelet::onInit()
     ros::NodeHandle nh = getMTNodeHandle();
     ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-    ik_ = new IKRosI(nh, nh_private);
+    ik_ = std::make_unique<IKRosI>(nh, nh_private);
 }
