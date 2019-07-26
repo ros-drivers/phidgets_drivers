@@ -37,7 +37,8 @@ add_library(phidgets_api src/analog_input.cpp
                          src/ir.cpp
                          src/motor.cpp
                          src/phidget21.cpp
-                         src/phidget22.cpp)
+                         src/phidget22.cpp
+                         src/temperature.cpp)
 
 add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
 
