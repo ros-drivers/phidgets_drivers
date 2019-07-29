@@ -1,3 +1,10 @@
+#include <memory>
+
+#include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
+#include <ros/ros.h>
+
+#include "phidgets_high_speed_encoder/high_speed_encoder_ros_i.h"
 #include "phidgets_high_speed_encoder/phidgets_high_speed_encoder_nodelet.h"
 
 typedef phidgets::PhidgetsHighSpeedEncoderNodelet
@@ -13,5 +20,5 @@ void PhidgetsHighSpeedEncoderNodelet::onInit()
     ros::NodeHandle nh = getMTNodeHandle();
     ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-    enc_ = new HighSpeedEncoderRosI(nh, nh_private);
+    enc_ = std::make_unique<HighSpeedEncoderRosI>(nh, nh_private);
 }

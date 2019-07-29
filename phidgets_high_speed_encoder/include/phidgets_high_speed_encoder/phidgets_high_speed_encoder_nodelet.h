@@ -1,8 +1,9 @@
 #ifndef PHIDGETS_HIGH_SPEED_ENCODER_PHIDGETS_HIGH_SPEED_ENCODER_NODELET_H
 #define PHIDGETS_HIGH_SPEED_ENCODER_PHIDGETS_HIGH_SPEED_ENCODER_NODELET_H
 
+#include <memory>
+
 #include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
 
 #include "phidgets_high_speed_encoder/high_speed_encoder_ros_i.h"
 
@@ -14,7 +15,7 @@ class PhidgetsHighSpeedEncoderNodelet : public nodelet::Nodelet
     virtual void onInit();
 
   private:
-    Encoder* enc_;  // FIXME: change to smart pointer
+    std::unique_ptr<HighSpeedEncoderRosI> enc_;
 };
 
 }  // namespace phidgets

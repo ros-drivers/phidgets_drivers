@@ -34,6 +34,7 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/digital_output.cpp
                          src/digital_outputs.cpp
                          src/encoder.cpp
+                         src/encoders.cpp
                          src/gyroscope.cpp
                          src/ir.cpp
                          src/magnetometer.cpp
