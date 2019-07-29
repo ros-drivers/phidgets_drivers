@@ -1,40 +1,45 @@
-#include "phidgets_api/ir.h"
+#include <functional>
 
-#include <cstdio>
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/ir.h"
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-IR::IR() : Phidget21(), ir_handle_(nullptr)
+IR::IR(int32_t serial_number,
+       std::function<void(const char *, uint32_t, int)> code_handler)
+    : code_handler_(code_handler)
 {
     // create the handle
-    CPhidgetIR_create(&ir_handle_);
+    PhidgetReturnCode ret = PhidgetIR_create(&ir_handle_);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to create IR handle", ret);
+    }
 
-    // pass handle to base class
-    Phidget21::init((CPhidgetHandle)ir_handle_);
-
-    // register base class callbacks
-    Phidget21::registerHandlers();
+    helpers::openWaitForAttachment(reinterpret_cast<PhidgetHandle>(ir_handle_),
+                                   serial_number, 0, false, 0);
 
     // register ir data callback
-    CPhidgetIR_set_OnCode_Handler(ir_handle_, CodeHandler, this);
+    PhidgetIR_setOnCodeHandler(ir_handle_, CodeHandler, this);
 }
 
 IR::~IR()
 {
+    PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(ir_handle_);
+    helpers::closeAndDelete(&handle);
 }
 
-int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr,
-                    unsigned char *data, int dataLength, int bitCount,
-                    int repeat)
+void IR::codeHandler(const char *code, uint32_t bit_count, int is_repeat) const
 {
-    ((IR *)userptr)->codeHandler(data, dataLength, bitCount, repeat);
-    return 0;
+    code_handler_(code, bit_count, is_repeat);
 }
 
-void IR::codeHandler(unsigned char * /* data */, int /* dataLength */,
-                     int /* bitCount */, int /* repeat */)
+void IR::CodeHandler(PhidgetIRHandle /* ir */, void *ctx, const char *code,
+                     uint32_t bit_count, int is_repeat)
 {
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+    ((IR *)ctx)->codeHandler(code, bit_count, is_repeat);
 }
 
 }  // namespace phidgets

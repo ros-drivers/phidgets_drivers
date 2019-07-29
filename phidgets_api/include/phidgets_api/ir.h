@@ -1,27 +1,32 @@
 #ifndef PHIDGETS_API_IR_H
 #define PHIDGETS_API_IR_H
 
-#include "phidgets_api/phidget21.h"
+#include <functional>
+
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-class IR : public Phidget21
+class IR final
 {
   public:
-    IR();
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(IR)
 
-    virtual ~IR();
+    explicit IR(int32_t serial_number,
+                std::function<void(const char *, uint32_t, int)> code_handler);
 
-  protected:
-    virtual void codeHandler(unsigned char *data, int dataLength, int bitCount,
-                             int repeat);
+    ~IR();
+
+    void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
 
   private:
-    CPhidgetIRHandle ir_handle_;
+    std::function<void(const char *, uint32_t, int)> code_handler_;
+    PhidgetIRHandle ir_handle_;
 
-    static int CodeHandler(CPhidgetIRHandle ir, void *userPtr,
-                           unsigned char *data, int dataLength, int bitCount,
-                           int repeat);
+    static void CodeHandler(PhidgetIRHandle ir, void *ctx, const char *code,
+                            uint32_t bit_count, int is_repeat);
 };
 
 }  // namespace phidgets
