@@ -35,12 +35,12 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/digital_outputs.cpp
                          src/encoder.cpp
                          src/gyroscope.cpp
-                         src/imu.cpp
                          src/ir.cpp
                          src/magnetometer.cpp
                          src/motor.cpp
                          src/phidget21.cpp
                          src/phidget22.cpp
+                         src/spatial.cpp
                          src/temperature.cpp)
 
 add_dependencies(phidgets_api ${catkin_EXPORTED_TARGETS})
