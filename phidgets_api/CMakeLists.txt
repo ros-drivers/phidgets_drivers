@@ -16,12 +16,12 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS libphidget21 libphidget22)
+find_package(catkin REQUIRED COMPONENTS libphidget22)
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES phidgets_api
-    CATKIN_DEPENDS libphidget21 libphidget22
+    CATKIN_DEPENDS libphidget22
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -40,7 +40,6 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/magnetometer.cpp
                          src/motor.cpp
                          src/motors.cpp
-                         src/phidget21.cpp
                          src/phidget22.cpp
                          src/spatial.cpp
                          src/temperature.cpp)

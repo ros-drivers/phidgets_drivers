@@ -22,7 +22,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>libphidget21</exec_depend>
   <exec_depend>libphidget22</exec_depend>
   <exec_depend>phidgets_accelerometer</exec_depend>
   <exec_depend>phidgets_api</exec_depend>
