@@ -1,86 +1,50 @@
 #ifndef PHIDGETS_API_MOTOR_H
 #define PHIDGETS_API_MOTOR_H
 
-#include "phidgets_api/phidget21.h"
+#include <functional>
+
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-class MotorController : public Phidget21
+class Motor final
 {
   public:
-    MotorController();
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
 
-    virtual ~MotorController();
+    explicit Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
+                   int channel,
+                   std::function<void(int, double)> duty_cycle_change_handler,
+                   std::function<void(int, double)> back_emf_change_handler);
 
-    // Motor specific
-    int getMotorCount();
-    double getVelocity(int index);
-    void setVelocity(int index, double velocity);
-    double getAcceleration(int index);
-    void setAcceleration(int index, double acceleration);
-    double getAccelerationMax(int index);
-    double getAccelerationMin(int index);
-    double getCurrent(int index);
+    ~Motor();
 
-    // Digital inputs
-    int getInputCount();
-    bool getInputState(int index);
+    double getDutyCycle() const;
+    void setDutyCycle(double duty_cycle) const;
+    double getAcceleration() const;
+    void setAcceleration(double acceleration) const;
+    double getBackEMF() const;
+    void setDataInterval(uint32_t data_interval_ms) const;
 
-    // Encoder inputs
-    int getEncoderCount();
-    int getEncoderPosition(int index);
-    void setEncoderPosition(int index, int position);
+    double getBraking() const;
+    void setBraking(double braking) const;
 
-    // Back EMF
-    int getBackEMFSensingState(int index);
-    void setBackEMFSensingState(int index, int bEMFState);
-    double getBackEMF(int index);
+    void dutyCycleChangeHandler(double duty_cycle) const;
 
-    double getSupplyVoltage();
-
-    double getBraking(int index);
-    void setBraking(int index, double braking);
-
-    // Analog sensors
-    int getSensorCount();
-    int getSensorValue(int index);
-    int getSensorRawValue(int index);
-
-    int getRatiometric();
-    void setRatiometric(int ratiometric);
-
-  protected:
-    virtual void velocityChangeHandler(int index, double velocity);
-    virtual void currentChangeHandler(int index, double current);
-    virtual void inputChangeHandler(int index, int inputState);
-    virtual void encoderPositionChangeHandler(int index, int time,
-                                              int positionChange);
-    virtual void encoderPositionUpdateHandler(int index, int positionChange);
-    virtual void backEMFUpdateHandler(int index, double voltage);
-    virtual void sensorUpdateHandler(int index, int sensorValue);
-    virtual void currentUpdateHandler(int index, double current);
+    void backEMFChangeHandler(double back_emf) const;
 
   private:
-    CPhidgetMotorControlHandle motor_handle_;
+    int channel_;
+    std::function<void(int, double)> duty_cycle_change_handler_;
+    std::function<void(int, double)> back_emf_change_handler_;
+    PhidgetDCMotorHandle motor_handle_;
 
-    static int VelocityChangeHandler(CPhidgetMotorControlHandle phid,
-                                     void *userPtr, int index, double velocity);
-    static int CurrentChangeHandler(CPhidgetMotorControlHandle phid,
-                                    void *userPtr, int index, double current);
-    static int InputChangeHandler(CPhidgetMotorControlHandle phid,
-                                  void *userPtr, int index, int inputState);
-    static int EncoderPositionChangeHandler(CPhidgetMotorControlHandle phid,
-                                            void *userPtr, int index, int time,
-                                            int positionChange);
-    static int EncoderPositionUpdateHandler(CPhidgetMotorControlHandle phid,
-                                            void *userPtr, int index,
-                                            int positionChange);
-    static int BackEMFUpdateHandler(CPhidgetMotorControlHandle phid,
-                                    void *userPtr, int index, double voltage);
-    static int SensorUpdateHandler(CPhidgetMotorControlHandle phid,
-                                   void *userPtr, int index, int sensorValue);
-    static int CurrentUpdateHandler(CPhidgetMotorControlHandle phid,
-                                    void *userPtr, int index, double current);
+    static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
+                                       void *ctx, double duty_cycle);
+    static void BackEMFChangeHandler(PhidgetDCMotorHandle motor_handle,
+                                     void *ctx, double back_emf);
 };
 
 }  // namespace phidgets
