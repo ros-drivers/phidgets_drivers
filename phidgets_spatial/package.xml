@@ -25,10 +25,6 @@
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
 
-  <build_depend>roslaunch</build_depend>
-
-  <exec_depend>spatial_filter_madgwick</exec_depend>
-
   <export>
     <nodelet plugin="${prefix}/phidgets_spatial_nodelet.xml" />
   </export>
