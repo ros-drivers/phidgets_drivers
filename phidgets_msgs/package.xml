@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_msgs</name>
+  <version>0.7.9</version>
+  <description>Custom ROS messages for Phidgets drivers</description>
+
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author>Chris Lalancette</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>std_msgs</depend>
+
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>message_runtime</exec_depend>
+</package>

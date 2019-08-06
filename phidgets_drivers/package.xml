@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>phidgets_drivers</name>
   <version>0.7.9</version>
   <description>API and ROS drivers for Phidgets devices</description>
@@ -21,10 +21,13 @@
   <author>José-Luis Blanco Claraco</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>phidgets_api</run_depend>
-  <run_depend>phidgets_imu</run_depend>
-  <run_depend>libphidget21</run_depend>
-  <run_depend>phidgets_high_speed_encoder</run_depend>
+
+  <exec_depend>libphidget21</exec_depend>
+  <exec_depend>phidgets_api</exec_depend>
+  <exec_depend>phidgets_ik</exec_depend>
+  <exec_depend>phidgets_high_speed_encoder</exec_depend>
+  <exec_depend>phidgets_imu</exec_depend>
+  <exec_depend>phidgets_msgs</exec_depend>
 
   <export>
     <metapackage />

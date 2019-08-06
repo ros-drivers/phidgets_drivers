@@ -14,9 +14,9 @@ class PhidgetsImuNodelet : public nodelet::Nodelet
     virtual void onInit();
 
   private:
-    Imu * imu_;  // FIXME: change to smart pointer
+    Imu* imu_;  // FIXME: change to smart pointer
 };
 
-} // namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_IMU_PHIDGETS_IMU_NODELET_H
+#endif  // PHIDGETS_IMU_PHIDGETS_IMU_NODELET_H

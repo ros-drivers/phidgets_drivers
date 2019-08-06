@@ -1,45 +1,42 @@
 #ifndef PHIDGETS_IK_IK_ROS_I_H
 #define PHIDGETS_IK_IK_ROS_I_H
 
-#include <ros/ros.h>
 #include <phidgets_api/ik.h>
+#include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
-#include "phidgets_ik/SetDigitalOutput.h"
+#include "phidgets_msgs/SetDigitalOutput.h"
 
+#include <memory>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 
 namespace phidgets {
 
-class OutputSetter {
+class OutputSetter
+{
   public:
-    OutputSetter(CPhidgetInterfaceKitHandle ik_handle, int index);
-    virtual void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
+    explicit OutputSetter(IK* ik, int index);
+    void set_msg_callback(const std_msgs::Bool::ConstPtr& msg);
     ros::Subscriber subscription;
+
   protected:
-    int index;
-    CPhidgetInterfaceKitHandle ik_handle_;
+    IK* ik_;
+    int index_;
 };
 
-class IKRosI : public IK
+class IKRosI final : public IK
 {
-
   public:
+    explicit IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
-    IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
-
-  protected:
-
+  private:
     int n_in;
     int n_out;
     int n_sensors;
     std::vector<ros::Publisher> in_pubs_;
     std::vector<ros::Publisher> sensor_pubs_;
     ros::ServiceServer out_srv_;
-    std::vector<boost::shared_ptr<OutputSetter> > out_subs_;
-
-  private:
+    std::vector<std::shared_ptr<OutputSetter> > out_subs_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
@@ -47,12 +44,13 @@ class IKRosI : public IK
     const float VREF;
 
     void initDevice();
-    void sensorHandler(int index, int sensorValue);
-    void inputHandler(int index, int inputValue);
+    void sensorHandler(int index, int sensorValue) override;
+    void inputHandler(int index, int inputValue) override;
 
-    bool set_srv_callback(phidgets_ik::SetDigitalOutput::Request& req, phidgets_ik::SetDigitalOutput::Response &res);
+    bool set_srv_callback(phidgets_msgs::SetDigitalOutput::Request& req,
+                          phidgets_msgs::SetDigitalOutput::Response& res);
 };
 
-} //namespace phidgets
+}  // namespace phidgets
 
-#endif // PHIDGETS_IK_IK_ROS_I_H
+#endif  // PHIDGETS_IK_IK_ROS_I_H

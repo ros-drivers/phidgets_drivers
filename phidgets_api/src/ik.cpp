@@ -2,45 +2,83 @@
 
 namespace phidgets {
 
-IK::IK():
-  Phidget(),
-  ik_handle_(0)
+IK::IK() : Phidget(), ik_handle_(nullptr)
 {
-  // create the handle
-  CPhidgetInterfaceKit_create(&ik_handle_);
+    // create the handle
+    CPhidgetInterfaceKit_create(&ik_handle_);
 
-  // pass handle to base class
-  Phidget::init((CPhidgetHandle)ik_handle_);
+    // pass handle to base class
+    Phidget::init((CPhidgetHandle)ik_handle_);
 
-  // register base class callbacks
-  Phidget::registerHandlers();
+    // register base class callbacks
+    Phidget::registerHandlers();
 
-  // register ik data callback
-  CPhidgetInterfaceKit_set_OnSensorChange_Handler(ik_handle_, SensorHandler, this);
-  CPhidgetInterfaceKit_set_OnInputChange_Handler(ik_handle_, InputHandler, this);
+    // register ik data callback
+    CPhidgetInterfaceKit_set_OnSensorChange_Handler(ik_handle_, SensorHandler,
+                                                    this);
+    CPhidgetInterfaceKit_set_OnInputChange_Handler(ik_handle_, InputHandler,
+                                                   this);
 }
 
-
-int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int sensorValue)
+IK::~IK()
 {
-  ((IK*)userptr)->sensorHandler(index, sensorValue);
-  return 0;
 }
 
-void IK::sensorHandler(int index, int sensorValue)
+int IK::getInputCount() const
 {
-  printf("index: %d, value: %d\n", index, sensorValue);
+    int n_in;
+    CPhidgetInterfaceKit_getInputCount(ik_handle_, &n_in);
+    return n_in;
 }
 
-int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr, int index, int inputValue)
+int IK::getOutputCount() const
 {
-  ((IK*)userptr)->inputHandler(index, inputValue);
-  return 0;
+    int n_out;
+    CPhidgetInterfaceKit_getOutputCount(ik_handle_, &n_out);
+    return n_out;
 }
 
-void IK::inputHandler(int index, int inputValue)
+int IK::getSensorCount() const
 {
-  printf("index: %d, value: %d\n", index, inputValue);
+    int n_sensors;
+    CPhidgetInterfaceKit_getSensorCount(ik_handle_, &n_sensors);
+    return n_sensors;
 }
 
-} // namespace phidgets
+int IK::getSensorRawValue(int index) const
+{
+    int rawval;
+    CPhidgetInterfaceKit_getSensorRawValue(ik_handle_, index, &rawval);
+    return rawval;
+}
+
+bool IK::setOutputState(int index, bool state) const
+{
+    return !CPhidgetInterfaceKit_setOutputState(ik_handle_, index, state);
+}
+
+int IK::SensorHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr,
+                      int index, int sensorValue)
+{
+    ((IK *)userptr)->sensorHandler(index, sensorValue);
+    return 0;
+}
+
+void IK::sensorHandler(int /* index */, int /* sensorValue */)
+{
+    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+}
+
+int IK::InputHandler(CPhidgetInterfaceKitHandle /* ik */, void *userptr,
+                     int index, int inputValue)
+{
+    ((IK *)userptr)->inputHandler(index, inputValue);
+    return 0;
+}
+
+void IK::inputHandler(int /* index */, int /* inputValue */)
+{
+    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+}
+
+}  // namespace phidgets
