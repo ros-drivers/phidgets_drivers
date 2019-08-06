@@ -17,5 +17,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>libusb-dev</depend>
+  <build_depend>libusb-1.0-dev</build_depend>
+  <exec_depend>libusb-1.0</exec_depend>
 </package>
