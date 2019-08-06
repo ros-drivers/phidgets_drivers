@@ -15,7 +15,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
                                            ros::NodeHandle nh_private)
     : nh_(nh), nh_private_(nh_private)
 {
-    ROS_INFO("Staring Phidgets Encoders");
+    ROS_INFO("Starting Phidgets Encoders");
 
     int serial_num;
     if (!nh_private_.getParam("serial", serial_num))
