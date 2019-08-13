@@ -211,7 +211,9 @@ void ImuRosI::calibrate()
 {
     ROS_INFO("Calibrating IMU...");
     zero();
-    ROS_INFO("Calibrating IMU done.");
+    ROS_WARN(
+        "Gyroscope calibration takes around 2 seconds to finish. "
+        "Make sure that the device is not moved during this time.");
 
     time_zero_ = ros::Time::now();
 
