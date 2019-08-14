@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_spatial src/spatial_ros_i.cpp)
 add_library(phidgets_spatial_nodelet src/phidgets_spatial_nodelet.cpp)
 
-add_executable(phidgets_spatial_node src/phidgets_spatial_node.cpp)
-
 add_dependencies(phidgets_spatial ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_spatial_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_spatial_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_spatial ${catkin_LIBRARIES})
 target_link_libraries(phidgets_spatial_nodelet ${catkin_LIBRARIES} phidgets_spatial)
-target_link_libraries(phidgets_spatial_node ${catkin_LIBRARIES} phidgets_spatial)
 
-install(TARGETS phidgets_spatial phidgets_spatial_nodelet phidgets_spatial_node
+install(TARGETS phidgets_spatial phidgets_spatial_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

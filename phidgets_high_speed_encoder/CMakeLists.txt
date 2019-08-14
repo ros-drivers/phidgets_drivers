@@ -26,17 +26,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_high_speed_encoder src/high_speed_encoder_ros_i.cpp)
 add_library(phidgets_high_speed_encoder_nodelet src/phidgets_high_speed_encoder_nodelet.cpp)
 
-add_executable(phidgets_high_speed_encoder_node src/phidgets_high_speed_encoder_node.cpp)
-
 add_dependencies(phidgets_high_speed_encoder ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_high_speed_encoder_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_high_speed_encoder_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_high_speed_encoder ${catkin_LIBRARIES})
 target_link_libraries(phidgets_high_speed_encoder_nodelet ${catkin_LIBRARIES} phidgets_high_speed_encoder)
-target_link_libraries(phidgets_high_speed_encoder_node ${catkin_LIBRARIES} phidgets_high_speed_encoder)
 
-install(TARGETS phidgets_high_speed_encoder phidgets_high_speed_encoder_nodelet phidgets_high_speed_encoder_node
+install(TARGETS phidgets_high_speed_encoder phidgets_high_speed_encoder_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_accelerometer src/accelerometer_ros_i.cpp)
 add_library(phidgets_accelerometer_nodelet src/phidgets_accelerometer_nodelet.cpp)
 
-add_executable(phidgets_accelerometer_node src/phidgets_accelerometer_node.cpp)
-
 add_dependencies(phidgets_accelerometer ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_accelerometer_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_accelerometer_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_accelerometer ${catkin_LIBRARIES})
 target_link_libraries(phidgets_accelerometer_nodelet ${catkin_LIBRARIES} phidgets_accelerometer)
-target_link_libraries(phidgets_accelerometer_node ${catkin_LIBRARIES} phidgets_accelerometer)
 
-install(TARGETS phidgets_accelerometer phidgets_accelerometer_nodelet phidgets_accelerometer_node
+install(TARGETS phidgets_accelerometer phidgets_accelerometer_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

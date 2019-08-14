@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_digital_outputs src/digital_outputs_ros_i.cpp)
 add_library(phidgets_digital_outputs_nodelet src/phidgets_digital_outputs_nodelet.cpp)
 
-add_executable(phidgets_digital_outputs_node src/phidgets_digital_outputs_node.cpp)
-
 add_dependencies(phidgets_digital_outputs ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_digital_outputs_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_digital_outputs_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_digital_outputs ${catkin_LIBRARIES})
 target_link_libraries(phidgets_digital_outputs_nodelet ${catkin_LIBRARIES} phidgets_digital_outputs)
-target_link_libraries(phidgets_digital_outputs_node ${catkin_LIBRARIES} phidgets_digital_outputs)
 
-install(TARGETS phidgets_digital_outputs phidgets_digital_outputs_nodelet phidgets_digital_outputs_node
+install(TARGETS phidgets_digital_outputs phidgets_digital_outputs_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

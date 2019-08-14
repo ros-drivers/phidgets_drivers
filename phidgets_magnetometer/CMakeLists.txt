@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_magnetometer src/magnetometer_ros_i.cpp)
 add_library(phidgets_magnetometer_nodelet src/phidgets_magnetometer_nodelet.cpp)
 
-add_executable(phidgets_magnetometer_node src/phidgets_magnetometer_node.cpp)
-
 add_dependencies(phidgets_magnetometer ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_magnetometer_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_magnetometer_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_magnetometer ${catkin_LIBRARIES})
 target_link_libraries(phidgets_magnetometer_nodelet ${catkin_LIBRARIES} phidgets_magnetometer)
-target_link_libraries(phidgets_magnetometer_node ${catkin_LIBRARIES} phidgets_magnetometer)
 
-install(TARGETS phidgets_magnetometer phidgets_magnetometer_nodelet phidgets_magnetometer_node
+install(TARGETS phidgets_magnetometer phidgets_magnetometer_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

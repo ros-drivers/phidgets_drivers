@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_temperature src/temperature_ros_i.cpp)
 add_library(phidgets_temperature_nodelet src/phidgets_temperature_nodelet.cpp)
 
-add_executable(phidgets_temperature_node src/phidgets_temperature_node.cpp)
-
 add_dependencies(phidgets_temperature ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_temperature_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_temperature_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_temperature ${catkin_LIBRARIES})
 target_link_libraries(phidgets_temperature_nodelet ${catkin_LIBRARIES} phidgets_temperature)
-target_link_libraries(phidgets_temperature_node ${catkin_LIBRARIES} phidgets_temperature)
 
-install(TARGETS phidgets_temperature phidgets_temperature_nodelet phidgets_temperature_node
+install(TARGETS phidgets_temperature phidgets_temperature_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

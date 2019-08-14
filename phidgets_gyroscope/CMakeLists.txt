@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_gyroscope src/gyroscope_ros_i.cpp)
 add_library(phidgets_gyroscope_nodelet src/phidgets_gyroscope_nodelet.cpp)
 
-add_executable(phidgets_gyroscope_node src/phidgets_gyroscope_node.cpp)
-
 add_dependencies(phidgets_gyroscope ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_gyroscope_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_gyroscope_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_gyroscope ${catkin_LIBRARIES})
 target_link_libraries(phidgets_gyroscope_nodelet ${catkin_LIBRARIES} phidgets_gyroscope)
-target_link_libraries(phidgets_gyroscope_node ${catkin_LIBRARIES} phidgets_gyroscope)
 
-install(TARGETS phidgets_gyroscope phidgets_gyroscope_nodelet phidgets_gyroscope_node
+install(TARGETS phidgets_gyroscope phidgets_gyroscope_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

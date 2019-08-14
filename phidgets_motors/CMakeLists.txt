@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_motors src/motors_ros_i.cpp)
 add_library(phidgets_motors_nodelet src/phidgets_motors_nodelet.cpp)
 
-add_executable(phidgets_motors_node src/phidgets_motors_node.cpp)
-
 add_dependencies(phidgets_motors ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_motors_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_motors_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_motors ${catkin_LIBRARIES})
 target_link_libraries(phidgets_motors_nodelet ${catkin_LIBRARIES} phidgets_motors)
-target_link_libraries(phidgets_motors_node ${catkin_LIBRARIES} phidgets_motors)
 
-install(TARGETS phidgets_motors phidgets_motors_nodelet phidgets_motors_node
+install(TARGETS phidgets_motors phidgets_motors_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

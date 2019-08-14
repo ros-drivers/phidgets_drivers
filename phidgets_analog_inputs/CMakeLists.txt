@@ -28,17 +28,13 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_analog_inputs src/analog_inputs_ros_i.cpp)
 add_library(phidgets_analog_inputs_nodelet src/phidgets_analog_inputs_nodelet.cpp)
 
-add_executable(phidgets_analog_inputs_node src/phidgets_analog_inputs_node.cpp)
-
 add_dependencies(phidgets_analog_inputs ${catkin_EXPORTED_TARGETS})
 add_dependencies(phidgets_analog_inputs_nodelet ${catkin_EXPORTED_TARGETS})
-add_dependencies(phidgets_analog_inputs_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(phidgets_analog_inputs ${catkin_LIBRARIES})
 target_link_libraries(phidgets_analog_inputs_nodelet ${catkin_LIBRARIES} phidgets_analog_inputs)
-target_link_libraries(phidgets_analog_inputs_node ${catkin_LIBRARIES} phidgets_analog_inputs)
 
-install(TARGETS phidgets_analog_inputs phidgets_analog_inputs_nodelet phidgets_analog_inputs_node
+install(TARGETS phidgets_analog_inputs phidgets_analog_inputs_nodelet
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
