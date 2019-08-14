@@ -71,7 +71,7 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
     }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
-        publish_rate_ = 5;
+        publish_rate_ = 0;
     }
 
     // compass correction params (see

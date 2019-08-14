@@ -73,7 +73,7 @@ GyroscopeRosI::GyroscopeRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
-        publish_rate_ = 5;
+        publish_rate_ = 0;
     }
 
     ROS_INFO(
