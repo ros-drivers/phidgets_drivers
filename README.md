@@ -4,18 +4,36 @@ Phidgets drivers for ROS
 Overview
 --------
 
-Drivers for the Phidgets devices. This Catkin metapackage includes:
+Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin metapackage includes:
 
 * `phidgets_api`: a package which downloads and builds the Phidgets C API from
    phidgets.com (as an external project). It also implements a C++ wrapper
-   for the C API, providing a base Phidget class and various inherited classes
+   for the C API, providing some base Phidget helper functions and various classes
    for different phidget devices.
 
-* ROS nodes exposing the functionality of specific phidgets devices using:
+* ROS nodelets exposing the functionality of specific phidgets devices:
 
-  - `phidgets_imu`
-  - `phidgets_high_speed_encoder`
-  - `phidgets_ik`
+  * [`phidgets_accelerometer`](phidgets_accelerometer/README.md)
+
+  * [`phidgets_analog_inputs`](phidgets_analog_inputs/README.md)
+
+  * [`phidgets_digital_inputs`](phidgets_digital_inputs/README.md)
+
+  * [`phidgets_digital_outputs`](phidgets_digital_outputs/README.md)
+
+  * [`phidgets_gyroscope`](phidgets_gyroscope/README.md)
+
+  * [`phidgets_high_speed_encoder`](phidgets_high_speed_encoder/README.md)
+
+  * [`phidgets_ik`](phidgets_ik/README.md)
+
+  * [`phidgets_magnetometer`](phidgets_magnetometer/README.md)
+
+  * [`phidgets_motors`](phidgets_motors/README.md)
+
+  * [`phidgets_spatial`](phidgets_spatial/README.md)
+
+  * [`phidgets_temperature`](phidgets_temperature/README.md)
 
 Installing
 ----------
