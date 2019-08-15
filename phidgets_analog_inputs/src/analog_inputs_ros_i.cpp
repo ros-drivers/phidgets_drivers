@@ -61,6 +61,11 @@ AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
         // only used if the device is on a VINT hub_port
         is_hub_port_device = false;
     }
+    int data_interval_ms;
+    if (!nh_private.getParam("data_interval_ms", data_interval_ms))
+    {
+        data_interval_ms = 250;
+    }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
         publish_rate_ = 0;
@@ -89,6 +94,9 @@ AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
         char topicname[] = "analog_input00";
         snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
         val_to_pubs_[i].pub = nh_.advertise<std_msgs::Float64>(topicname, 1);
+
+        ais_->setDataInterval(i, data_interval_ms);
+
         val_to_pubs_[i].last_val = ais_->getSensorValue(i);
     }
 

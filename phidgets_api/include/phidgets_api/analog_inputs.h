@@ -54,6 +54,8 @@ class AnalogInputs final
 
     double getSensorValue(int index) const;
 
+    void setDataInterval(int index, uint32_t data_interval_ms) const;
+
   private:
     uint32_t input_count_;
     std::vector<std::unique_ptr<AnalogInput>> ais_;

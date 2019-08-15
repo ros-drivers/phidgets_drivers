@@ -51,6 +51,8 @@ class AnalogInput final
 
     double getSensorValue() const;
 
+    void setDataInterval(uint32_t data_interval_ms) const;
+
     void voltageChangeHandler(double sensorValue) const;
 
   private:

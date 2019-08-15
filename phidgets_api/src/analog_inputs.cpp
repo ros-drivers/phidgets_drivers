@@ -95,4 +95,9 @@ double AnalogInputs::getSensorValue(int index) const
     return ais_.at(index)->getSensorValue();
 }
 
+void AnalogInputs::setDataInterval(int index, uint32_t data_interval_ms) const
+{
+    ais_.at(index)->setDataInterval(data_interval_ms);
+}
+
 }  // namespace phidgets
