@@ -77,45 +77,54 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
 
     ROS_INFO("Connecting to Phidgets Encoders serial %d, hub port %d ...",
              serial_num, hub_port);
-    encs_ = std::make_unique<Encoders>(
-        serial_num, hub_port, false,
-        std::bind(&HighSpeedEncoderRosI::positionChangeHandler, this,
-                  std::placeholders::_1, std::placeholders::_2,
-                  std::placeholders::_3, std::placeholders::_4));
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
     // finished setting up.
     std::lock_guard<std::mutex> lock(encoder_mutex_);
 
-    int n_encs = encs_->getEncoderCount();
-    ROS_INFO("Connected %d encoders", n_encs);
-    enc_data_to_pub_.resize(n_encs);
-    for (int i = 0; i < n_encs; i++)
+    int n_encs;
+    try
     {
-        char str[100];
-        sprintf(str, "joint%u_name", i);
-        if (!nh_private_.getParam(str, enc_data_to_pub_[i].joint_name))
+        encs_ = std::make_unique<Encoders>(
+            serial_num, hub_port, false,
+            std::bind(&HighSpeedEncoderRosI::positionChangeHandler, this,
+                      std::placeholders::_1, std::placeholders::_2,
+                      std::placeholders::_3, std::placeholders::_4));
+
+        n_encs = encs_->getEncoderCount();
+        ROS_INFO("Connected %d encoders", n_encs);
+        enc_data_to_pub_.resize(n_encs);
+        for (int i = 0; i < n_encs; i++)
         {
-            enc_data_to_pub_[i].joint_name = "joint" + std::to_string(i);
+            char str[100];
+            sprintf(str, "joint%u_name", i);
+            if (!nh_private_.getParam(str, enc_data_to_pub_[i].joint_name))
+            {
+                enc_data_to_pub_[i].joint_name = "joint" + std::to_string(i);
+            }
+
+            sprintf(str, "joint%u_tick2rad", i);
+            if (!nh_private_.getParam(str, enc_data_to_pub_[i].joint_tick2rad))
+            {
+                enc_data_to_pub_[i].joint_tick2rad = 1.0;
+            }
+
+            ROS_INFO("Channel %u: '%s'='%s'", i, str,
+                     enc_data_to_pub_[i].joint_name.c_str());
+
+            char buf[100];
+            sprintf(buf, "joint_states_ch%u_decim_speed", i);
+            ROS_INFO("Publishing decimated speed of channel %u to topic: %s", i,
+                     buf);
+            enc_data_to_pub_[i].encoder_decimspeed_pub =
+                nh_.advertise<phidgets_msgs::EncoderDecimatedSpeed>(buf, 10);
+            encs_->setEnabled(i, true);
         }
-
-        sprintf(str, "joint%u_tick2rad", i);
-        if (!nh_private_.getParam(str, enc_data_to_pub_[i].joint_tick2rad))
-        {
-            enc_data_to_pub_[i].joint_tick2rad = 1.0;
-        }
-
-        ROS_INFO("Channel %u: '%s'='%s'", i, str,
-                 enc_data_to_pub_[i].joint_name.c_str());
-
-        char buf[100];
-        sprintf(buf, "joint_states_ch%u_decim_speed", i);
-        ROS_INFO("Publishing decimated speed of channel %u to topic: %s", i,
-                 buf);
-        enc_data_to_pub_[i].encoder_decimspeed_pub =
-            nh_.advertise<phidgets_msgs::EncoderDecimatedSpeed>(buf, 10);
-        encs_->setEnabled(i, true);
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("Encoders: %s", err.what());
+        throw;
     }
 
     encoder_pub_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);

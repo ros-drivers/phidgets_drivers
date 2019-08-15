@@ -77,39 +77,49 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     // finished setting up.
     std::lock_guard<std::mutex> lock(motor_mutex_);
 
-    motors_ = std::make_unique<Motors>(
-        serial_num, hub_port, false,
-        std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2),
-        std::bind(&MotorsRosI::backEMFChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
-
-    ROS_INFO("Connected");
-
-    int n_motors = motors_->getMotorCount();
-    motor_vals_.resize(n_motors);
-    for (int i = 0; i < n_motors; i++)
+    int n_motors;
+    try
     {
-        char topicname[] = "set_motor_duty_cycle00";
-        snprintf(topicname, sizeof(topicname), "set_motor_duty_cycle%02d", i);
-        motor_vals_[i].duty_cycle_sub =
-            std::make_unique<DutyCycleSetter>(motors_.get(), i, nh, topicname);
+        motors_ = std::make_unique<Motors>(
+            serial_num, hub_port, false,
+            std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2),
+            std::bind(&MotorsRosI::backEMFChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
 
-        char pubtopic[] = "motor_duty_cycle00";
-        snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
-        motor_vals_[i].duty_cycle_pub =
-            nh_.advertise<std_msgs::Float64>(pubtopic, 1);
+        ROS_INFO("Connected");
 
-        char backemftopic[] = "motor_back_emf00";
-        snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d", i);
-        motor_vals_[i].back_emf_pub =
-            nh_.advertise<std_msgs::Float64>(backemftopic, 1);
+        n_motors = motors_->getMotorCount();
+        motor_vals_.resize(n_motors);
+        for (int i = 0; i < n_motors; i++)
+        {
+            char topicname[] = "set_motor_duty_cycle00";
+            snprintf(topicname, sizeof(topicname), "set_motor_duty_cycle%02d",
+                     i);
+            motor_vals_[i].duty_cycle_sub = std::make_unique<DutyCycleSetter>(
+                motors_.get(), i, nh, topicname);
 
-        motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
-        motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+            char pubtopic[] = "motor_duty_cycle00";
+            snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
+            motor_vals_[i].duty_cycle_pub =
+                nh_.advertise<std_msgs::Float64>(pubtopic, 1);
 
-        motors_->setDataInterval(i, data_interval_ms);
-        motors_->setBraking(i, braking_strength);
+            char backemftopic[] = "motor_back_emf00";
+            snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
+                     i);
+            motor_vals_[i].back_emf_pub =
+                nh_.advertise<std_msgs::Float64>(backemftopic, 1);
+
+            motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
+            motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+
+            motors_->setDataInterval(i, data_interval_ms);
+            motors_->setBraking(i, braking_strength);
+        }
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("Motors: %s", err.what());
+        throw;
     }
 
     if (publish_rate_ > 0)

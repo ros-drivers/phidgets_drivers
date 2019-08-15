@@ -105,57 +105,70 @@ IKRosI::IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     // finished setting up.
     std::lock_guard<std::mutex> lock(ik_mutex_);
 
-    dis_ = std::make_unique<DigitalInputs>(
-        serial_num, digital_inputs_hub_port, digital_inputs_is_hub_port_device,
-        std::bind(&IKRosI::stateChangeCallback, this, std::placeholders::_1,
-                  std::placeholders::_2));
-
-    int n_dis = dis_->getInputCount();
-    ROS_INFO("Connected %d inputs", n_dis);
-    for (int i = 0; i < n_dis; i++)
+    int n_dis;
+    int n_ais;
+    try
     {
-        char topicname[] = "digital_input00";
-        snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
-        di_pubs_.push_back(nh_.advertise<std_msgs::Bool>(topicname, 1));
-        last_di_vals_[i] = dis_->getInputValue(i);
-    }
+        dis_ = std::make_unique<DigitalInputs>(
+            serial_num, digital_inputs_hub_port,
+            digital_inputs_is_hub_port_device,
+            std::bind(&IKRosI::stateChangeCallback, this, std::placeholders::_1,
+                      std::placeholders::_2));
 
-    ROS_INFO("Connecting to Phidgets DigitalOutputs serial %d, hub port %d ...",
-             serial_num, digital_outputs_hub_port);
+        n_dis = dis_->getInputCount();
+        ROS_INFO("Connected %d inputs", n_dis);
+        for (int i = 0; i < n_dis; i++)
+        {
+            char topicname[] = "digital_input00";
+            snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
+            di_pubs_.push_back(nh_.advertise<std_msgs::Bool>(topicname, 1));
+            last_di_vals_[i] = dis_->getInputValue(i);
+        }
 
-    dos_ =
-        std::make_unique<DigitalOutputs>(serial_num, digital_outputs_hub_port,
-                                         digital_outputs_is_hub_port_device);
+        ROS_INFO(
+            "Connecting to Phidgets DigitalOutputs serial %d, hub port %d ...",
+            serial_num, digital_outputs_hub_port);
 
-    int n_out = dos_->getOutputCount();
-    ROS_INFO("Connected %d outputs", n_out);
-    out_subs_.resize(n_out);
-    for (int i = 0; i < n_out; i++)
+        dos_ = std::make_unique<DigitalOutputs>(
+            serial_num, digital_outputs_hub_port,
+            digital_outputs_is_hub_port_device);
+
+        int n_out = dos_->getOutputCount();
+        ROS_INFO("Connected %d outputs", n_out);
+        out_subs_.resize(n_out);
+        for (int i = 0; i < n_out; i++)
+        {
+            char topicname[] = "digital_output00";
+            snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
+            out_subs_[i] = std::make_unique<IKDigitalOutputSetter>(
+                dos_.get(), i, nh, topicname);
+        }
+        out_srv_ = nh_.advertiseService("set_digital_output",
+                                        &IKRosI::setSrvCallback, this);
+
+        ROS_INFO(
+            "Connecting to Phidgets AnalogInputs serial %d, hub port %d ...",
+            serial_num, analog_inputs_hub_port);
+
+        ais_ = std::make_unique<AnalogInputs>(
+            serial_num, analog_inputs_hub_port,
+            analog_inputs_is_hub_port_device,
+            std::bind(&IKRosI::sensorChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
+
+        n_ais = ais_->getInputCount();
+        ROS_INFO("Connected %d inputs", n_ais);
+        for (int i = 0; i < n_ais; i++)
+        {
+            char topicname[] = "analog_input00";
+            snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
+            ai_pubs_.push_back(nh_.advertise<std_msgs::Float64>(topicname, 1));
+            last_ai_vals_[i] = ais_->getSensorValue(i);
+        }
+    } catch (const Phidget22Error& err)
     {
-        char topicname[] = "digital_output00";
-        snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
-        out_subs_[i] = std::make_unique<IKDigitalOutputSetter>(dos_.get(), i,
-                                                               nh, topicname);
-    }
-    out_srv_ = nh_.advertiseService("set_digital_output",
-                                    &IKRosI::setSrvCallback, this);
-
-    ROS_INFO("Connecting to Phidgets AnalogInputs serial %d, hub port %d ...",
-             serial_num, analog_inputs_hub_port);
-
-    ais_ = std::make_unique<AnalogInputs>(
-        serial_num, analog_inputs_hub_port, analog_inputs_is_hub_port_device,
-        std::bind(&IKRosI::sensorChangeCallback, this, std::placeholders::_1,
-                  std::placeholders::_2));
-
-    int n_ais = ais_->getInputCount();
-    ROS_INFO("Connected %d inputs", n_ais);
-    for (int i = 0; i < n_ais; i++)
-    {
-        char topicname[] = "analog_input00";
-        snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
-        ai_pubs_.push_back(nh_.advertise<std_msgs::Float64>(topicname, 1));
-        last_ai_vals_[i] = ais_->getSensorValue(i);
+        ROS_ERROR("Temperature: %s", err.what());
+        throw;
     }
 
     if (publish_rate_ > 0)

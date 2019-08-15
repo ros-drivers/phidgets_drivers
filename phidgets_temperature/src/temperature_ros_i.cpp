@@ -79,19 +79,26 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     // finished setting up.
     std::lock_guard<std::mutex> lock(temperature_mutex_);
 
-    temperature_ = std::make_unique<Temperature>(
-        serial_num, hub_port, false,
-        std::bind(&TemperatureRosI::temperatureChangeCallback, this,
-                  std::placeholders::_1));
-
-    ROS_INFO("Connected");
-
-    temperature_->setDataInterval(data_interval_ms);
-
-    if (thermocouple_type != 0)
+    try
     {
-        temperature_->setThermocoupleType(
-            static_cast<ThermocoupleType>(thermocouple_type));
+        temperature_ = std::make_unique<Temperature>(
+            serial_num, hub_port, false,
+            std::bind(&TemperatureRosI::temperatureChangeCallback, this,
+                      std::placeholders::_1));
+
+        ROS_INFO("Connected");
+
+        temperature_->setDataInterval(data_interval_ms);
+
+        if (thermocouple_type != 0)
+        {
+            temperature_->setThermocoupleType(
+                static_cast<ThermocoupleType>(thermocouple_type));
+        }
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("Temperature: %s", err.what());
+        throw;
     }
 
     temperature_pub_ = nh_.advertise<std_msgs::Float64>("temperature", 1);

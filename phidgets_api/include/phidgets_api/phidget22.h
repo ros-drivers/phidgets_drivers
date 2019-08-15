@@ -48,9 +48,10 @@ class Phidget22Error final : public std::exception
   public:
     explicit Phidget22Error(const std::string &msg, PhidgetReturnCode code);
 
+    const char *what() const noexcept;
+
   private:
     std::string msg_;
-    const char *what() const noexcept;
 };
 
 namespace helpers {

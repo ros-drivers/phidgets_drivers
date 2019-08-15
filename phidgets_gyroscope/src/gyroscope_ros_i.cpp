@@ -84,28 +84,35 @@ GyroscopeRosI::GyroscopeRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     // finished setting up.
     std::lock_guard<std::mutex> lock(gyro_mutex_);
 
-    gyroscope_ = std::make_unique<Gyroscope>(
-        serial_num, hub_port, false,
-        std::bind(&GyroscopeRosI::gyroscopeChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
+    try
+    {
+        gyroscope_ = std::make_unique<Gyroscope>(
+            serial_num, hub_port, false,
+            std::bind(&GyroscopeRosI::gyroscopeChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
 
-    ROS_INFO("Connected");
+        ROS_INFO("Connected");
 
-    gyroscope_->setDataInterval(data_interval_ms);
+        gyroscope_->setDataInterval(data_interval_ms);
 
-    cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
+        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
 
-    calibrate();
+        calibrate();
 
-    gyroscope_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
+        gyroscope_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
 
-    cal_srv_ = nh_.advertiseService("imu/calibrate",
-                                    &GyroscopeRosI::calibrateService, this);
+        cal_srv_ = nh_.advertiseService("imu/calibrate",
+                                        &GyroscopeRosI::calibrateService, this);
 
-    gyroscope_->getAngularRate(last_gyro_x_, last_gyro_y_, last_gyro_z_,
-                               gyro_time_zero_);
-    last_gyro_timestamp_ = gyro_time_zero_;
-    ros_time_zero_ = ros::Time::now();
+        gyroscope_->getAngularRate(last_gyro_x_, last_gyro_y_, last_gyro_z_,
+                                   gyro_time_zero_);
+        last_gyro_timestamp_ = gyro_time_zero_;
+        ros_time_zero_ = ros::Time::now();
+    } catch (const Phidget22Error &err)
+    {
+        ROS_ERROR("Gyroscope: %s", err.what());
+        throw;
+    }
 
     if (publish_rate_ > 0)
     {

@@ -45,20 +45,28 @@ DigitalInputsRosI::DigitalInputsRosI(ros::NodeHandle nh,
     // finished setting up.
     std::lock_guard<std::mutex> lock(di_mutex_);
 
-    dis_ = std::make_unique<DigitalInputs>(
-        serial_num, hub_port, is_hub_port_device,
-        std::bind(&DigitalInputsRosI::stateChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
-
-    int n_in = dis_->getInputCount();
-    ROS_INFO("Connected %d inputs", n_in);
-    val_to_pubs_.resize(n_in);
-    for (int i = 0; i < n_in; i++)
+    int n_in;
+    try
     {
-        char topicname[] = "digital_input00";
-        snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
-        val_to_pubs_[i].pub = nh_.advertise<std_msgs::Bool>(topicname, 1);
-        val_to_pubs_[i].last_val = dis_->getInputValue(i);
+        dis_ = std::make_unique<DigitalInputs>(
+            serial_num, hub_port, is_hub_port_device,
+            std::bind(&DigitalInputsRosI::stateChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
+
+        n_in = dis_->getInputCount();
+        ROS_INFO("Connected %d inputs", n_in);
+        val_to_pubs_.resize(n_in);
+        for (int i = 0; i < n_in; i++)
+        {
+            char topicname[] = "digital_input00";
+            snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
+            val_to_pubs_[i].pub = nh_.advertise<std_msgs::Bool>(topicname, 1);
+            val_to_pubs_[i].last_val = dis_->getInputValue(i);
+        }
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("DigitalInputs: %s", err.what());
+        throw;
     }
 
     if (publish_rate_ > 0)

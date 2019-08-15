@@ -129,34 +129,41 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     // finished setting up.
     std::lock_guard<std::mutex> lock(spatial_mutex_);
 
-    spatial_ = std::make_unique<Spatial>(
-        serial_num, hub_port, false,
-        std::bind(&SpatialRosI::spatialDataCallback, this,
-                  std::placeholders::_1, std::placeholders::_2,
-                  std::placeholders::_3, std::placeholders::_4));
+    try
+    {
+        spatial_ = std::make_unique<Spatial>(
+            serial_num, hub_port, false,
+            std::bind(&SpatialRosI::spatialDataCallback, this,
+                      std::placeholders::_1, std::placeholders::_2,
+                      std::placeholders::_3, std::placeholders::_4));
 
-    ROS_INFO("Connected");
+        ROS_INFO("Connected");
 
-    spatial_->setDataInterval(data_interval_ms);
+        spatial_->setDataInterval(data_interval_ms);
 
-    imu_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
+        imu_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
 
-    cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
+        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
 
-    calibrate();
+        calibrate();
+
+        if (has_compass_params)
+        {
+            spatial_->setCompassCorrectionParameters(
+                cc_mag_field, cc_offset0, cc_offset1, cc_offset2, cc_gain0,
+                cc_gain1, cc_gain2, cc_T0, cc_T1, cc_T2, cc_T3, cc_T4, cc_T5);
+        } else
+        {
+            ROS_INFO("No compass correction params found.");
+        }
+    } catch (const Phidget22Error &err)
+    {
+        ROS_ERROR("Spatial: %s", err.what());
+        throw;
+    }
 
     cal_srv_ = nh_.advertiseService("imu/calibrate",
                                     &SpatialRosI::calibrateService, this);
-
-    if (has_compass_params)
-    {
-        spatial_->setCompassCorrectionParameters(
-            cc_mag_field, cc_offset0, cc_offset1, cc_offset2, cc_gain0,
-            cc_gain1, cc_gain2, cc_T0, cc_T1, cc_T2, cc_T3, cc_T4, cc_T5);
-    } else
-    {
-        ROS_INFO("No compass correction params found.");
-    }
 
     magnetic_field_pub_ =
         nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);

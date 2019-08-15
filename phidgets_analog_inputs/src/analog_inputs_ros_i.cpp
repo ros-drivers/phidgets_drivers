@@ -79,23 +79,32 @@ AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
     // finished setting up.
     std::lock_guard<std::mutex> lock(ai_mutex_);
 
-    ais_ = std::make_unique<AnalogInputs>(
-        serial_num, hub_port, is_hub_port_device,
-        std::bind(&AnalogInputsRosI::sensorChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
-
-    int n_in = ais_->getInputCount();
-    ROS_INFO("Connected %d inputs", n_in);
-    val_to_pubs_.resize(n_in);
-    for (int i = 0; i < n_in; i++)
+    int n_in;
+    try
     {
-        char topicname[] = "analog_input00";
-        snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
-        val_to_pubs_[i].pub = nh_.advertise<std_msgs::Float64>(topicname, 1);
+        ais_ = std::make_unique<AnalogInputs>(
+            serial_num, hub_port, is_hub_port_device,
+            std::bind(&AnalogInputsRosI::sensorChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
 
-        ais_->setDataInterval(i, data_interval_ms);
+        n_in = ais_->getInputCount();
+        ROS_INFO("Connected %d inputs", n_in);
+        val_to_pubs_.resize(n_in);
+        for (int i = 0; i < n_in; i++)
+        {
+            char topicname[] = "analog_input00";
+            snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
+            val_to_pubs_[i].pub =
+                nh_.advertise<std_msgs::Float64>(topicname, 1);
 
-        val_to_pubs_[i].last_val = ais_->getSensorValue(i);
+            ais_->setDataInterval(i, data_interval_ms);
+
+            val_to_pubs_[i].last_val = ais_->getSensorValue(i);
+        }
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("AnalogInputs: %s", err.what());
+        throw;
     }
 
     if (publish_rate_ > 0)

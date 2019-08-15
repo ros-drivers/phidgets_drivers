@@ -113,31 +113,39 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
     // finished setting up.
     std::lock_guard<std::mutex> lock(mag_mutex_);
 
-    magnetometer_ = std::make_unique<Magnetometer>(
-        serial_num, hub_port, false,
-        std::bind(&MagnetometerRosI::magnetometerChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
-
-    ROS_INFO("Connected");
-
-    magnetometer_->setDataInterval(data_interval_ms);
-
-    if (has_compass_params)
+    try
     {
-        magnetometer_->setCompassCorrectionParameters(
-            cc_mag_field, cc_offset0, cc_offset1, cc_offset2, cc_gain0,
-            cc_gain1, cc_gain2, cc_T0, cc_T1, cc_T2, cc_T3, cc_T4, cc_T5);
-    } else
+        magnetometer_ = std::make_unique<Magnetometer>(
+            serial_num, hub_port, false,
+            std::bind(&MagnetometerRosI::magnetometerChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
+
+        ROS_INFO("Connected");
+
+        magnetometer_->setDataInterval(data_interval_ms);
+
+        if (has_compass_params)
+        {
+            magnetometer_->setCompassCorrectionParameters(
+                cc_mag_field, cc_offset0, cc_offset1, cc_offset2, cc_gain0,
+                cc_gain1, cc_gain2, cc_T0, cc_T1, cc_T2, cc_T3, cc_T4, cc_T5);
+        } else
+        {
+            ROS_INFO("No compass correction params found.");
+        }
+
+        magnetometer_->getMagneticField(last_mag_x_, last_mag_y_, last_mag_z_,
+                                        mag_time_zero_);
+        last_mag_timestamp_ = mag_time_zero_;
+        ros_time_zero_ = ros::Time::now();
+
+    } catch (const Phidget22Error& err)
     {
-        ROS_INFO("No compass correction params found.");
+        ROS_ERROR("Magnetometer: %s", err.what());
+        throw;
     }
 
     magnetometer_pub_ = nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);
-
-    magnetometer_->getMagneticField(last_mag_x_, last_mag_y_, last_mag_z_,
-                                    mag_time_zero_);
-    last_mag_timestamp_ = mag_time_zero_;
-    ros_time_zero_ = ros::Time::now();
 
     if (publish_rate_ > 0)
     {

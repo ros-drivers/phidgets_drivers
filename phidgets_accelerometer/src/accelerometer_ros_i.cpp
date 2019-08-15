@@ -82,21 +82,28 @@ AccelerometerRosI::AccelerometerRosI(ros::NodeHandle nh,
     // finished setting up.
     std::lock_guard<std::mutex> lock(accel_mutex_);
 
-    accelerometer_ = std::make_unique<Accelerometer>(
-        serial_num, hub_port, false,
-        std::bind(&AccelerometerRosI::accelerometerChangeCallback, this,
-                  std::placeholders::_1, std::placeholders::_2));
+    try
+    {
+        accelerometer_ = std::make_unique<Accelerometer>(
+            serial_num, hub_port, false,
+            std::bind(&AccelerometerRosI::accelerometerChangeCallback, this,
+                      std::placeholders::_1, std::placeholders::_2));
 
-    ROS_INFO("Connected");
+        ROS_INFO("Connected");
 
-    accelerometer_->setDataInterval(data_interval_ms);
+        accelerometer_->setDataInterval(data_interval_ms);
 
-    accelerometer_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
+        accelerometer_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
 
-    accelerometer_->getAcceleration(last_accel_x_, last_accel_y_, last_accel_z_,
-                                    accel_time_zero_);
-    last_accel_timestamp_ = accel_time_zero_;
-    ros_time_zero_ = ros::Time::now();
+        accelerometer_->getAcceleration(last_accel_x_, last_accel_y_,
+                                        last_accel_z_, accel_time_zero_);
+        last_accel_timestamp_ = accel_time_zero_;
+        ros_time_zero_ = ros::Time::now();
+    } catch (const Phidget22Error& err)
+    {
+        ROS_ERROR("Accelerometer: %s", err.what());
+        throw;
+    }
 
     if (publish_rate_ > 0)
     {
