@@ -67,7 +67,7 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
-        data_interval_ms = 250;
+        data_interval_ms = 8;
     }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
@@ -105,10 +105,8 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
         nh_private_.getParam("cc_t4", cc_T4) &&
         nh_private_.getParam("cc_t5", cc_T5);
 
-    ROS_INFO(
-        "Waiting for Phidgets Magnetometer serial %d, hub port %d to be "
-        "attached...",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets Magnetometer serial %d, hub port %d ...",
+             serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are

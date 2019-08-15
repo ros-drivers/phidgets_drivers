@@ -89,7 +89,8 @@ double AnalogInput::getSensorValue() const
 
 void AnalogInput::setDataInterval(uint32_t data_interval_ms) const
 {
-    PhidgetReturnCode ret = PhidgetVoltageInput_setDataInterval(ai_handle_, data_interval_ms);
+    PhidgetReturnCode ret =
+        PhidgetVoltageInput_setDataInterval(ai_handle_, data_interval_ms);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set analog data interval", ret);

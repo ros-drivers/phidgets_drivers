@@ -32,10 +32,8 @@ DigitalOutputsRosI::DigitalOutputsRosI(ros::NodeHandle nh,
         is_hub_port_device = false;
     }
 
-    ROS_INFO(
-        "Waiting for Phidgets DigitalOutputs serial %d, hub port %d to be "
-        "attached...",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets DigitalOutputs serial %d, hub port %d ...",
+             serial_num, hub_port);
 
     dos_ = std::make_unique<DigitalOutputs>(serial_num, hub_port,
                                             is_hub_port_device);

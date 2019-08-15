@@ -69,10 +69,8 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         publish_rate_ = 0;
     }
 
-    ROS_INFO(
-        "Waiting for Phidgets Motors serial %d, hub port %d to be "
-        "attached...",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets Motors serial %d, hub port %d ...",
+             serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are

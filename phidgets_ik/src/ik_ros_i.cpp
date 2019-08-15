@@ -97,10 +97,8 @@ IKRosI::IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         publish_rate_ = 0;
     }
 
-    ROS_INFO(
-        "Waiting for Phidgets DigitalInputs serial %d, hub port %d to be "
-        "attached...",
-        serial_num, digital_inputs_hub_port);
+    ROS_INFO("Connecting to Phidgets DigitalInputs serial %d, hub port %d ...",
+             serial_num, digital_inputs_hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -122,10 +120,8 @@ IKRosI::IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         last_di_vals_[i] = dis_->getInputValue(i);
     }
 
-    ROS_INFO(
-        "Waiting for Phidgets DigitalOutputs serial %d, hub port %d to be "
-        "attached...",
-        serial_num, digital_outputs_hub_port);
+    ROS_INFO("Connecting to Phidgets DigitalOutputs serial %d, hub port %d ...",
+             serial_num, digital_outputs_hub_port);
 
     dos_ =
         std::make_unique<DigitalOutputs>(serial_num, digital_outputs_hub_port,
@@ -144,10 +140,8 @@ IKRosI::IKRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     out_srv_ = nh_.advertiseService("set_digital_output",
                                     &IKRosI::setSrvCallback, this);
 
-    ROS_INFO(
-        "Waiting for Phidgets AnalogInputs serial %d, hub port %d to be "
-        "attached...",
-        serial_num, analog_inputs_hub_port);
+    ROS_INFO("Connecting to Phidgets AnalogInputs serial %d, hub port %d ...",
+             serial_num, analog_inputs_hub_port);
 
     ais_ = std::make_unique<AnalogInputs>(
         serial_num, analog_inputs_hub_port, analog_inputs_is_hub_port_device,

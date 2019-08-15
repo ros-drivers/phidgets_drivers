@@ -83,7 +83,7 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
-        data_interval_ms = 250;
+        data_interval_ms = 8;
     }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
@@ -121,10 +121,8 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         nh_private_.getParam("cc_t4", cc_T4) &&
         nh_private_.getParam("cc_t5", cc_T5);
 
-    ROS_INFO(
-        "Waiting for Phidgets Spatial serial %d, hub port %d to be "
-        "attached...",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets Spatial serial %d, hub port %d ...",
+             serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -143,11 +141,11 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
     imu_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
 
-    cal_publisher_ = nh_.advertise<std_msgs::Bool>("spatial/is_calibrated", 5);
+    cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
 
     calibrate();
 
-    cal_srv_ = nh_.advertiseService("spatial/calibrate",
+    cal_srv_ = nh_.advertiseService("imu/calibrate",
                                     &SpatialRosI::calibrateService, this);
 
     if (has_compass_params)

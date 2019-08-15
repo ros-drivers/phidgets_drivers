@@ -21,7 +21,7 @@ Parameters
 * `linear_acceleration_stdev` (double) - The standard deviation to use for the linear acceleration when publishing the message.  Defaults to 300 ug.
 * `angular_velocity_stdev` (double) - The standard deviation to use for the angular velocity when publishing the message.  Defaults to 0.02 deg/s.
 * `magnetic_field_stdev` - The standard deviation to use for the magnetic field when publishing the message.  Defaults to 0.095 deg/s.
-* `data_interval_ms` (int) - The number of milliseconds between acquisitions of data on the device.  Defaults to 250 ms.
+* `data_interval_ms` (int) - The number of milliseconds between acquisitions of data on the device.  Defaults to 8 ms.
 * `publish_rate` (int) - How often the driver will publish data on the ROS topic.  If 0 (the default), it will publish every time there is an update from the device (so at the `data_interval_ms`).  If positive, it will publish the data at that rate regardless of the acquisition interval.
 * `cc_mag_field` (double) - Ambient magnetic field calibration value; see device's user guide for information on how to calibrate.
 * `cc_offset0` (double) - Calibration offset value 0; see device's user guide for information on how to calibrate.

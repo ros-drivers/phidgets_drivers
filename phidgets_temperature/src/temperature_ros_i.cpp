@@ -69,8 +69,9 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     }
 
     ROS_INFO(
-        "Waiting for Phidgets Temperature serial %d, hub port %d, thermocouple "
-        "type %d to be attached...",
+        "Connecting to Phidgets Temperature serial %d, hub port %d, "
+        "thermocouple "
+        "type %d ...",
         serial_num, hub_port, thermocouple_type);
 
     // We take the mutex here and don't unlock until the end of the constructor

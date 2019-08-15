@@ -75,10 +75,8 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
         publish_rate_ = 0;
     }
 
-    ROS_INFO(
-        "Waiting for Phidgets Encoders serial %d, hub port %d to be "
-        "attached...",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets Encoders serial %d, hub port %d ...",
+             serial_num, hub_port);
     encs_ = std::make_unique<Encoders>(
         serial_num, hub_port, false,
         std::bind(&HighSpeedEncoderRosI::positionChangeHandler, this,
