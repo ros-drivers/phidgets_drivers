@@ -179,7 +179,8 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
         imu_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
 
-        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
+        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5,
+                                                       true /* latched */);
 
         calibrate();
 
@@ -222,9 +223,14 @@ bool SpatialRosI::calibrateService(std_srvs::Empty::Request &req,
 
 void SpatialRosI::calibrate()
 {
-    ROS_INFO("Calibrating Gyro...");
+    ROS_INFO(
+        "Calibrating IMU, this takes around 2 seconds to finish. "
+        "Make sure that the device is not moved during this time.");
     spatial_->zero();
-    ROS_INFO("Calibrating Gyro done.");
+    // The API call returns directly, so we "enforce" the recommended 2 sec
+    // here. See: https://github.com/ros-drivers/phidgets_drivers/issues/40
+    ros::Duration(2.).sleep();
+    ROS_INFO("Calibrating IMU done.");
 
     // publish message
     std_msgs::Bool is_calibrated_msg;
