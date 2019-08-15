@@ -68,7 +68,8 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
     imu_publisher_ = nh_.advertise<ImuMsg>("imu/data_raw", 5);
     mag_publisher_ = nh_.advertise<MagMsg>("imu/mag", 5);
-    cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
+    cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5,
+                                                   true /* latched */);
 
     // Set up the topic publisher diagnostics monitor for imu/data_raw
     // 1. The frequency status component monitors if imu data is published
@@ -209,8 +210,13 @@ bool ImuRosI::calibrateService(std_srvs::Empty::Request &req,
 
 void ImuRosI::calibrate()
 {
-    ROS_INFO("Calibrating IMU...");
+    ROS_INFO(
+        "Calibrating IMU, this takes around 2 seconds to finish. "
+        "Make sure that the device is not moved during this time.");
     zero();
+    // The API call returns directly, so we "enforce" the recommended 2 sec
+    // here. See: https://github.com/ros-drivers/phidgets_drivers/issues/40
+    ros::Duration(2.).sleep();
     ROS_INFO("Calibrating IMU done.");
 
     time_zero_ = ros::Time::now();
