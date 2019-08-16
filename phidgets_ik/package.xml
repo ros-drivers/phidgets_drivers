@@ -16,16 +16,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>nodelet</depend>
-  <depend>phidgets_api</depend>
-  <depend>phidgets_msgs</depend>
-  <depend>pluginlib</depend>
-  <depend>roscpp</depend>
+  <depend>phidgets_analog_inputs</depend>
+  <depend>phidgets_digital_inputs</depend>
+  <depend>phidgets_digital_outputs</depend>
   <depend>roslaunch</depend>
-  <depend>sensor_msgs</depend>
-  <depend>std_msgs</depend>
 
-  <export>
-    <nodelet plugin="${prefix}/phidgets_ik_nodelet.xml" />
-  </export>
 </package>
