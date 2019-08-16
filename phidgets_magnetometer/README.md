@@ -19,12 +19,12 @@ Parameters
  * `cc_offset0` (double) - Calibration offset value 0; see device's user guide for information on how to calibrate.
  * `cc_offset1` (double) - Calibration offset value 1; see device's user guide for information on how to calibrate.
  * `cc_offset2` (double) - Calibration offset value 2; see device's user guide for information on how to calibrate.
- * `cc_gain0` (double) - Gain offset value 0; see device's user guide for information on how to calibrate.
- * `cc_gain1` (double) - Gain offset value 1; see device's user guide for information on how to calibrate.
- * `cc_gain2` (double) - Gain offset value 2; see device's user guide for information on how to calibrate.
- * `cc_t0` (double) - T offset value 0; see device's user guide for information on how to calibrate.
- * `cc_t1` (double) - T offset value 1; see device's user guide for information on how to calibrate.
- * `cc_t2` (double) - T offset value 2; see device's user guide for information on how to calibrate.
- * `cc_t3` (double) - T offset value 3; see device's user guide for information on how to calibrate.
- * `cc_t4` (double) - T offset value 4; see device's user guide for information on how to calibrate.
- * `cc_t5` (double) - T offset value 5; see device's user guide for information on how to calibrate
+ * `cc_gain0` (double) - Gain value 0; see device's user guide for information on how to calibrate.
+ * `cc_gain1` (double) - Gain value 1; see device's user guide for information on how to calibrate.
+ * `cc_gain2` (double) - Gain value 2; see device's user guide for information on how to calibrate.
+ * `cc_t0` (double) - T value 0; see device's user guide for information on how to calibrate.
+ * `cc_t1` (double) - T value 1; see device's user guide for information on how to calibrate.
+ * `cc_t2` (double) - T value 2; see device's user guide for information on how to calibrate.
+ * `cc_t3` (double) - T value 3; see device's user guide for information on how to calibrate.
+ * `cc_t4` (double) - T value 4; see device's user guide for information on how to calibrate.
+ * `cc_t5` (double) - T value 5; see device's user guide for information on how to calibrate
