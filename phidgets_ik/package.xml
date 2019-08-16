@@ -21,6 +21,7 @@
   <depend>phidgets_msgs</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
+  <depend>roslaunch</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
 

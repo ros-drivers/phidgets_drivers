@@ -15,6 +15,7 @@
   <depend>nodelet</depend>
   <depend>phidgets_api</depend>
   <depend>roscpp</depend>
+  <depend>roslaunch</depend>
   <depend>sensor_msgs</depend>
 
   <export>

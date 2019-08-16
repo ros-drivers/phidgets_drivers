@@ -16,6 +16,7 @@
   <depend>phidgets_api</depend>
   <depend>phidgets_msgs</depend>
   <depend>roscpp</depend>
+  <depend>roslaunch</depend>
   <depend>std_msgs</depend>
 
   <export>

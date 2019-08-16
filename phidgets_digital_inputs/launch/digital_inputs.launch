@@ -1,0 +1,31 @@
+<!-- Phidgets Digital Inputs launch file -->
+
+<launch>
+
+  #### Nodelet manager ######################################################
+
+  <node pkg="nodelet" type="nodelet" name="di_manager"
+    args="manager" output="screen" />
+
+  #### Digital Inputs Driver ################################################
+
+  <node pkg="nodelet" type="nodelet" name="PhidgetsDigitalInputsNodelet"
+    args="load phidgets_digital_inputs/PhidgetsDigitalInputsNodelet di_manager"
+    output="screen">
+
+    # See README.md for more information on the parameters
+
+    # optional param serial, default is -1
+    <!-- <param name="serial" value="123456"/> -->
+
+    # optional param hub_port, used if connected to a VINT hub
+    <!-- <param name="hub_port" value="0"/> -->
+
+    # optional param is_hub_port_device, used if connected to a VINT hub
+    <!-- <param name="is_hub_port_device" value="false"/> -->
+
+    # optional param publish_rate, defaults to 0
+    <!-- <param name="publish_rate" value="0" /> -->
+  </node>
+
+</launch>

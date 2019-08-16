@@ -15,7 +15,7 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs roscpp std_msgs)
+find_package(catkin REQUIRED COMPONENTS nodelet phidgets_api phidgets_msgs roscpp roslaunch std_msgs)
 
 catkin_package(
     INCLUDE_DIRS include
@@ -45,6 +45,12 @@ install(DIRECTORY include/${PROJECT_NAME}/
     FILES_MATCHING PATTERN "*.h"
 )
 
+install(DIRECTORY launch
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
 install(FILES phidgets_motors_nodelet.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+roslaunch_add_file_check(launch)
