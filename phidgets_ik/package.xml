@@ -16,9 +16,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>phidgets_analog_inputs</depend>
-  <depend>phidgets_digital_inputs</depend>
-  <depend>phidgets_digital_outputs</depend>
   <depend>roslaunch</depend>
+
+  <exec_depend>nodelet</exec_depend>
+  <exec_depend>phidgets_analog_inputs</exec_depend>
+  <exec_depend>phidgets_digital_inputs</exec_depend>
+  <exec_depend>phidgets_digital_outputs</exec_depend>
 
 </package>
