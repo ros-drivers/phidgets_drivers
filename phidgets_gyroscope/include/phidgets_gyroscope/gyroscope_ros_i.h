@@ -41,8 +41,6 @@
 
 namespace phidgets {
 
-const double MAX_TIMEDIFF_SECONDS = 0.1;
-
 class GyroscopeRosI final
 {
   public:
@@ -51,23 +49,31 @@ class GyroscopeRosI final
   private:
     std::unique_ptr<Gyroscope> gyroscope_;
     std::string frame_id_;
-    double angular_velocity_stdev_;
+    double angular_velocity_variance_;
     std::mutex gyro_mutex_;
     double last_gyro_x_;
     double last_gyro_y_;
     double last_gyro_z_;
-    double last_gyro_timestamp_;
-    double gyro_time_zero_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
     ros::Publisher cal_publisher_;
     ros::ServiceServer cal_srv_;
     ros::Publisher gyroscope_pub_;
-    ros::Time ros_time_zero_;
     void timerCallback(const ros::TimerEvent &event);
     ros::Timer timer_;
     int publish_rate_;
+
+    ros::Time ros_time_zero_;
+    bool synchronize_timestamps_{true};
+    uint64_t data_time_zero_ns_{0};
+    uint64_t last_data_timestamp_ns_{0};
+    uint64_t last_ros_stamp_ns_{0};
+    int64_t time_resync_interval_ns_{0};
+    int64_t data_interval_ns_{0};
+    bool can_publish_{false};
+    ros::Time last_cb_time_;
+    int64_t cb_delta_epsilon_ns_{0};
 
     void publishLatest();
 

@@ -59,16 +59,44 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
         // As specified in http://www.ros.org/reps/rep-0145.html
         frame_id_ = "imu_link";
     }
-    if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev_))
+
+    double magnetic_field_stdev;
+    if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev))
     {
-        magnetic_field_stdev_ =
+        magnetic_field_stdev =
             0.095 * (M_PI / 180.0);  // 0.095°/s as per manual
     }
+    magnetic_field_variance_ = magnetic_field_stdev * magnetic_field_stdev;
+
+    int time_resync_ms;
+    if (!nh_private_.getParam("time_resynchronization_interval_ms",
+                              time_resync_ms))
+    {
+        time_resync_ms = 5000;
+    }
+    time_resync_interval_ns_ =
+        static_cast<int64_t>(time_resync_ms) * 1000 * 1000;
+
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
         data_interval_ms = 8;
     }
+
+    int cb_delta_epsilon_ms;
+    if (!nh_private.getParam("callback_delta_epsilon_ms", cb_delta_epsilon_ms))
+    {
+        cb_delta_epsilon_ms = 1;
+    }
+    cb_delta_epsilon_ns_ = cb_delta_epsilon_ms * 1000 * 1000;
+
+    if (cb_delta_epsilon_ms >= data_interval_ms)
+    {
+        throw std::runtime_error(
+            "Callback epsilon is larger than the data interval; this can never "
+            "work");
+    }
+
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
         publish_rate_ = 0;
@@ -134,11 +162,6 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
             ROS_INFO("No compass correction params found.");
         }
 
-        magnetometer_->getMagneticField(last_mag_x_, last_mag_y_, last_mag_z_,
-                                        mag_time_zero_);
-        last_mag_timestamp_ = mag_time_zero_;
-        ros_time_zero_ = ros::Time::now();
-
     } catch (const Phidget22Error& err)
     {
         ROS_ERROR("Magnetometer: %s", err.what());
@@ -151,13 +174,6 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
     {
         timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
                                  &MagnetometerRosI::timerCallback, this);
-    } else
-    {
-        // If we are *not* publishing periodically, then we are event driven and
-        // will only publish when something changes (where "changes" is defined
-        // by the libphidget22 library).  In that case, make sure to publish
-        // once at the beginning to make sure there is *some* data.
-        publishLatest();
     }
 }
 
@@ -170,33 +186,35 @@ void MagnetometerRosI::publishLatest()
 
     // build covariance matrix
 
-    double mag_field_var = magnetic_field_stdev_ * magnetic_field_stdev_;
-
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
         {
-            int idx = j * 3 + i;
-
             if (i == j)
             {
-                msg->magnetic_field_covariance[idx] = mag_field_var;
-            } else
-            {
-                msg->magnetic_field_covariance[idx] = 0.0;
+                int idx = j * 3 + i;
+                msg->magnetic_field_covariance[idx] = magnetic_field_variance_;
             }
         }
     }
 
-    double mag_diff_in_secs = (last_mag_timestamp_ - mag_time_zero_) / 1000.0;
-    double time_in_secs = ros_time_zero_.toSec() + mag_diff_in_secs;
+    uint64_t mag_diff_in_ns = last_data_timestamp_ns_ - data_time_zero_ns_;
+    uint64_t time_in_ns = ros_time_zero_.toNSec() + mag_diff_in_ns;
 
-    msg->header.stamp = ros::Time(time_in_secs);
+    if (time_in_ns < last_ros_stamp_ns_)
+    {
+        ROS_WARN("Time went backwards (%lu < %lu)!", time_in_ns,
+                 last_ros_stamp_ns_);
+    }
+
+    last_ros_stamp_ns_ = time_in_ns;
+
+    msg->header.stamp = ros::Time().fromNSec(time_in_ns);
 
     // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-    msg->magnetic_field.x = last_mag_x_ * 1e-4;
-    msg->magnetic_field.y = last_mag_y_ * 1e-4;
-    msg->magnetic_field.z = last_mag_z_ * 1e-4;
+    msg->magnetic_field.x = last_mag_x_;
+    msg->magnetic_field.y = last_mag_y_;
+    msg->magnetic_field.z = last_mag_z_;
 
     magnetometer_pub_.publish(*msg);
 }
@@ -204,22 +222,118 @@ void MagnetometerRosI::publishLatest()
 void MagnetometerRosI::timerCallback(const ros::TimerEvent& /* event */)
 {
     std::lock_guard<std::mutex> lock(mag_mutex_);
-    publishLatest();
+    if (can_publish_)
+    {
+        publishLatest();
+    }
 }
 
 void MagnetometerRosI::magnetometerChangeCallback(
     const double magnetic_field[3], double timestamp)
 {
-    std::lock_guard<std::mutex> lock(mag_mutex_);
-    last_mag_x_ = magnetic_field[0];
-    last_mag_y_ = magnetic_field[1];
-    last_mag_z_ = magnetic_field[2];
-    last_mag_timestamp_ = timestamp;
+    // When publishing the message on the ROS network, we want to publish the
+    // time that the data was acquired in seconds since the Unix epoch.  The
+    // data we have to work with is the time that the callback happened (on the
+    // local processor, in Unix epoch seconds), and the timestamp that the
+    // IMU gives us on the callback (from the processor on the IMU, in
+    // milliseconds since some arbitrary starting point).
+    //
+    // At a first approximation, we can apply the timestamp from the device to
+    // Unix epoch seconds by taking a common starting point on the IMU and the
+    // local processor, then applying the delta between this IMU timestamp and
+    // the "zero" IMU timestamp to the local processor starting point.
+    //
+    // There are several complications with the simple scheme above.  The first
+    // is finding a proper "zero" point where the IMU timestamp and the local
+    // timestamp line up.  Due to potential delays in servicing this process,
+    // along with USB delays, the delta timestamp from the IMU and the time when
+    // this callback gets called can be wildly different.  Since we want the
+    // initial zero for both the IMU and the local time to be in the same time
+    // "window", we throw away data at the beginning until we see that the delta
+    // callback and delta timestamp are within reasonable bounds of each other.
+    //
+    // The second complication is that the time on the IMU drifts away from the
+    // time on the local processor.  Taking the "zero" time once at the
+    // beginning isn't sufficient, and we have to periodically re-synchronize
+    // the times given the constraints above.  Because we still have the
+    // arbitrary delays present as described above, it can take us several
+    // callbacks to successfully synchronize.  We continue publishing data using
+    // the old "zero" time until successfully resynchronize, at which point we
+    // switch to the new zero point.
 
-    if (publish_rate_ <= 0)
+    std::lock_guard<std::mutex> lock(mag_mutex_);
+
+    ros::Time now = ros::Time::now();
+
+    // At the beginning of time, need to initialize last_cb_time for later use;
+    // last_cb_time is used to figure out the time between callbacks
+    if (last_cb_time_.sec == 0 && last_cb_time_.nsec == 0)
     {
-        publishLatest();
+        last_cb_time_ = now;
+        return;
     }
+
+    ros::Duration time_since_last_cb = now - last_cb_time_;
+    uint64_t this_ts_ns = static_cast<uint64_t>(timestamp * 1000.0 * 1000.0);
+
+    if (synchronize_timestamps_)
+    {
+        // The only time it's safe to sync time between IMU and ROS Node is when
+        // the data that came in is within the data interval that data is
+        // expected. It's possible for data to come late because of USB issues
+        // or swapping, etc and we don't want to sync with data that was
+        // actually published before this time interval, so we wait until we get
+        // data that is within the data interval +/- an epsilon since we will
+        // have taken some time to process and/or a short delay (maybe USB
+        // comms) may have happened
+        if (time_since_last_cb.toNSec() >=
+                (data_interval_ns_ - cb_delta_epsilon_ns_) &&
+            time_since_last_cb.toNSec() <=
+                (data_interval_ns_ + cb_delta_epsilon_ns_))
+        {
+            ros_time_zero_ = now;
+            data_time_zero_ns_ = this_ts_ns;
+            synchronize_timestamps_ = false;
+            can_publish_ = true;
+        } else
+        {
+            ROS_WARN(
+                "Data not within acceptable window for synchronization: "
+                "expected between %ld and %ld, saw %ld",
+                data_interval_ns_ - cb_delta_epsilon_ns_,
+                data_interval_ns_ + cb_delta_epsilon_ns_,
+                time_since_last_cb.toNSec());
+        }
+    }
+
+    if (can_publish_)  // Cannot publish data until IMU/ROS timestamps have been
+                       // synchronized at least once
+    {
+        // Save off the values
+        // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
+        last_mag_x_ = magnetic_field[0] * 1e-4;
+        last_mag_y_ = magnetic_field[1] * 1e-4;
+        last_mag_z_ = magnetic_field[2] * 1e-4;
+
+        last_data_timestamp_ns_ = this_ts_ns;
+
+        // Publish if we aren't publishing on a timer
+        if (publish_rate_ <= 0)
+        {
+            publishLatest();
+        }
+    }
+
+    // Determine if we need to resynchronize - time between IMU and ROS Node can
+    // drift, periodically resync to deal with this issue
+    ros::Duration diff = now - ros_time_zero_;
+    if (time_resync_interval_ns_ > 0 &&
+        diff.toNSec() >= time_resync_interval_ns_)
+    {
+        synchronize_timestamps_ = true;
+    }
+
+    last_cb_time_ = now;
 }
 
 }  // namespace phidgets

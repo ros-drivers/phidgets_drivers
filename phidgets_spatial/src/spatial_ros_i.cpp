@@ -64,27 +64,63 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         // As specified in http://www.ros.org/reps/rep-0145.html
         frame_id_ = "imu_link";
     }
+
+    double linear_acceleration_stdev;
     if (!nh_private_.getParam("linear_acceleration_stdev",
-                              linear_acceleration_stdev_))
+                              linear_acceleration_stdev))
     {
-        linear_acceleration_stdev_ = 300.0 * 1e-6 * G;  // 300 ug as per manual
+        linear_acceleration_stdev = 300.0 * 1e-6 * G;  // 300 ug as per manual
     }
-    if (!nh_private_.getParam("angular_velocity_stdev",
-                              angular_velocity_stdev_))
+    linear_acceleration_variance_ =
+        linear_acceleration_stdev * linear_acceleration_stdev;
+
+    double angular_velocity_stdev;
+    if (!nh_private_.getParam("angular_velocity_stdev", angular_velocity_stdev))
     {
-        angular_velocity_stdev_ =
+        angular_velocity_stdev =
             0.02 * (M_PI / 180.0);  // 0.02 deg/s resolution, as per manual
     }
-    if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev_))
+    angular_velocity_variance_ =
+        angular_velocity_stdev * angular_velocity_stdev;
+
+    double magnetic_field_stdev;
+    if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev))
     {
-        magnetic_field_stdev_ =
+        magnetic_field_stdev =
             0.095 * (M_PI / 180.0);  // 0.095°/s as per manual
     }
+    magnetic_field_variance_ = magnetic_field_stdev * magnetic_field_stdev;
+
+    int time_resync_ms;
+    if (!nh_private_.getParam("time_resynchronization_interval_ms",
+                              time_resync_ms))
+    {
+        time_resync_ms = 5000;
+    }
+    time_resync_interval_ns_ =
+        static_cast<int64_t>(time_resync_ms) * 1000 * 1000;
+
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
         data_interval_ms = 8;
     }
+    data_interval_ns_ = data_interval_ms * 1000 * 1000;
+
+    int cb_delta_epsilon_ms;
+    if (!nh_private.getParam("callback_delta_epsilon_ms", cb_delta_epsilon_ms))
+    {
+        cb_delta_epsilon_ms = 1;
+    }
+    cb_delta_epsilon_ns_ = cb_delta_epsilon_ms * 1000 * 1000;
+
+    if (cb_delta_epsilon_ms >= data_interval_ms)
+    {
+        throw std::runtime_error(
+            "Callback epsilon is larger than the data interval; this can never "
+            "work");
+    }
+
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
         publish_rate_ = 0;
@@ -168,17 +204,10 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     magnetic_field_pub_ =
         nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);
 
-    got_first_data_ = false;
-
     if (publish_rate_ > 0)
     {
         timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
                                  &SpatialRosI::timerCallback, this);
-    } else
-    {
-        // We'd like to publish the latest data, but the underlying libphidget22
-        // class doesn't have the ability to grab the latest data, so we just
-        // stay silent until the first event.
     }
 }
 
@@ -208,78 +237,65 @@ void SpatialRosI::publishLatest()
     std::shared_ptr<sensor_msgs::Imu> msg =
         std::make_shared<sensor_msgs::Imu>();
 
-    msg->header.frame_id = frame_id_;
-
-    // build covariance matrix
-    double lin_acc_var =
-        linear_acceleration_stdev_ * linear_acceleration_stdev_;
-    double ang_vel_var = angular_velocity_stdev_ * angular_velocity_stdev_;
-
-    for (int i = 0; i < 3; ++i)
-    {
-        for (int j = 0; j < 3; ++j)
-        {
-            int idx = j * 3 + i;
-
-            if (i == j)
-            {
-                msg->linear_acceleration_covariance[idx] = lin_acc_var;
-                msg->angular_velocity_covariance[idx] = ang_vel_var;
-            } else
-            {
-                msg->linear_acceleration_covariance[idx] = 0.0;
-                msg->angular_velocity_covariance[idx] = 0.0;
-            }
-        }
-    }
-
-    double imu_diff_in_secs = (last_data_timestamp_ - data_time_zero_) / 1000.0;
-    double time_in_secs = ros_time_zero_.toSec() + imu_diff_in_secs;
-
-    msg->header.stamp = ros::Time(time_in_secs);
-
-    // set linear acceleration
-    msg->linear_acceleration.x = -last_accel_x_ * G;
-    msg->linear_acceleration.y = -last_accel_y_ * G;
-    msg->linear_acceleration.z = -last_accel_z_ * G;
-
-    // set angular velocities
-    msg->angular_velocity.x = last_gyro_x_ * (M_PI / 180.0);
-    msg->angular_velocity.y = last_gyro_y_ * (M_PI / 180.0);
-    msg->angular_velocity.z = last_gyro_z_ * (M_PI / 180.0);
-
-    imu_pub_.publish(*msg);
-
     std::shared_ptr<sensor_msgs::MagneticField> mag_msg =
         std::make_shared<sensor_msgs::MagneticField>();
 
-    mag_msg->header.frame_id = frame_id_;
-
-    // build covariance matrix
-    double mag_field_var = magnetic_field_stdev_ * magnetic_field_stdev_;
-
+    // build covariance matrices
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
         {
-            int idx = j * 3 + i;
-
             if (i == j)
             {
-                mag_msg->magnetic_field_covariance[idx] = mag_field_var;
-            } else
-            {
-                mag_msg->magnetic_field_covariance[idx] = 0.0;
+                int idx = j * 3 + i;
+                msg->linear_acceleration_covariance[idx] =
+                    linear_acceleration_variance_;
+                msg->angular_velocity_covariance[idx] =
+                    angular_velocity_variance_;
+                mag_msg->magnetic_field_covariance[idx] =
+                    magnetic_field_variance_;
             }
         }
     }
 
-    mag_msg->header.stamp = ros::Time(time_in_secs);
+    // Fill out and send IMU message
+    msg->header.frame_id = frame_id_;
 
-    // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-    mag_msg->magnetic_field.x = last_mag_x_ * 1e-4;
-    mag_msg->magnetic_field.y = last_mag_y_ * 1e-4;
-    mag_msg->magnetic_field.z = last_mag_z_ * 1e-4;
+    uint64_t imu_diff_in_ns = last_data_timestamp_ns_ - data_time_zero_ns_;
+    uint64_t time_in_ns = ros_time_zero_.toNSec() + imu_diff_in_ns;
+
+    if (time_in_ns < last_ros_stamp_ns_)
+    {
+        ROS_WARN("Time went backwards (%lu < %lu)!", time_in_ns,
+                 last_ros_stamp_ns_);
+    }
+
+    last_ros_stamp_ns_ = time_in_ns;
+
+    ros::Time ros_time = ros::Time().fromNSec(time_in_ns);
+
+    msg->header.stamp = ros_time;
+
+    // set linear acceleration
+    msg->linear_acceleration.x = last_accel_x_;
+    msg->linear_acceleration.y = last_accel_y_;
+    msg->linear_acceleration.z = last_accel_z_;
+
+    // set angular velocities
+    msg->angular_velocity.x = last_gyro_x_;
+    msg->angular_velocity.y = last_gyro_y_;
+    msg->angular_velocity.z = last_gyro_z_;
+
+    imu_pub_.publish(*msg);
+
+    // Fill out and publish magnetic message
+    mag_msg->header.frame_id = frame_id_;
+
+    mag_msg->header.stamp = ros_time;
+
+    mag_msg->magnetic_field.x = last_mag_x_;
+    mag_msg->magnetic_field.y = last_mag_y_;
+    mag_msg->magnetic_field.z = last_mag_z_;
 
     magnetic_field_pub_.publish(*mag_msg);
 }
@@ -289,38 +305,123 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
                                       const double magnetic_field[3],
                                       double timestamp)
 {
+    // When publishing the message on the ROS network, we want to publish the
+    // time that the data was acquired in seconds since the Unix epoch.  The
+    // data we have to work with is the time that the callback happened (on the
+    // local processor, in Unix epoch seconds), and the timestamp that the
+    // IMU gives us on the callback (from the processor on the IMU, in
+    // milliseconds since some arbitrary starting point).
+    //
+    // At a first approximation, we can apply the timestamp from the device to
+    // Unix epoch seconds by taking a common starting point on the IMU and the
+    // local processor, then applying the delta between this IMU timestamp and
+    // the "zero" IMU timestamp to the local processor starting point.
+    //
+    // There are several complications with the simple scheme above.  The first
+    // is finding a proper "zero" point where the IMU timestamp and the local
+    // timestamp line up.  Due to potential delays in servicing this process,
+    // along with USB delays, the delta timestamp from the IMU and the time when
+    // this callback gets called can be wildly different.  Since we want the
+    // initial zero for both the IMU and the local time to be in the same time
+    // "window", we throw away data at the beginning until we see that the delta
+    // callback and delta timestamp are within reasonable bounds of each other.
+    //
+    // The second complication is that the time on the IMU drifts away from the
+    // time on the local processor.  Taking the "zero" time once at the
+    // beginning isn't sufficient, and we have to periodically re-synchronize
+    // the times given the constraints above.  Because we still have the
+    // arbitrary delays present as described above, it can take us several
+    // callbacks to successfully synchronize.  We continue publishing data using
+    // the old "zero" time until successfully resynchronize, at which point we
+    // switch to the new zero point.
+
     std::lock_guard<std::mutex> lock(spatial_mutex_);
-    last_accel_x_ = acceleration[0];
-    last_accel_y_ = acceleration[1];
-    last_accel_z_ = acceleration[2];
 
-    last_gyro_x_ = angular_rate[0];
-    last_gyro_y_ = angular_rate[1];
-    last_gyro_z_ = angular_rate[2];
+    ros::Time now = ros::Time::now();
 
-    last_mag_x_ = magnetic_field[0];
-    last_mag_y_ = magnetic_field[1];
-    last_mag_z_ = magnetic_field[2];
-
-    last_data_timestamp_ = timestamp;
-
-    if (!got_first_data_)
+    // At the beginning of time, need to initialize last_cb_time for later use;
+    // last_cb_time is used to figure out the time between callbacks
+    if (last_cb_time_.sec == 0 && last_cb_time_.nsec == 0)
     {
-        got_first_data_ = true;
-        data_time_zero_ = timestamp;
-        ros_time_zero_ = ros::Time::now();
+        last_cb_time_ = now;
+        return;
     }
 
-    if (publish_rate_ <= 0)
+    ros::Duration time_since_last_cb = now - last_cb_time_;
+    uint64_t this_ts_ns = static_cast<uint64_t>(timestamp * 1000.0 * 1000.0);
+
+    if (synchronize_timestamps_)
     {
-        publishLatest();
+        // The only time it's safe to sync time between IMU and ROS Node is when
+        // the data that came in is within the data interval that data is
+        // expected. It's possible for data to come late because of USB issues
+        // or swapping, etc and we don't want to sync with data that was
+        // actually published before this time interval, so we wait until we get
+        // data that is within the data interval +/- an epsilon since we will
+        // have taken some time to process and/or a short delay (maybe USB
+        // comms) may have happened
+        if (time_since_last_cb.toNSec() >=
+                (data_interval_ns_ - cb_delta_epsilon_ns_) &&
+            time_since_last_cb.toNSec() <=
+                (data_interval_ns_ + cb_delta_epsilon_ns_))
+        {
+            ros_time_zero_ = now;
+            data_time_zero_ns_ = this_ts_ns;
+            synchronize_timestamps_ = false;
+            can_publish_ = true;
+        } else
+        {
+            ROS_WARN(
+                "Data not within acceptable window for synchronization: "
+                "expected between %ld and %ld, saw %ld",
+                data_interval_ns_ - cb_delta_epsilon_ns_,
+                data_interval_ns_ + cb_delta_epsilon_ns_,
+                time_since_last_cb.toNSec());
+        }
     }
+
+    if (can_publish_)  // Cannot publish data until IMU/ROS timestamps have been
+                       // synchronized at least once
+    {
+        // Save off the values
+        last_accel_x_ = -acceleration[0] * G;
+        last_accel_y_ = -acceleration[1] * G;
+        last_accel_z_ = -acceleration[2] * G;
+
+        last_gyro_x_ = angular_rate[0] * (M_PI / 180.0);
+        last_gyro_y_ = angular_rate[1] * (M_PI / 180.0);
+        last_gyro_z_ = angular_rate[2] * (M_PI / 180.0);
+
+        // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
+        last_mag_x_ = magnetic_field[0] * 1e-4;
+        last_mag_y_ = magnetic_field[1] * 1e-4;
+        last_mag_z_ = magnetic_field[2] * 1e-4;
+
+        last_data_timestamp_ns_ = this_ts_ns;
+
+        // Publish if we aren't publishing on a timer
+        if (publish_rate_ <= 0)
+        {
+            publishLatest();
+        }
+    }
+
+    // Determine if we need to resynchronize - time between IMU and ROS Node can
+    // drift, periodically resync to deal with this issue
+    ros::Duration diff = now - ros_time_zero_;
+    if (time_resync_interval_ns_ > 0 &&
+        diff.toNSec() >= time_resync_interval_ns_)
+    {
+        synchronize_timestamps_ = true;
+    }
+
+    last_cb_time_ = now;
 }
 
 void SpatialRosI::timerCallback(const ros::TimerEvent & /* event */)
 {
     std::lock_guard<std::mutex> lock(spatial_mutex_);
-    if (got_first_data_)
+    if (can_publish_)
     {
         publishLatest();
     }

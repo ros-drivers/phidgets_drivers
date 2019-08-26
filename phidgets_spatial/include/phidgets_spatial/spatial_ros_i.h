@@ -43,7 +43,6 @@
 namespace phidgets {
 
 const float G = 9.81;
-const float MAX_TIMEDIFF_SECONDS = 0.1;
 
 class SpatialRosI final
 {
@@ -53,7 +52,6 @@ class SpatialRosI final
   private:
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
-    ros::Time ros_time_zero_;
     std::string frame_id_;
     std::mutex spatial_mutex_;
     void timerCallback(const ros::TimerEvent &event);
@@ -61,13 +59,19 @@ class SpatialRosI final
     int publish_rate_;
     ros::Publisher cal_publisher_;
     ros::ServiceServer cal_srv_;
-
     ros::Publisher imu_pub_;
-    bool got_first_data_;
-    double data_time_zero_;
-    double last_data_timestamp_;
-
     ros::Publisher magnetic_field_pub_;
+
+    ros::Time ros_time_zero_;
+    bool synchronize_timestamps_{true};
+    uint64_t data_time_zero_ns_{0};
+    uint64_t last_data_timestamp_ns_{0};
+    uint64_t last_ros_stamp_ns_{0};
+    int64_t time_resync_interval_ns_{0};
+    int64_t data_interval_ns_{0};
+    bool can_publish_{false};
+    ros::Time last_cb_time_;
+    int64_t cb_delta_epsilon_ns_{0};
 
     void calibrate();
 
@@ -77,19 +81,19 @@ class SpatialRosI final
     std::unique_ptr<Spatial> spatial_;
 
     // Accelerometer
-    double linear_acceleration_stdev_;
+    double linear_acceleration_variance_;
     double last_accel_x_;
     double last_accel_y_;
     double last_accel_z_;
 
     // Gyroscope
-    double angular_velocity_stdev_;
+    double angular_velocity_variance_;
     double last_gyro_x_;
     double last_gyro_y_;
     double last_gyro_z_;
 
     // Magnetometer
-    double magnetic_field_stdev_;
+    double magnetic_field_variance_;
     double last_mag_x_;
     double last_mag_y_;
     double last_mag_z_;

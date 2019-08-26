@@ -40,8 +40,6 @@
 
 namespace phidgets {
 
-const double MAX_TIMEDIFF_SECONDS = 0.1;
-
 class MagnetometerRosI final
 {
   public:
@@ -50,21 +48,29 @@ class MagnetometerRosI final
   private:
     std::unique_ptr<Magnetometer> magnetometer_;
     std::string frame_id_;
-    double magnetic_field_stdev_;
+    double magnetic_field_variance_;
     std::mutex mag_mutex_;
     double last_mag_x_;
     double last_mag_y_;
     double last_mag_z_;
-    double last_mag_timestamp_;
-    double mag_time_zero_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
     ros::Publisher magnetometer_pub_;
-    ros::Time ros_time_zero_;
     void timerCallback(const ros::TimerEvent& event);
     ros::Timer timer_;
     int publish_rate_;
+
+    ros::Time ros_time_zero_;
+    bool synchronize_timestamps_{true};
+    uint64_t data_time_zero_ns_{0};
+    uint64_t last_data_timestamp_ns_{0};
+    uint64_t last_ros_stamp_ns_{0};
+    int64_t time_resync_interval_ns_{0};
+    int64_t data_interval_ns_{0};
+    bool can_publish_{false};
+    ros::Time last_cb_time_;
+    int64_t cb_delta_epsilon_ns_{0};
 
     void publishLatest();
 
