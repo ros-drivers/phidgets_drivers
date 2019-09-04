@@ -64,8 +64,8 @@ GyroscopeRosI::GyroscopeRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     double angular_velocity_stdev;
     if (!nh_private_.getParam("angular_velocity_stdev", angular_velocity_stdev))
     {
-        angular_velocity_stdev =
-            0.02 * (M_PI / 180.0);  // 0.02 deg/s resolution, as per manual
+        // 0.095 deg/s gyroscope white noise sigma, as per manual
+        angular_velocity_stdev = 0.095 * (M_PI / 180.0);
     }
     angular_velocity_variance_ =
         angular_velocity_stdev * angular_velocity_stdev;

@@ -64,7 +64,8 @@ AccelerometerRosI::AccelerometerRosI(ros::NodeHandle nh,
     if (!nh_private_.getParam("linear_acceleration_stdev",
                               linear_acceleration_stdev))
     {
-        linear_acceleration_stdev = 300.0 * 1e-6 * G;  // 300 ug as per manual
+        // 280 ug accelerometer white noise sigma, as per manual
+        linear_acceleration_stdev = 280.0 * 1e-6 * G;
     }
     linear_acceleration_variance_ =
         linear_acceleration_stdev * linear_acceleration_stdev;
