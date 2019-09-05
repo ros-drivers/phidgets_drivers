@@ -22,12 +22,20 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>libphidget21</exec_depend>
+  <exec_depend>libphidget22</exec_depend>
+  <exec_depend>phidgets_accelerometer</exec_depend>
   <exec_depend>phidgets_api</exec_depend>
+  <exec_depend>phidgets_analog_inputs</exec_depend>
+  <exec_depend>phidgets_digital_inputs</exec_depend>
+  <exec_depend>phidgets_digital_outputs</exec_depend>
+  <exec_depend>phidgets_gyroscope</exec_depend>
   <exec_depend>phidgets_ik</exec_depend>
   <exec_depend>phidgets_high_speed_encoder</exec_depend>
-  <exec_depend>phidgets_imu</exec_depend>
+  <exec_depend>phidgets_magnetometer</exec_depend>
+  <exec_depend>phidgets_motors</exec_depend>
   <exec_depend>phidgets_msgs</exec_depend>
+  <exec_depend>phidgets_spatial</exec_depend>
+  <exec_depend>phidgets_temperature</exec_depend>
 
   <export>
     <metapackage />

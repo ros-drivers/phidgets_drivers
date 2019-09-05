@@ -4,18 +4,56 @@ Phidgets drivers for ROS
 Overview
 --------
 
-Drivers for the Phidgets devices. This Catkin metapackage includes:
+Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin metapackage includes:
 
 * `phidgets_api`: a package which downloads and builds the Phidgets C API from
    phidgets.com (as an external project). It also implements a C++ wrapper
-   for the C API, providing a base Phidget class and various inherited classes
+   for the C API, providing some base Phidget helper functions and various classes
    for different phidget devices.
 
-* ROS nodes exposing the functionality of specific phidgets devices using:
+* ROS nodelets exposing the functionality of specific phidgets devices:
 
-  - `phidgets_imu`
-  - `phidgets_high_speed_encoder`
-  - `phidgets_ik`
+  * [`phidgets_accelerometer`](phidgets_accelerometer/README.md)
+
+  * [`phidgets_analog_inputs`](phidgets_analog_inputs/README.md)
+
+  * [`phidgets_digital_inputs`](phidgets_digital_inputs/README.md)
+
+  * [`phidgets_digital_outputs`](phidgets_digital_outputs/README.md)
+
+  * [`phidgets_gyroscope`](phidgets_gyroscope/README.md)
+
+  * [`phidgets_high_speed_encoder`](phidgets_high_speed_encoder/README.md)
+
+  * [`phidgets_ik`](phidgets_ik/README.md)
+
+  * [`phidgets_magnetometer`](phidgets_magnetometer/README.md)
+
+  * [`phidgets_motors`](phidgets_motors/README.md)
+
+  * [`phidgets_spatial`](phidgets_spatial/README.md)
+
+  * [`phidgets_temperature`](phidgets_temperature/README.md)
+
+Migrating from earlier versions
+-------------------------------
+
+Prior to ROS Noetic, this library was based on the older libphidget21 library.  While it is still supported by Phidgets, they no longer add new features to it and [VINT hub](https://www.phidgets.com/?tier=3&catid=2&pcid=1&prodid=643) style devices cannot be used with it.  In ROS Noetic, this library was rewritten to use the libphidget22 library, which is the latest supported and contains all of the newest features.  However, the new libphidget22 library is very different from the old libphidget21 library, and some of those differences leak through to the drivers themselves.  The following is a list of things that may help in migrating to the new drivers.
+
+## General ##
+* All drivers now have nodelets.
+* No drivers have nodes anymore.  While this makes debugging somewhat harder, nodelets are the only way to support devices on a VINT hub.
+* The "serial_number" parameter has been renamed to "serial".
+
+## Specific nodes ##
+### IMU ###
+* The "imu" node was renamed to the "spatial" node.
+* Diagnostics have been removed from the spatial driver.  They will be reinstated later.
+* The "period" parameter has been renamed to "data_interval_ms".
+* The default "frame_id" has been changed from "imu" to "imu_link" to comply with [REP-0145](http://www.ros.org/reps/rep-0145.html).
+
+### IK ###
+* The "ik" node is now just a launch file which composes an Analog Input, Digital Input, and Digital Output nodelet together.
 
 Installing
 ----------

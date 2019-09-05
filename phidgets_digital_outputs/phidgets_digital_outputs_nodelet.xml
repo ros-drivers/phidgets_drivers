@@ -1,0 +1,9 @@
+<!-- Phidgets Digital Outputs nodelet publisher -->
+<library path="lib/libphidgets_digital_outputs_nodelet">
+  <class name="phidgets_digital_outputs/PhidgetsDigitalOutputsNodelet" type="PhidgetsDigitalOutputsNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Digital Outputs nodelet publisher.
+    </description>
+  </class>
+</library>

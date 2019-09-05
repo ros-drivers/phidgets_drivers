@@ -1,0 +1,9 @@
+<!-- Phidgets Magnetometer nodelet publisher -->
+<library path="lib/libphidgets_magnetometer_nodelet">
+  <class name="phidgets_magnetometer/PhidgetsMagnetometerNodelet" type="PhidgetsMagnetometerNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Magnetometer nodelet publisher.
+    </description>
+  </class>
+</library>

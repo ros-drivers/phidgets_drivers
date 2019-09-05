@@ -1,0 +1,9 @@
+<!-- Phidgets IMU nodelet publisher -->
+<library path="lib/libphidgets_spatial_nodelet">
+  <class name="phidgets_spatial/PhidgetsSpatialNodelet" type="PhidgetsSpatialNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Spatial nodelet publisher.
+    </description>
+  </class>
+</library>

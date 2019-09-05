@@ -1,300 +1,214 @@
+/*
+ * Copyright (c) 2019, Open Source Robotics Foundation
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the copyright holder nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include <functional>
+#include <string>
+
+#include <libphidget22/phidget22.h>
+
 #include "phidgets_api/motor.h"
-
-#include <cassert>
-
-// Get and return the value name of type type (I varient is indexed)
-#define GAR(type, name)                                          \
-    type x;                                                      \
-    int ret = CPhidgetMotorControl_get##name(motor_handle_, &x); \
-    assert(ret == EPHIDGET_OK);                                  \
-    return x;
-#define GAR_I(type, name, i)                                        \
-    type x;                                                         \
-    int ret = CPhidgetMotorControl_get##name(motor_handle_, i, &x); \
-    assert(ret == EPHIDGET_OK);                                     \
-    return x;
-
-// Set the value name to x (I varient is indexed)
-#define SET(name, x)                                            \
-    int ret = CPhidgetMotorControl_set##name(motor_handle_, x); \
-    assert(ret == EPHIDGET_OK);
-#define SET_I(name, x, i)                                          \
-    int ret = CPhidgetMotorControl_set##name(motor_handle_, i, x); \
-    assert(ret == EPHIDGET_OK);
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-MotorController::MotorController() : Phidget(), motor_handle_(nullptr)
+Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
+             int channel,
+             std::function<void(int, double)> duty_cycle_change_handler,
+             std::function<void(int, double)> back_emf_change_handler)
+    : channel_(channel),
+      duty_cycle_change_handler_(duty_cycle_change_handler),
+      back_emf_change_handler_(back_emf_change_handler)
 {
-    // create the handle
-    CPhidgetMotorControl_create(&motor_handle_);
+    PhidgetReturnCode ret = PhidgetDCMotor_create(&motor_handle_);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to create Motor handle for channel " +
+                                 std::to_string(channel),
+                             ret);
+    }
 
-    // pass handle to base class
-    Phidget::init((CPhidgetHandle)motor_handle_);
+    helpers::openWaitForAttachment(
+        reinterpret_cast<PhidgetHandle>(motor_handle_), serial_number, hub_port,
+        is_hub_port_device, channel);
 
-    // register base class callbacks
-    Phidget::registerHandlers();
+    ret = PhidgetDCMotor_setOnVelocityUpdateHandler(
+        motor_handle_, DutyCycleChangeHandler, this);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to set duty cycle update handler for Motor channel " +
+                std::to_string(channel),
+            ret);
+    }
 
-    // register motor data callbacks
-    CPhidgetMotorControl_set_OnVelocityChange_Handler(
-        motor_handle_, VelocityChangeHandler, this);
-    CPhidgetMotorControl_set_OnCurrentChange_Handler(
-        motor_handle_, CurrentChangeHandler, this);
-    CPhidgetMotorControl_set_OnInputChange_Handler(motor_handle_,
-                                                   InputChangeHandler, this);
-    CPhidgetMotorControl_set_OnEncoderPositionChange_Handler(
-        motor_handle_, EncoderPositionChangeHandler, this);
-    CPhidgetMotorControl_set_OnEncoderPositionUpdate_Handler(
-        motor_handle_, EncoderPositionUpdateHandler, this);
-    CPhidgetMotorControl_set_OnBackEMFUpdate_Handler(
-        motor_handle_, BackEMFUpdateHandler, this);
-    CPhidgetMotorControl_set_OnSensorUpdate_Handler(motor_handle_,
-                                                    SensorUpdateHandler, this);
-    CPhidgetMotorControl_set_OnCurrentUpdate_Handler(
-        motor_handle_, CurrentUpdateHandler, this);
+    ret = PhidgetDCMotor_setOnBackEMFChangeHandler(motor_handle_,
+                                                   BackEMFChangeHandler, this);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to set back EMF update handler for Motor channel " +
+                std::to_string(channel),
+            ret);
+    }
 }
 
-MotorController::~MotorController()
+Motor::~Motor()
 {
+    PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(motor_handle_);
+    helpers::closeAndDelete(&handle);
 }
 
-int MotorController::getMotorCount()
+double Motor::getDutyCycle() const
 {
-    GAR(int, MotorCount);
+    double duty_cycle;
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_getVelocity(motor_handle_, &duty_cycle);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get duty cycle for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
+    return duty_cycle;
 }
 
-double MotorController::getVelocity(int index)
+void Motor::setDutyCycle(double duty_cycle) const
 {
-    GAR_I(double, Velocity, index);
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_setTargetVelocity(motor_handle_, duty_cycle);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set duty cycle for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
 }
 
-void MotorController::setVelocity(int index, double velocity)
+double Motor::getAcceleration() const
 {
-    SET_I(Velocity, velocity, index);
+    double accel;
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_getAcceleration(motor_handle_, &accel);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get acceleration for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
+    return accel;
 }
 
-double MotorController::getAcceleration(int index)
+void Motor::setAcceleration(double acceleration) const
 {
-    GAR_I(double, Acceleration, index);
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_setAcceleration(motor_handle_, acceleration);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set acceleration for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
 }
 
-void MotorController::setAcceleration(int index, double acceleration)
+double Motor::getBackEMF() const
 {
-    SET_I(Acceleration, acceleration, index);
+    double backemf;
+    PhidgetReturnCode ret = PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get back EMF for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
+    return backemf;
 }
 
-double MotorController::getAccelerationMax(int index)
+void Motor::setDataInterval(uint32_t data_interval_ms) const
 {
-    GAR_I(double, AccelerationMax, index);
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_setDataInterval(motor_handle_, data_interval_ms);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set data interval for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
 }
 
-double MotorController::getAccelerationMin(int index)
+double Motor::getBraking() const
 {
-    GAR_I(double, AccelerationMin, index);
+    double braking;
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_getBrakingStrength(motor_handle_, &braking);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to get braking strength for Motor channel " +
+                std::to_string(channel_),
+            ret);
+    }
+    return braking;
 }
 
-double MotorController::getCurrent(int index)
+void Motor::setBraking(double braking) const
 {
-    GAR_I(double, Current, index);
+    PhidgetReturnCode ret =
+        PhidgetDCMotor_setTargetBrakingStrength(motor_handle_, braking);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to set braking strength for Motor channel " +
+                std::to_string(channel_),
+            ret);
+    }
 }
 
-int MotorController::getInputCount()
+void Motor::dutyCycleChangeHandler(double duty_cycle) const
 {
-    GAR(int, InputCount);
+    duty_cycle_change_handler_(channel_, duty_cycle);
 }
 
-bool MotorController::getInputState(int index)
+void Motor::backEMFChangeHandler(double back_emf) const
 {
-    int state;
-    int ret = CPhidgetMotorControl_getInputState(motor_handle_, index, &state);
-
-    assert(ret == EPHIDGET_OK);
-
-    return state == PTRUE;
+    back_emf_change_handler_(channel_, back_emf);
 }
 
-int MotorController::getEncoderCount()
+void Motor::DutyCycleChangeHandler(PhidgetDCMotorHandle /* motor_handle */,
+                                   void *ctx, double duty_cycle)
 {
-    GAR(int, EncoderCount);
+    ((Motor *)ctx)->dutyCycleChangeHandler(duty_cycle);
 }
 
-int MotorController::getEncoderPosition(int index)
+void Motor::BackEMFChangeHandler(PhidgetDCMotorHandle /* motor_handle */,
+                                 void *ctx, double back_emf)
 {
-    GAR_I(int, EncoderPosition, index);
-}
-
-void MotorController::setEncoderPosition(int index, int position)
-{
-    SET_I(EncoderPosition, position, index);
-}
-
-int MotorController::getBackEMFSensingState(int index)
-{
-    GAR_I(int, BackEMFSensingState, index);
-}
-
-void MotorController::setBackEMFSensingState(int index, int bEMFState)
-{
-    SET_I(BackEMFSensingState, bEMFState, index);
-}
-
-double MotorController::getBackEMF(int index)
-{
-    GAR_I(double, BackEMF, index);
-}
-
-double MotorController::getSupplyVoltage()
-{
-    GAR(double, SupplyVoltage);
-}
-
-double MotorController::getBraking(int index)
-{
-    GAR_I(double, Braking, index);
-}
-
-void MotorController::setBraking(int index, double braking)
-{
-    SET_I(Braking, braking, index);
-}
-
-int MotorController::getSensorCount()
-{
-    GAR(int, SensorCount);
-}
-
-int MotorController::getSensorValue(int index)
-{
-    GAR_I(int, SensorValue, index);
-}
-
-int MotorController::getSensorRawValue(int index)
-{
-    GAR_I(int, SensorRawValue, index);
-}
-
-int MotorController::getRatiometric()
-{
-    GAR(int, Ratiometric);
-}
-
-void MotorController::setRatiometric(int ratiometric)
-{
-    SET(Ratiometric, ratiometric);
-}
-
-int MotorController::VelocityChangeHandler(
-    CPhidgetMotorControlHandle /* phid */, void *userPtr, int index,
-    double velocity)
-{
-    ((MotorController *)userPtr)->velocityChangeHandler(index, velocity);
-    return 0;
-}
-
-int MotorController::CurrentChangeHandler(CPhidgetMotorControlHandle /* phid */,
-                                          void *userPtr, int index,
-                                          double current)
-{
-    ((MotorController *)userPtr)->currentChangeHandler(index, current);
-    return 0;
-}
-
-int MotorController::InputChangeHandler(CPhidgetMotorControlHandle /* phid */,
-                                        void *userPtr, int index,
-                                        int inputState)
-{
-    ((MotorController *)userPtr)->inputChangeHandler(index, inputState);
-    return 0;
-}
-
-int MotorController::EncoderPositionChangeHandler(
-    CPhidgetMotorControlHandle /* phid */, void *userPtr, int index, int time,
-    int positionChange)
-{
-    ((MotorController *)userPtr)
-        ->encoderPositionChangeHandler(index, time, positionChange);
-    return 0;
-}
-
-int MotorController::EncoderPositionUpdateHandler(
-    CPhidgetMotorControlHandle /* phid */, void *userPtr, int index,
-    int positionChange)
-{
-    ((MotorController *)userPtr)
-        ->encoderPositionUpdateHandler(index, positionChange);
-    return 0;
-}
-
-int MotorController::BackEMFUpdateHandler(CPhidgetMotorControlHandle /* phid */,
-                                          void *userPtr, int index,
-                                          double voltage)
-{
-    ((MotorController *)userPtr)->backEMFUpdateHandler(index, voltage);
-    return 0;
-}
-
-int MotorController::SensorUpdateHandler(CPhidgetMotorControlHandle /* phid */,
-                                         void *userPtr, int index,
-                                         int sensorValue)
-{
-    ((MotorController *)userPtr)->sensorUpdateHandler(index, sensorValue);
-    return 0;
-}
-
-int MotorController::CurrentUpdateHandler(CPhidgetMotorControlHandle /* phid */,
-                                          void *userPtr, int index,
-                                          double current)
-{
-    ((MotorController *)userPtr)->currentUpdateHandler(index, current);
-    return 0;
-}
-
-void MotorController::velocityChangeHandler(int /* index */,
-                                            double /* velocity */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::currentChangeHandler(int /* index */,
-                                           double /* current */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::inputChangeHandler(int /* index */, int /* inputState */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::encoderPositionChangeHandler(int /* index */,
-                                                   int /* time */,
-                                                   int /* positionChange */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::encoderPositionUpdateHandler(int /* index */,
-                                                   int /* positionChange */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::backEMFUpdateHandler(int /* index */,
-                                           double /* voltage */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::sensorUpdateHandler(int /* index */,
-                                          int /* sensorValue */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
-}
-
-void MotorController::currentUpdateHandler(int /* index */,
-                                           double /* current */)
-{
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+    ((Motor *)ctx)->backEMFChangeHandler(back_emf);
 }
 
 }  // namespace phidgets

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_spatial</name>
+  <version>0.7.9</version>
+  <description>Driver for the Phidgets Spatial 3/3/3 devices</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
+  <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/phidgets_spatial</url>
+  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
+
+  <author email="ccnyroboticslab@gmail.com">Ivan Dryanovski</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>nodelet</depend>
+  <depend>phidgets_api</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
+  <depend>roslaunch</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+
+  <exec_depend>imu_filter_madgwick</exec_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_spatial_nodelet.xml" />
+  </export>
+</package>

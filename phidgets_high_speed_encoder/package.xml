@@ -18,8 +18,8 @@
   <depend>phidgets_msgs</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
+  <depend>roslaunch</depend>
   <depend>sensor_msgs</depend>
-  <depend>std_msgs</depend>
 
   <export>
     <nodelet plugin="${prefix}/phidgets_high_speed_encoder_nodelet.xml" />

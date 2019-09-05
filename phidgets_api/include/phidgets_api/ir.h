@@ -1,27 +1,61 @@
+/*
+ * Copyright (c) 2019, Open Source Robotics Foundation
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the copyright holder nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #ifndef PHIDGETS_API_IR_H
 #define PHIDGETS_API_IR_H
 
-#include "phidgets_api/phidget.h"
+#include <functional>
+
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-class IR : public Phidget
+class IR final
 {
   public:
-    IR();
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(IR)
 
-    virtual ~IR();
+    explicit IR(int32_t serial_number,
+                std::function<void(const char *, uint32_t, int)> code_handler);
 
-  protected:
-    virtual void codeHandler(unsigned char *data, int dataLength, int bitCount,
-                             int repeat);
+    ~IR();
+
+    void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
 
   private:
-    CPhidgetIRHandle ir_handle_;
+    std::function<void(const char *, uint32_t, int)> code_handler_;
+    PhidgetIRHandle ir_handle_;
 
-    static int CodeHandler(CPhidgetIRHandle ir, void *userPtr,
-                           unsigned char *data, int dataLength, int bitCount,
-                           int repeat);
+    static void CodeHandler(PhidgetIRHandle ir, void *ctx, const char *code,
+                            uint32_t bit_count, int is_repeat);
 };
 
 }  // namespace phidgets

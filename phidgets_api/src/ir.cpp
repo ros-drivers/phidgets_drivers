@@ -1,40 +1,74 @@
-#include "phidgets_api/ir.h"
+/*
+ * Copyright (c) 2019, Open Source Robotics Foundation
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the copyright holder nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 
-#include <cstdio>
+#include <functional>
+
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/ir.h"
+#include "phidgets_api/phidget22.h"
 
 namespace phidgets {
 
-IR::IR() : Phidget(), ir_handle_(nullptr)
+IR::IR(int32_t serial_number,
+       std::function<void(const char *, uint32_t, int)> code_handler)
+    : code_handler_(code_handler)
 {
     // create the handle
-    CPhidgetIR_create(&ir_handle_);
+    PhidgetReturnCode ret = PhidgetIR_create(&ir_handle_);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to create IR handle", ret);
+    }
 
-    // pass handle to base class
-    Phidget::init((CPhidgetHandle)ir_handle_);
-
-    // register base class callbacks
-    Phidget::registerHandlers();
+    helpers::openWaitForAttachment(reinterpret_cast<PhidgetHandle>(ir_handle_),
+                                   serial_number, 0, false, 0);
 
     // register ir data callback
-    CPhidgetIR_set_OnCode_Handler(ir_handle_, CodeHandler, this);
+    PhidgetIR_setOnCodeHandler(ir_handle_, CodeHandler, this);
 }
 
 IR::~IR()
 {
+    PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(ir_handle_);
+    helpers::closeAndDelete(&handle);
 }
 
-int IR::CodeHandler(CPhidgetIRHandle /* ir */, void *userptr,
-                    unsigned char *data, int dataLength, int bitCount,
-                    int repeat)
+void IR::codeHandler(const char *code, uint32_t bit_count, int is_repeat) const
 {
-    ((IR *)userptr)->codeHandler(data, dataLength, bitCount, repeat);
-    return 0;
+    code_handler_(code, bit_count, is_repeat);
 }
 
-void IR::codeHandler(unsigned char * /* data */, int /* dataLength */,
-                     int /* bitCount */, int /* repeat */)
+void IR::CodeHandler(PhidgetIRHandle /* ir */, void *ctx, const char *code,
+                     uint32_t bit_count, int is_repeat)
 {
-    // This method can be overridden in a concrete subclass (e.g., ROS wrapper)
+    ((IR *)ctx)->codeHandler(code, bit_count, is_repeat);
 }
 
 }  // namespace phidgets

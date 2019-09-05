@@ -1,0 +1,34 @@
+<!-- Phidgets Motors launch file -->
+
+<launch>
+
+  #### Nodelet manager ######################################################
+
+  <node pkg="nodelet" type="nodelet" name="motors_manager"
+    args="manager" output="screen" />
+
+  #### Motors Driver ########################################################
+
+  <node pkg="nodelet" type="nodelet" name="PhidgetsMotorsNodelet"
+    args="load phidgets_motors/PhidgetsMotorsNodelet motors_manager"
+    output="screen">
+
+    # See README.md for more information on the parameters
+
+    # optional param serial, default is -1
+    <!-- <param name="serial" value="123456"/> -->
+
+    # optional param hub_port, used if connected to a VINT hub
+    <!-- <param name="hub_port" value="0"/> -->
+
+    # optional param braking_strength, default is 0.0
+    <!-- <param name="braking_strength" value="0.0" /> -->
+
+    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
+    <param name="data_interval_ms" value="4"/>
+
+    # optional param publish_rate, defaults to 0
+    <!-- <param name="publish_rate" value="0" /> -->
+  </node>
+
+</launch>
