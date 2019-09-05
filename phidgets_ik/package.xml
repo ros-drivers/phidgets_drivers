@@ -4,15 +4,13 @@
   <version>0.7.9</version>
   <description>Driver for the Phidgets InterfaceKit devices</description>
 
-  <maintainer email="russel@appliedinvention.com">Russel Howe</maintainer>
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
 
   <license>BSD</license>
 
-  <!--
-  <url type="website">http://ros.org/wiki/phidgets_ik</url>
-  -->
-
   <author>James Sarrett</author>
+  <author email="russel@appliedinvention.com">Russel Howe</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
