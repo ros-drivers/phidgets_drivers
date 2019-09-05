@@ -1,41 +1,42 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(libphidget22)
 
-find_package(catkin REQUIRED COMPONENTS)
+find_package(ament_cmake REQUIRED)
 
-catkin_destinations() # set-up destination variables
-file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation")
 
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
     URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.4.20190605.tar.gz
     URL_MD5 96e5d64263866d34e1d9a5f4ba78ba65
 
-    CONFIGURE_COMMAND "./configure"
     PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-fix-uninitialized-memory-access.patch
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND make "CFLAGS=-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation"
-        # copy headers to devel space (catkin does not like headers in source space)
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src/phidget22.h ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-        # copy libs, set-up soname chain
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src/.libs/libphidget22.so.0.0.0 ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}
-        COMMAND ${CMAKE_COMMAND} -E create_symlink libphidget22.so.0 ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/libphidget22.so
-        COMMAND ${CMAKE_COMMAND} -E create_symlink libphidget22.so.0.0.0 ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/libphidget22.so.0
-    INSTALL_COMMAND ""
+    CONFIGURE_COMMAND
+      <SOURCE_DIR>/configure
+      CFLAGS=${extra_c_flags}
+      --prefix=${CMAKE_CURRENT_BINARY_DIR}/libphidget22_install
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
 )
 
-catkin_package(
-    CFG_EXTRAS libphidget22-extras.cmake # catkin_package does not support artifacts in devel space
-    EXPORTED_TARGETS EP_${PROJECT_NAME}
+# The external project will install to the build folder, but we'll install that on make install.
+# Note that we install lib and include separately so we can add the extra level of indirection
+# to the include directory.
+install(
+  DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/libphidget22_install/lib/
+  DESTINATION
+    ${CMAKE_INSTALL_PREFIX}/opt/libphidget22/lib/
 )
 
-install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+install(
+  DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/libphidget22_install/include/
+  DESTINATION
+    ${CMAKE_INSTALL_PREFIX}/opt/libphidget22/include/libphidget22/
 )
 
-install(PROGRAMS ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/libphidget22.so
-                 ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/libphidget22.so.0
-                 ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/libphidget22.so.0.0.0
-    DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
+ament_environment_hooks(env_hook/libphidget22_library_path.sh)
+
+ament_package(CONFIG_EXTRAS "cmake/libphidget22-extras.cmake.in")
