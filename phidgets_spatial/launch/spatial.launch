@@ -24,14 +24,14 @@
     # optional param frame_id, default is "imu_link"
     <!-- <param name="frame_id" value="imu_link"/> -->
 
-    # optional param linear_acceleration_stdev, default is 300ug
-    <!-- <param name="linear_acceleration_stdev" value="0.002943"/> -->
+    # optional param linear_acceleration_stdev, default is 280ug
+    <!-- <param name="linear_acceleration_stdev" value="0.002745862"/> -->
 
-    # optional param angular_velocity_stdev, default is 0.02 deg/s
+    # optional param angular_velocity_stdev, default is 0.095 deg/s
     <!-- <param name="angular_velocity_stdev" value="0.000349" /> -->
 
-    # optional param magnetic_field_stdev, default is 0.095 deg/s
-    <!-- <param name="magnetic_field_stdev" value="0.001658" /> -->
+    # optional param magnetic_field_stdev, default is 1.1 milligauss
+    <!-- <param name="magnetic_field_stdev" type="double" value="1.1e-7" /> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="data_interval_ms" value="4"/>

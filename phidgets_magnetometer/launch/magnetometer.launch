@@ -24,8 +24,8 @@
     # optional param frame_id, default is "imu_link"
     <!-- <param name="frame_id" value="imu_link"/> -->
 
-    # optional param magnetic_field_stdev, default is 0.095 deg/s
-    <!-- <param name="magnetic_field_stdev" value="0.001658" /> -->
+    # optional param magnetic_field_stdev, default is 1.1 milligauss
+    <!-- <param name="magnetic_field_stdev" type="double" value="1.1e-7" /> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="data_interval_ms" value="4"/>

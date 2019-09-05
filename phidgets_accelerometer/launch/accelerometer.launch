@@ -24,8 +24,8 @@
     # optional param frame_id, default is "imu_link"
     <!-- <param name="frame_id" value="imu_link"/> -->
 
-    # optional param linear_acceleration_stdev, default is 300ug
-    <!-- <param name="linear_acceleration_stdev" value="0.002943"/> -->
+    # optional param linear_acceleration_stdev, default is 280ug
+    <!-- <param name="linear_acceleration_stdev" value="0.002745862"/> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="data_interval_ms" value="4"/>

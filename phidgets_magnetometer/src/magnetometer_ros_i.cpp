@@ -63,8 +63,8 @@ MagnetometerRosI::MagnetometerRosI(ros::NodeHandle nh,
     double magnetic_field_stdev;
     if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev))
     {
-        magnetic_field_stdev =
-            0.095 * (M_PI / 180.0);  // 0.095°/s as per manual
+        // 1.1 milligauss magnetometer white noise sigma, as per manual
+        magnetic_field_stdev = 1.1 * 1e-3 * 1e-4;
     }
     magnetic_field_variance_ = magnetic_field_stdev * magnetic_field_stdev;
 

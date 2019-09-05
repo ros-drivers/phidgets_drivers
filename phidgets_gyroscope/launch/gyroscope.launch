@@ -24,8 +24,8 @@
     # optional param frame_id, default is "imu_link"
     <!-- <param name="frame_id" value="imu_link"/> -->
 
-    # optional param angular_velocity_stdev, default is 0.02 deg/s
-    <!-- <param name="angular_velocity_stdev" value="0.000349" /> -->
+    # optional param angular_velocity_stdev, default is 0.095deg/s
+    <!-- <param name="angular_velocity_stdev" value="0.001658" /> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="data_interval_ms" value="4"/>

@@ -40,7 +40,7 @@
 
 namespace phidgets {
 
-const double G = 9.81;
+const double G = 9.80665;
 
 class AccelerometerRosI final
 {

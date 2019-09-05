@@ -42,7 +42,7 @@
 
 namespace phidgets {
 
-const float G = 9.81;
+const float G = 9.80665;
 
 class SpatialRosI final
 {
