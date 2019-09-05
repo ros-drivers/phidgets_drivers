@@ -26,18 +26,19 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     if (!nh_private_.getParam("angular_velocity_stdev",
                               angular_velocity_stdev_))
     {
-        angular_velocity_stdev_ =
-            0.02 * (M_PI / 180.0);  // 0.02 deg/s resolution, as per manual
+        // 0.095 deg/s gyroscope white noise sigma, as per manual
+        angular_velocity_stdev_ = 0.095 * (M_PI / 180.0);
     }
     if (!nh_private_.getParam("linear_acceleration_stdev",
                               linear_acceleration_stdev_))
     {
-        linear_acceleration_stdev_ = 300.0 * 1e-6 * G;  // 300 ug as per manual
+        // 280 ug accelerometer white noise sigma, as per manual
+        linear_acceleration_stdev_ = 280.0 * 1e-6 * G;
     }
     if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev_))
     {
-        magnetic_field_stdev_ =
-            0.095 * (M_PI / 180.0);  // 0.095°/s as per manual
+        // 1.1 milligauss magnetometer white noise sigma, as per manual
+        magnetic_field_stdev_ = 1.1 * 1e-3 * 1e-4;
     }
     if (nh_private_.getParam(
             "serial_number",

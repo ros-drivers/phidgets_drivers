@@ -16,7 +16,7 @@
 
 namespace phidgets {
 
-const float G = 9.81;
+const float G = 9.80665;
 const float MAX_TIMEDIFF_SECONDS = 0.1;
 
 class ImuRosI final : public Imu
