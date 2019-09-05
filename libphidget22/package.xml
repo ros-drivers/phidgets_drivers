@@ -4,12 +4,12 @@
   <version>0.7.9</version>
   <description>This package wraps the libphidget22 to use it as a ROS dependency</description>
 
-  <maintainer email="martin.guenther@dfki.de">Martin Guenther</maintainer>
-  <maintainer email="muhrix@gmail.com">Murilo FM</maintainer>
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
 
   <license>LGPL</license>
 
-  <url type="website">http://ros.org/wiki/libphidget21</url>
+  <url type="website">http://ros.org/wiki/libphidget22</url>
   <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
   <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
 

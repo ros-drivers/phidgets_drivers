@@ -4,6 +4,7 @@
   <version>0.7.9</version>
   <description>Driver for the Phidgets Gyroscope devices</description>
 
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
   <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
 
   <license>BSD</license>

@@ -4,12 +4,13 @@
   <version>0.7.9</version>
   <description>Driver for the Phidgets high speed encoder devices</description>
 
-  <maintainer email="geoffrey.viola@asirobots.com">Geoff Viola</maintainer>
-  <maintainer email="jlblanco@ual.es">José-Luis Blanco Claraco</maintainer>
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
 
   <license>BSD</license>
 
   <author email="geoffrey.viola@asirobots.com">Geoff Viola</author>
+  <author email="jlblanco@ual.es">José-Luis Blanco Claraco</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
