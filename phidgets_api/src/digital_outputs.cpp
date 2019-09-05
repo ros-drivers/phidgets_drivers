@@ -32,9 +32,9 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/digital_output.h"
-#include "phidgets_api/digital_outputs.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/digital_output.hpp"
+#include "phidgets_api/digital_outputs.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

@@ -27,55 +27,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_MOTOR_H
-#define PHIDGETS_API_MOTOR_H
+#ifndef PHIDGETS_API_MOTORS_H
+#define PHIDGETS_API_MOTORS_H
 
 #include <functional>
+#include <memory>
+#include <vector>
 
-#include <libphidget22/phidget22.h>
-
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/motor.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Motor final
+class Motors final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motors)
 
-    explicit Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
-                   int channel,
-                   std::function<void(int, double)> duty_cycle_change_handler,
-                   std::function<void(int, double)> back_emf_change_handler);
+    explicit Motors(int32_t serial_number, int hub_port,
+                    bool is_hub_port_device,
+                    std::function<void(int, double)> duty_cycle_change_handler,
+                    std::function<void(int, double)> back_emf_change_handler);
 
-    ~Motor();
+    ~Motors();
 
-    double getDutyCycle() const;
-    void setDutyCycle(double duty_cycle) const;
-    double getAcceleration() const;
-    void setAcceleration(double acceleration) const;
-    double getBackEMF() const;
-    void setDataInterval(uint32_t data_interval_ms) const;
+    uint32_t getMotorCount() const noexcept;
+    double getDutyCycle(int index) const;
+    void setDutyCycle(int index, double duty_cycle) const;
+    double getAcceleration(int index) const;
+    void setAcceleration(int index, double acceleration) const;
+    double getBackEMF(int index) const;
+    void setDataInterval(int index, uint32_t data_interval_ms) const;
 
-    double getBraking() const;
-    void setBraking(double braking) const;
-
-    void dutyCycleChangeHandler(double duty_cycle) const;
-
-    void backEMFChangeHandler(double back_emf) const;
+    double getBraking(int index) const;
+    void setBraking(int index, double braking) const;
 
   private:
-    int channel_;
-    std::function<void(int, double)> duty_cycle_change_handler_;
-    std::function<void(int, double)> back_emf_change_handler_;
-    PhidgetDCMotorHandle motor_handle_;
-
-    static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
-                                       void *ctx, double duty_cycle);
-    static void BackEMFChangeHandler(PhidgetDCMotorHandle motor_handle,
-                                     void *ctx, double back_emf);
+    uint32_t motor_count_;
+    std::vector<std::unique_ptr<Motor>> motors_;
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_MOTOR_H
+#endif  // PHIDGETS_API_MOTORS_H

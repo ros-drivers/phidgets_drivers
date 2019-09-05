@@ -27,38 +27,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_INPUTS_H
-#define PHIDGETS_API_DIGITAL_INPUTS_H
+#ifndef PHIDGETS_API_GYROSCOPE_H
+#define PHIDGETS_API_GYROSCOPE_H
 
 #include <functional>
-#include <memory>
-#include <vector>
 
-#include "phidgets_api/digital_input.h"
-#include "phidgets_api/phidget22.h"
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class DigitalInputs
+class Gyroscope final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalInputs)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Gyroscope)
 
-    explicit DigitalInputs(int32_t serial_number, int hub_port,
-                           bool is_hub_port_device,
-                           std::function<void(int, int)> input_handler);
+    explicit Gyroscope(
+        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        std::function<void(const double[3], double)> data_handler);
 
-    ~DigitalInputs();
+    ~Gyroscope();
 
-    uint32_t getInputCount() const noexcept;
+    void dataHandler(const double angular_rate[3], double timestamp) const;
 
-    bool getInputValue(int index) const;
+    void getAngularRate(double &x, double &y, double &z,
+                        double &timestamp) const;
+
+    void setDataInterval(uint32_t interval_ms) const;
+
+    void zero() const;
 
   private:
-    uint32_t input_count_;
-    std::vector<std::unique_ptr<DigitalInput>> dis_;
+    std::function<void(const double[3], double)> data_handler_;
+    PhidgetGyroscopeHandle gyro_handle_;
+
+    static void DataHandler(PhidgetGyroscopeHandle input_handle, void *ctx,
+                            const double angular_rate[3], double timestamp);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_INPUTS_H
+#endif  // PHIDGETS_API_GYROSCOPE_H

@@ -31,8 +31,8 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/ir.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/ir.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

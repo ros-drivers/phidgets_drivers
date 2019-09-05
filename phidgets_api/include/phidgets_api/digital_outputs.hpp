@@ -27,45 +27,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_GYROSCOPE_H
-#define PHIDGETS_API_GYROSCOPE_H
+#ifndef PHIDGETS_API_DIGITAL_OUTPUTS_H
+#define PHIDGETS_API_DIGITAL_OUTPUTS_H
 
-#include <functional>
+#include <memory>
+#include <vector>
 
-#include <libphidget22/phidget22.h>
-
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/digital_output.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Gyroscope final
+class DigitalOutputs final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Gyroscope)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalOutputs)
 
-    explicit Gyroscope(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
-        std::function<void(const double[3], double)> data_handler);
+    explicit DigitalOutputs(int32_t serial_number, int hub_port,
+                            bool is_hub_port_device);
 
-    ~Gyroscope();
+    ~DigitalOutputs();
 
-    void dataHandler(const double angular_rate[3], double timestamp) const;
+    uint32_t getOutputCount() const noexcept;
 
-    void getAngularRate(double &x, double &y, double &z,
-                        double &timestamp) const;
-
-    void setDataInterval(uint32_t interval_ms) const;
-
-    void zero() const;
+    void setOutputState(int index, bool state) const;
 
   private:
-    std::function<void(const double[3], double)> data_handler_;
-    PhidgetGyroscopeHandle gyro_handle_;
-
-    static void DataHandler(PhidgetGyroscopeHandle input_handle, void *ctx,
-                            const double angular_rate[3], double timestamp);
+    uint32_t output_count_;
+    std::vector<std::unique_ptr<DigitalOutput>> dos_;
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_GYROSCOPE_H
+#endif  // PHIDGETS_API_DIGITAL_OUTPUTS_H

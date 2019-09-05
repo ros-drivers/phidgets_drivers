@@ -27,43 +27,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_ACCELEROMETER_H
-#define PHIDGETS_API_ACCELEROMETER_H
+#ifndef PHIDGETS_API_DIGITAL_INPUTS_H
+#define PHIDGETS_API_DIGITAL_INPUTS_H
 
 #include <functional>
+#include <memory>
+#include <vector>
 
-#include <libphidget22/phidget22.h>
-
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/digital_input.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Accelerometer final
+class DigitalInputs
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Accelerometer)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalInputs)
 
-    explicit Accelerometer(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
-        std::function<void(const double[3], double)> data_handler);
+    explicit DigitalInputs(int32_t serial_number, int hub_port,
+                           bool is_hub_port_device,
+                           std::function<void(int, int)> input_handler);
 
-    ~Accelerometer();
+    ~DigitalInputs();
 
-    void getAcceleration(double &x, double &y, double &z,
-                         double &timestamp) const;
+    uint32_t getInputCount() const noexcept;
 
-    void setDataInterval(uint32_t interval_ms) const;
-
-    void dataHandler(const double acceleration[3], double timestamp) const;
+    bool getInputValue(int index) const;
 
   private:
-    std::function<void(const double[3], double)> data_handler_;
-    PhidgetAccelerometerHandle accel_handle_;
-
-    static void DataHandler(PhidgetAccelerometerHandle input_handle, void *ctx,
-                            const double acceleration[3], double timestamp);
+    uint32_t input_count_;
+    std::vector<std::unique_ptr<DigitalInput>> dis_;
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_ACCELEROMETER_H
+#endif  // PHIDGETS_API_DIGITAL_INPUTS_H

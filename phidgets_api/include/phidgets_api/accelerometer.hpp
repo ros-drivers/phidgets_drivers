@@ -27,46 +27,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_MOTORS_H
-#define PHIDGETS_API_MOTORS_H
+#ifndef PHIDGETS_API_ACCELEROMETER_H
+#define PHIDGETS_API_ACCELEROMETER_H
 
 #include <functional>
-#include <memory>
-#include <vector>
 
-#include "phidgets_api/motor.h"
-#include "phidgets_api/phidget22.h"
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Motors final
+class Accelerometer final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motors)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Accelerometer)
 
-    explicit Motors(int32_t serial_number, int hub_port,
-                    bool is_hub_port_device,
-                    std::function<void(int, double)> duty_cycle_change_handler,
-                    std::function<void(int, double)> back_emf_change_handler);
+    explicit Accelerometer(
+        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        std::function<void(const double[3], double)> data_handler);
 
-    ~Motors();
+    ~Accelerometer();
 
-    uint32_t getMotorCount() const noexcept;
-    double getDutyCycle(int index) const;
-    void setDutyCycle(int index, double duty_cycle) const;
-    double getAcceleration(int index) const;
-    void setAcceleration(int index, double acceleration) const;
-    double getBackEMF(int index) const;
-    void setDataInterval(int index, uint32_t data_interval_ms) const;
+    void getAcceleration(double &x, double &y, double &z,
+                         double &timestamp) const;
 
-    double getBraking(int index) const;
-    void setBraking(int index, double braking) const;
+    void setDataInterval(uint32_t interval_ms) const;
+
+    void dataHandler(const double acceleration[3], double timestamp) const;
 
   private:
-    uint32_t motor_count_;
-    std::vector<std::unique_ptr<Motor>> motors_;
+    std::function<void(const double[3], double)> data_handler_;
+    PhidgetAccelerometerHandle accel_handle_;
+
+    static void DataHandler(PhidgetAccelerometerHandle input_handle, void *ctx,
+                            const double acceleration[3], double timestamp);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_MOTORS_H
+#endif  // PHIDGETS_API_ACCELEROMETER_H

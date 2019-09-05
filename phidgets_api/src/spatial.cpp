@@ -34,8 +34,8 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/phidget22.h"
-#include "phidgets_api/spatial.h"
+#include "phidgets_api/phidget22.hpp"
+#include "phidgets_api/spatial.hpp"
 
 namespace phidgets {
 
