@@ -27,26 +27,58 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef PHIDGETS_ACCELEROMETER_ACCELEROMETER_ROS_I_H
+#define PHIDGETS_ACCELEROMETER_ACCELEROMETER_ROS_I_H
+
 #include <memory>
+#include <mutex>
+#include <string>
 
-#include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 
-#include "phidgets_accelerometer/accelerometer_ros_i.h"
-#include "phidgets_accelerometer/phidgets_accelerometer_nodelet.h"
+#include "phidgets_api/accelerometer.hpp"
 
-typedef phidgets::PhidgetsAccelerometerNodelet PhidgetsAccelerometerNodelet;
+namespace phidgets {
 
-PLUGINLIB_EXPORT_CLASS(PhidgetsAccelerometerNodelet, nodelet::Nodelet)
+const double G = 9.80665;
 
-void PhidgetsAccelerometerNodelet::onInit()
+class AccelerometerRosI final : public rclcpp::Node
 {
-    NODELET_INFO("Initializing Phidgets Accelerometer Nodelet");
+  public:
+    explicit AccelerometerRosI(const rclcpp::NodeOptions& options);
 
-    // TODO: Do we want the single threaded or multithreaded NH?
-    ros::NodeHandle nh = getMTNodeHandle();
-    ros::NodeHandle nh_private = getMTPrivateNodeHandle();
+  private:
+    std::unique_ptr<Accelerometer> accelerometer_;
+    std::string frame_id_;
+    double linear_acceleration_variance_;
+    std::mutex accel_mutex_;
+    double last_accel_x_;
+    double last_accel_y_;
+    double last_accel_z_;
 
-    accelerometer_ = std::make_unique<AccelerometerRosI>(nh, nh_private);
-}
+    rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr accelerometer_pub_;
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
+    int publish_rate_;
+
+    rclcpp::Time ros_time_zero_;
+    bool synchronize_timestamps_{true};
+    uint64_t data_time_zero_ns_{0};
+    uint64_t last_data_timestamp_ns_{0};
+    uint64_t last_ros_stamp_ns_{0};
+    int64_t time_resync_interval_ns_{0};
+    int64_t data_interval_ns_{0};
+    bool can_publish_{false};
+    rclcpp::Time last_cb_time_;
+    int64_t cb_delta_epsilon_ns_{0};
+
+    void publishLatest();
+
+    void accelerometerChangeCallback(const double acceleration[3],
+                                     const double timestamp);
+};
+
+}  // namespace phidgets
+
+#endif  // PHIDGETS_ACCELEROMETER_ACCELEROMETER_ROS_I_H
