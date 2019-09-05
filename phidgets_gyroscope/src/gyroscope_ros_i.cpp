@@ -124,7 +124,8 @@ GyroscopeRosI::GyroscopeRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
         gyroscope_->setDataInterval(data_interval_ms);
 
-        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5);
+        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5,
+                                                       true /* latched */);
 
         calibrate();
 
@@ -148,9 +149,14 @@ GyroscopeRosI::GyroscopeRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
 void GyroscopeRosI::calibrate()
 {
-    ROS_INFO("Calibrating IMU...");
+    ROS_INFO(
+        "Calibrating Gyro, this takes around 2 seconds to finish. "
+        "Make sure that the device is not moved during this time.");
     gyroscope_->zero();
-    ROS_INFO("Calibrating IMU done.");
+    // The API call returns directly, so we "enforce" the recommended 2 sec
+    // here. See: https://github.com/ros-drivers/phidgets_drivers/issues/40
+    ros::Duration(2.).sleep();
+    ROS_INFO("Calibrating Gyro done.");
 
     // publish message
     std_msgs::Bool is_calibrated_msg;
