@@ -27,40 +27,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_ANALOG_INPUTS_H
-#define PHIDGETS_API_ANALOG_INPUTS_H
+#ifndef PHIDGETS_API_MOTOR_H
+#define PHIDGETS_API_MOTOR_H
 
 #include <functional>
-#include <memory>
-#include <vector>
 
-#include "phidgets_api/analog_input.h"
-#include "phidgets_api/phidget22.h"
+#include <libphidget22/phidget22.h>
+
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class AnalogInputs final
+class Motor final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogInputs)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
 
-    explicit AnalogInputs(int32_t serial_number, int hub_port,
-                          bool is_hub_port_device,
-                          std::function<void(int, double)> input_handler);
+    explicit Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
+                   int channel,
+                   std::function<void(int, double)> duty_cycle_change_handler,
+                   std::function<void(int, double)> back_emf_change_handler);
 
-    ~AnalogInputs();
+    ~Motor();
 
-    uint32_t getInputCount() const noexcept;
+    double getDutyCycle() const;
+    void setDutyCycle(double duty_cycle) const;
+    double getAcceleration() const;
+    void setAcceleration(double acceleration) const;
+    double getBackEMF() const;
+    void setDataInterval(uint32_t data_interval_ms) const;
 
-    double getSensorValue(int index) const;
+    double getBraking() const;
+    void setBraking(double braking) const;
 
-    void setDataInterval(int index, uint32_t data_interval_ms) const;
+    void dutyCycleChangeHandler(double duty_cycle) const;
+
+    void backEMFChangeHandler(double back_emf) const;
 
   private:
-    uint32_t input_count_;
-    std::vector<std::unique_ptr<AnalogInput>> ais_;
+    int channel_;
+    std::function<void(int, double)> duty_cycle_change_handler_;
+    std::function<void(int, double)> back_emf_change_handler_;
+    PhidgetDCMotorHandle motor_handle_;
+
+    static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
+                                       void *ctx, double duty_cycle);
+    static void BackEMFChangeHandler(PhidgetDCMotorHandle motor_handle,
+                                     void *ctx, double back_emf);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_ANALOG_INPUTS_H
+#endif  // PHIDGETS_API_MOTOR_H

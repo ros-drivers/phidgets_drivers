@@ -27,36 +27,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_OUTPUTS_H
-#define PHIDGETS_API_DIGITAL_OUTPUTS_H
+#ifndef PHIDGETS_API_DIGITAL_OUTPUT_H
+#define PHIDGETS_API_DIGITAL_OUTPUT_H
 
-#include <memory>
-#include <vector>
+#include <libphidget22/phidget22.h>
 
-#include "phidgets_api/digital_output.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class DigitalOutputs final
+class DigitalOutput final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalOutputs)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalOutput)
 
-    explicit DigitalOutputs(int32_t serial_number, int hub_port,
-                            bool is_hub_port_device);
+    explicit DigitalOutput(int32_t serial_number, int hub_port,
+                           bool is_hub_port_device, int channel);
 
-    ~DigitalOutputs();
+    ~DigitalOutput();
 
-    uint32_t getOutputCount() const noexcept;
-
-    void setOutputState(int index, bool state) const;
+    void setOutputState(bool state) const;
 
   private:
-    uint32_t output_count_;
-    std::vector<std::unique_ptr<DigitalOutput>> dos_;
+    PhidgetDigitalOutputHandle do_handle_;
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_OUTPUTS_H
+#endif  // PHIDGETS_API_DIGITAL_OUTPUT_H

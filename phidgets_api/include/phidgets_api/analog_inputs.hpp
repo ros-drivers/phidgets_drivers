@@ -27,41 +27,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_INPUT_H
-#define PHIDGETS_API_DIGITAL_INPUT_H
+#ifndef PHIDGETS_API_ANALOG_INPUTS_H
+#define PHIDGETS_API_ANALOG_INPUTS_H
 
 #include <functional>
+#include <memory>
+#include <vector>
 
-#include <libphidget22/phidget22.h>
-
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/analog_input.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class DigitalInput
+class AnalogInputs final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalInput)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogInputs)
 
-    explicit DigitalInput(int32_t serial_number, int hub_port,
-                          bool is_hub_port_device, int channel,
-                          std::function<void(int, int)> input_handler);
+    explicit AnalogInputs(int32_t serial_number, int hub_port,
+                          bool is_hub_port_device,
+                          std::function<void(int, double)> input_handler);
 
-    ~DigitalInput();
+    ~AnalogInputs();
 
-    bool getInputValue() const;
+    uint32_t getInputCount() const noexcept;
 
-    void stateChangeHandler(int state) const;
+    double getSensorValue(int index) const;
+
+    void setDataInterval(int index, uint32_t data_interval_ms) const;
 
   private:
-    int channel_;
-    std::function<void(int, int)> input_handler_;
-    PhidgetDigitalInputHandle di_handle_;
-
-    static void StateChangeHandler(PhidgetDigitalInputHandle input_handle,
-                                   void *ctx, int state);
+    uint32_t input_count_;
+    std::vector<std::unique_ptr<AnalogInput>> ais_;
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_INPUT_H
+#endif  // PHIDGETS_API_ANALOG_INPUTS_H

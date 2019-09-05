@@ -34,8 +34,8 @@
 #include <memory>
 #include <vector>
 
-#include "phidgets_api/encoder.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/encoder.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

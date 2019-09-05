@@ -34,8 +34,8 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/magnetometer.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/magnetometer.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

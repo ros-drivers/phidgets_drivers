@@ -27,57 +27,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_SPATIAL_H
-#define PHIDGETS_API_SPATIAL_H
+#ifndef PHIDGETS_API_IR_H
+#define PHIDGETS_API_IR_H
 
 #include <functional>
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Spatial final
+class IR final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Spatial)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(IR)
 
-    explicit Spatial(int32_t serial_number, int hub_port,
-                     bool is_hub_port_device,
-                     std::function<void(const double[3], const double[3],
-                                        const double[3], double)>
-                         data_handler);
+    explicit IR(int32_t serial_number,
+                std::function<void(const char *, uint32_t, int)> code_handler);
 
-    ~Spatial();
+    ~IR();
 
-    void setCompassCorrectionParameters(double cc_mag_field, double cc_offset0,
-                                        double cc_offset1, double cc_offset2,
-                                        double cc_gain0, double cc_gain1,
-                                        double cc_gain2, double cc_T0,
-                                        double cc_T1, double cc_T2,
-                                        double cc_T3, double cc_T4,
-                                        double cc_T5);
-
-    void setDataInterval(uint32_t interval_ms) const;
-
-    void zero() const;
-
-    void dataHandler(const double acceleration[3], const double angular_rate[3],
-                     const double magnetic_field[3], double timestamp) const;
+    void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
 
   private:
-    std::function<void(const double[3], const double[3], const double[3],
-                       double)>
-        data_handler_;
-    PhidgetSpatialHandle spatial_handle_;
+    std::function<void(const char *, uint32_t, int)> code_handler_;
+    PhidgetIRHandle ir_handle_;
 
-    static void DataHandler(PhidgetSpatialHandle input_handle, void *ctx,
-                            const double acceleration[3],
-                            const double angular_rate[3],
-                            const double magnetic_field[3], double timestamp);
+    static void CodeHandler(PhidgetIRHandle ir, void *ctx, const char *code,
+                            uint32_t bit_count, int is_repeat);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_SPATIAL_H
+#endif  // PHIDGETS_API_IR_H

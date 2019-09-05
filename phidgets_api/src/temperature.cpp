@@ -32,8 +32,8 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/phidget22.h"
-#include "phidgets_api/temperature.h"
+#include "phidgets_api/phidget22.hpp"
+#include "phidgets_api/temperature.hpp"
 
 namespace phidgets {
 

@@ -32,9 +32,9 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/digital_input.h"
-#include "phidgets_api/digital_inputs.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/digital_input.hpp"
+#include "phidgets_api/digital_inputs.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

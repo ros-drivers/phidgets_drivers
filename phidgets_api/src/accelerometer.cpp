@@ -34,8 +34,8 @@
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/accelerometer.h"
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/accelerometer.hpp"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 

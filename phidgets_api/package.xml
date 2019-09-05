@@ -16,8 +16,11 @@
   <author>Tully Foote</author>
   <author>Ivan Dryanovski</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>libphidget22</depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>

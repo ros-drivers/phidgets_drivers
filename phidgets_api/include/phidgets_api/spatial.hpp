@@ -27,27 +27,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_MAGNETOMETER_H
-#define PHIDGETS_API_MAGNETOMETER_H
+#ifndef PHIDGETS_API_SPATIAL_H
+#define PHIDGETS_API_SPATIAL_H
 
 #include <functional>
 
 #include <libphidget22/phidget22.h>
 
-#include "phidgets_api/phidget22.h"
+#include "phidgets_api/phidget22.hpp"
 
 namespace phidgets {
 
-class Magnetometer final
+class Spatial final
 {
   public:
-    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Magnetometer)
+    PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Spatial)
 
-    explicit Magnetometer(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
-        std::function<void(const double[3], double)> data_handler);
+    explicit Spatial(int32_t serial_number, int hub_port,
+                     bool is_hub_port_device,
+                     std::function<void(const double[3], const double[3],
+                                        const double[3], double)>
+                         data_handler);
 
-    ~Magnetometer();
+    ~Spatial();
 
     void setCompassCorrectionParameters(double cc_mag_field, double cc_offset0,
                                         double cc_offset1, double cc_offset2,
@@ -57,21 +59,25 @@ class Magnetometer final
                                         double cc_T3, double cc_T4,
                                         double cc_T5);
 
-    void getMagneticField(double &x, double &y, double &z,
-                          double &timestamp) const;
-
     void setDataInterval(uint32_t interval_ms) const;
 
-    void dataHandler(const double magnetic_field[3], double timestamp) const;
+    void zero() const;
+
+    void dataHandler(const double acceleration[3], const double angular_rate[3],
+                     const double magnetic_field[3], double timestamp) const;
 
   private:
-    std::function<void(const double[3], double)> data_handler_;
-    PhidgetMagnetometerHandle mag_handle_;
+    std::function<void(const double[3], const double[3], const double[3],
+                       double)>
+        data_handler_;
+    PhidgetSpatialHandle spatial_handle_;
 
-    static void DataHandler(PhidgetMagnetometerHandle input_handle, void *ctx,
+    static void DataHandler(PhidgetSpatialHandle input_handle, void *ctx,
+                            const double acceleration[3],
+                            const double angular_rate[3],
                             const double magnetic_field[3], double timestamp);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_MAGNETOMETER_H
+#endif  // PHIDGETS_API_SPATIAL_H
