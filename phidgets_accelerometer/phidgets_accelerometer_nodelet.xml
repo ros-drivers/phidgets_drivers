@@ -1,9 +1,0 @@
-<!-- Phidgets Accelerometer nodelet publisher -->
-<library path="lib/libphidgets_accelerometer_nodelet">
-  <class name="phidgets_accelerometer/PhidgetsAccelerometerNodelet" type="PhidgetsAccelerometerNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Accelerometer nodelet publisher.
-    </description>
-  </class>
-</library>
