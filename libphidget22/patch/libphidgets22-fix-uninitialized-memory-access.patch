@@ -42,3 +42,15 @@ diff -Nurp libphidget22-1.4.20190605.orig/src/class/distancesensor.gen.c libphid
  	ch->count = 0;
  
  	return (ret);
+diff -Nurp libphidget22-1.4.20190605.orig/configure libphidget22-1.4.20190605/configure
+--- libphidget22-1.4.20190605.orig/configure	2019-06-05 16:06:56.000000000 -0400
++++ libphidget22-1.4.20190605/configure	2019-09-05 11:50:10.510502872 -0400
+@@ -5676,7 +5676,7 @@ esac
+ fi
+ 
+ : ${AR=ar}
+-: ${AR_FLAGS=cru}
++: ${AR_FLAGS=cr}
+ 
+ 
+ 
