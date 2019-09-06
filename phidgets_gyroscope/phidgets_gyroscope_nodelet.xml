@@ -1,9 +1,0 @@
-<!-- Phidgets Accelerometer nodelet publisher -->
-<library path="lib/libphidgets_gyroscope_nodelet">
-  <class name="phidgets_gyroscope/PhidgetsGyroscopeNodelet" type="PhidgetsGyroscopeNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Gyroscope nodelet publisher.
-    </description>
-  </class>
-</library>
