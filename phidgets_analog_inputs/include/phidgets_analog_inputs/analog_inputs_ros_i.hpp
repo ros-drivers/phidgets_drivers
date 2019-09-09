@@ -27,26 +27,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_ANALOG_INPUTS_PHIDGETS_ANALOG_INPUTS_NODELET_H
-#define PHIDGETS_ANALOG_INPUTS_PHIDGETS_ANALOG_INPUTS_NODELET_H
+#ifndef PHIDGETS_ANALOG_INPUTS_ANALOG_INPUTS_ROS_I_H
+#define PHIDGETS_ANALOG_INPUTS_ANALOG_INPUTS_ROS_I_H
 
 #include <memory>
+#include <mutex>
+#include <vector>
 
-#include <nodelet/nodelet.h>
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_analog_inputs/analog_inputs_ros_i.h"
+#include "phidgets_api/analog_inputs.hpp"
 
 namespace phidgets {
 
-class PhidgetsAnalogInputsNodelet : public nodelet::Nodelet
+struct ValToPub {
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub;
+    double last_val;
+};
+
+class AnalogInputsRosI final : public rclcpp::Node
 {
   public:
-    virtual void onInit();
+    explicit AnalogInputsRosI(const rclcpp::NodeOptions& options);
 
   private:
-    std::unique_ptr<AnalogInputsRosI> ais_;
+    std::unique_ptr<AnalogInputs> ais_;
+    std::mutex ai_mutex_;
+    std::vector<ValToPub> val_to_pubs_;
+
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
+    int publish_rate_;
+
+    void publishLatest(int index);
+
+    void sensorChangeCallback(int index, double sensor_value);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_ANALOG_INPUTS_PHIDGETS_ANALOG_INPUTS_NODELET_H
+#endif  // PHIDGETS_ANALOG_INPUTS_ANALOG_INPUTS_ROS_I_H

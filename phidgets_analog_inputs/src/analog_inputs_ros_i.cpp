@@ -27,52 +27,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 
-#include <ros/ros.h>
-#include <std_msgs/Float64.h>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+#include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_analog_inputs/analog_inputs_ros_i.h"
-#include "phidgets_api/analog_inputs.h"
+#include "phidgets_analog_inputs/analog_inputs_ros_i.hpp"
+#include "phidgets_api/analog_inputs.hpp"
 
 namespace phidgets {
 
-AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
-                                   ros::NodeHandle nh_private)
-    : nh_(nh), nh_private_(nh_private)
+AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
+    : rclcpp::Node("phidgets_analog_inputs_node", options)
 {
-    ROS_INFO("Starting Phidgets AnalogInputs");
+    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-    int serial_num;
-    if (!nh_private_.getParam("serial", serial_num))
+    RCLCPP_INFO(get_logger(), "Starting Phidgets AnalogInputs");
+
+    int serial_num =
+        this->declare_parameter("serial", -1);  // default open any device
+
+    int hub_port = this->declare_parameter(
+        "hub_port", 0);  // only used if the device is on a VINT hub_port
+
+    // only used if the device is on a VINT hub_port
+    bool is_hub_port_device =
+        this->declare_parameter("is_hub_port_device", false);
+
+    int data_interval_ms = this->declare_parameter("data_interval_ms", 250);
+
+    publish_rate_ = this->declare_parameter("publish_rate", 0);
+    if (publish_rate_ > 1000)
     {
-        serial_num = -1;  // default open any device
-    }
-    int hub_port;
-    if (!nh_private.getParam("hub_port", hub_port))
-    {
-        hub_port = 0;  // only used if the device is on a VINT hub_port
-    }
-    bool is_hub_port_device;
-    if (!nh_private.getParam("is_hub_port_device", is_hub_port_device))
-    {
-        // only used if the device is on a VINT hub_port
-        is_hub_port_device = false;
-    }
-    int data_interval_ms;
-    if (!nh_private.getParam("data_interval_ms", data_interval_ms))
-    {
-        data_interval_ms = 250;
-    }
-    if (!nh_private.getParam("publish_rate", publish_rate_))
-    {
-        publish_rate_ = 0;
+        throw std::runtime_error("Publish rate must be <= 1000");
     }
 
-    ROS_INFO("Connecting to Phidgets AnalogInputs serial %d, hub port %d ...",
-             serial_num, hub_port);
+    RCLCPP_INFO(
+        get_logger(),
+        "Connecting to Phidgets AnalogInputs serial %d, hub port %d ...",
+        serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -88,14 +86,14 @@ AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
                       std::placeholders::_1, std::placeholders::_2));
 
         n_in = ais_->getInputCount();
-        ROS_INFO("Connected %d inputs", n_in);
+        RCLCPP_INFO(get_logger(), "Connected %d inputs", n_in);
         val_to_pubs_.resize(n_in);
         for (int i = 0; i < n_in; i++)
         {
             char topicname[] = "analog_input00";
             snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
             val_to_pubs_[i].pub =
-                nh_.advertise<std_msgs::Float64>(topicname, 1);
+                this->create_publisher<std_msgs::msg::Float64>(topicname, 1);
 
             ais_->setDataInterval(i, data_interval_ms);
 
@@ -103,14 +101,16 @@ AnalogInputsRosI::AnalogInputsRosI(ros::NodeHandle nh,
         }
     } catch (const Phidget22Error& err)
     {
-        ROS_ERROR("AnalogInputs: %s", err.what());
+        RCLCPP_ERROR(get_logger(), "AnalogInputs: %s", err.what());
         throw;
     }
 
     if (publish_rate_ > 0)
     {
-        timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
-                                 &AnalogInputsRosI::timerCallback, this);
+        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
+            std::bind(&AnalogInputsRosI::timerCallback, this));
     } else
     {
         // If we are *not* publishing periodically, then we are event driven and
@@ -130,12 +130,12 @@ void AnalogInputsRosI::publishLatest(int index)
     // get rawsensorvalue and divide by 4096, which according to the
     // documentation for both the IK888 and IK222 are the maximum sensor value
     // Multiply by VREF=5.0V to get voltage
-    std_msgs::Float64 msg;
-    msg.data = VREF * val_to_pubs_[index].last_val / 4095.0;
-    val_to_pubs_[index].pub.publish(msg);
+    auto msg = std::make_unique<std_msgs::msg::Float64>();
+    msg->data = VREF * val_to_pubs_[index].last_val / 4095.0;
+    val_to_pubs_[index].pub->publish(std::move(msg));
 }
 
-void AnalogInputsRosI::timerCallback(const ros::TimerEvent& /* event */)
+void AnalogInputsRosI::timerCallback()
 {
     std::lock_guard<std::mutex> lock(ai_mutex_);
     for (int i = 0; i < static_cast<int>(val_to_pubs_.size()); ++i)
@@ -159,3 +159,5 @@ void AnalogInputsRosI::sensorChangeCallback(int index, double sensor_value)
 }
 
 }  // namespace phidgets
+
+RCLCPP_COMPONENTS_REGISTER_NODE(phidgets::AnalogInputsRosI)

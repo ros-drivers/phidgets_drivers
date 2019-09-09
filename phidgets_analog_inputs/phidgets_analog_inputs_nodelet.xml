@@ -1,9 +1,0 @@
-<!-- Phidgets Analog Inputs nodelet publisher -->
-<library path="lib/libphidgets_analog_inputs_nodelet">
-  <class name="phidgets_analog_inputs/PhidgetsAnalogInputsNodelet" type="PhidgetsAnalogInputsNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Analog Inputs nodelet publisher.
-    </description>
-  </class>
-</library>
