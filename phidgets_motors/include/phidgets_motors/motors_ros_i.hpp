@@ -27,26 +27,64 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef PHIDGETS_MOTORS_MOTORS_ROS_I_H
+#define PHIDGETS_MOTORS_MOTORS_ROS_I_H
+
 #include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
-#include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
-#include <ros/ros.h>
+#include <std_msgs/msg/float64.h>
+#include <rclcpp/rclcpp.hpp>
 
-#include "phidgets_motors/motors_ros_i.h"
-#include "phidgets_motors/phidgets_motors_nodelet.h"
+#include "phidgets_api/motors.hpp"
 
-typedef phidgets::PhidgetsMotorsNodelet PhidgetsMotorsNodelet;
+namespace phidgets {
 
-PLUGINLIB_EXPORT_CLASS(PhidgetsMotorsNodelet, nodelet::Nodelet)
-
-void PhidgetsMotorsNodelet::onInit()
+class DutyCycleSetter final
 {
-    NODELET_INFO("Initializing Phidgets Motors Nodelet");
+  public:
+    explicit DutyCycleSetter(Motors* motors, int index, rclcpp::Node* node,
+                             const std::string& topicname);
 
-    // TODO: Do we want the single threaded or multithreaded NH?
-    ros::NodeHandle nh = getMTNodeHandle();
-    ros::NodeHandle nh_private = getMTPrivateNodeHandle();
+  private:
+    void setMsgCallback(const std_msgs::msg::Float64::SharedPtr msg);
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription_;
+    Motors* motors_;
+    int index_;
+};
 
-    motors_ = std::make_unique<MotorsRosI>(nh, nh_private);
-}
+struct MotorVals {
+    std::unique_ptr<DutyCycleSetter> duty_cycle_sub;
+    double last_duty_cycle_val;
+    double last_back_emf_val;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr duty_cycle_pub;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr back_emf_pub;
+};
+
+class MotorsRosI final : public rclcpp::Node
+{
+  public:
+    explicit MotorsRosI(const rclcpp::NodeOptions& options);
+
+  private:
+    std::unique_ptr<Motors> motors_;
+    std::mutex motor_mutex_;
+    std::vector<MotorVals> motor_vals_;
+
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
+    int publish_rate_;
+
+    void publishLatestDutyCycle(int index);
+    void publishLatestBackEMF(int index);
+
+    void dutyCycleChangeCallback(int channel, double duty_cycle);
+
+    void backEMFChangeCallback(int channel, double back_emf);
+};
+
+}  // namespace phidgets
+
+#endif  // PHIDGETS_MOTORS_MOTORS_ROS_I_H

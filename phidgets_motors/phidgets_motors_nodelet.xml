@@ -1,9 +1,0 @@
-<!-- Phidgets Motors nodelet publisher -->
-<library path="lib/libphidgets_motors_nodelet">
-  <class name="phidgets_motors/PhidgetsMotorsNodelet" type="PhidgetsMotorsNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Motors nodelet publisher.
-    </description>
-  </class>
-</library>
