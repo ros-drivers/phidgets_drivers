@@ -1,7 +1,7 @@
-Phidgets magnetometer ROS driver
+Phidgets magnetometer ROS 2 driver
 ================================
 
-This is the ROS driver for Phidgets magnetometer.  The various topics, services, and parameters that the node operates with are listed below.
+This is the ROS 2 driver for Phidgets magnetometer.  The various topics, services, and parameters that the node operates with are listed below.
 
 Topics
 ------
