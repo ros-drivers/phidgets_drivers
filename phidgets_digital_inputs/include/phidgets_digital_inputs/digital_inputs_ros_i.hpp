@@ -34,31 +34,30 @@
 #include <mutex>
 #include <vector>
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/bool.hpp>
 
-#include "phidgets_api/digital_inputs.h"
+#include "phidgets_api/digital_inputs.hpp"
 
 namespace phidgets {
 
 struct ValToPub {
-    ros::Publisher pub;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr pub;
     bool last_val;
 };
 
-class DigitalInputsRosI final
+class DigitalInputsRosI final : public rclcpp::Node
 {
   public:
-    explicit DigitalInputsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+    explicit DigitalInputsRosI(const rclcpp::NodeOptions& options);
 
   private:
     std::unique_ptr<DigitalInputs> dis_;
     std::mutex di_mutex_;
     std::vector<ValToPub> val_to_pubs_;
 
-    ros::NodeHandle nh_;
-    ros::NodeHandle nh_private_;
-    void timerCallback(const ros::TimerEvent& event);
-    ros::Timer timer_;
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
     int publish_rate_;
 
     void publishLatest(int index);
