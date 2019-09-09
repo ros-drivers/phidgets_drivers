@@ -30,49 +30,44 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 
-#include <ros/ros.h>
-#include <std_msgs/Float64.h>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+#include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_temperature/temperature_ros_i.h"
+#include "phidgets_temperature/temperature_ros_i.hpp"
 
 namespace phidgets {
 
-TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
-    : nh_(nh), nh_private_(nh_private)
+TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
+    : rclcpp::Node("phidgets_temperature_node", options)
 {
-    ROS_INFO("Starting Phidgets Temperature");
+    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-    int serial_num;
-    if (!nh_private_.getParam("serial", serial_num))
+    RCLCPP_INFO(get_logger(), "Starting Phidgets Temperature");
+
+    int serial_num =
+        this->declare_parameter("serial", -1);  // default open any device
+
+    int hub_port = this->declare_parameter(
+        "hub_port", 0);  // only used if the device is on a VINT hub_port
+
+    int thermocouple_type = this->declare_parameter("thermocouple_type", 0);
+
+    int data_interval_ms = this->declare_parameter("data_interval_ms", 500);
+
+    publish_rate_ = this->declare_parameter("publish_rate", 0);
+    if (publish_rate_ > 1000)
     {
-        serial_num = -1;  // default open any device
-    }
-    int hub_port;
-    if (!nh_private.getParam("hub_port", hub_port))
-    {
-        hub_port = 0;  // only used if the device is on a VINT hub_port
-    }
-    int thermocouple_type;
-    if (!nh_private.getParam("thermocouple_type", thermocouple_type))
-    {
-        thermocouple_type = 0;
-    }
-    int data_interval_ms;
-    if (!nh_private.getParam("data_interval_ms", data_interval_ms))
-    {
-        data_interval_ms = 500;
-    }
-    if (!nh_private.getParam("publish_rate", publish_rate_))
-    {
-        publish_rate_ = 0;
+        throw std::runtime_error("Publish rate must be <= 1000");
     }
 
-    ROS_INFO(
-        "Connecting to Phidgets Temperature serial %d, hub port %d, "
-        "thermocouple "
-        "type %d ...",
-        serial_num, hub_port, thermocouple_type);
+    RCLCPP_INFO(get_logger(),
+                "Connecting to Phidgets Temperature serial %d, hub port %d, "
+                "thermocouple "
+                "type %d ...",
+                serial_num, hub_port, thermocouple_type);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -86,7 +81,7 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             std::bind(&TemperatureRosI::temperatureChangeCallback, this,
                       std::placeholders::_1));
 
-        ROS_INFO("Connected");
+        RCLCPP_INFO(get_logger(), "Connected");
 
         temperature_->setDataInterval(data_interval_ms);
 
@@ -97,18 +92,21 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         }
     } catch (const Phidget22Error& err)
     {
-        ROS_ERROR("Temperature: %s", err.what());
+        RCLCPP_ERROR(get_logger(), "Temperature: %s", err.what());
         throw;
     }
 
-    temperature_pub_ = nh_.advertise<std_msgs::Float64>("temperature", 1);
+    temperature_pub_ =
+        this->create_publisher<std_msgs::msg::Float64>("temperature", 1);
 
     got_first_data_ = false;
 
     if (publish_rate_ > 0)
     {
-        timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
-                                 &TemperatureRosI::timerCallback, this);
+        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
+            std::bind(&TemperatureRosI::timerCallback, this));
     } else
     {
         // We'd like to get the temperature on startup here, but it can take
@@ -120,12 +118,12 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
 void TemperatureRosI::publishLatest()
 {
-    std_msgs::Float64 msg;
-    msg.data = last_temperature_reading_;
-    temperature_pub_.publish(msg);
+    auto msg = std::unique_ptr<std_msgs::msg::Float64>();
+    msg->data = last_temperature_reading_;
+    temperature_pub_->publish(std::move(msg));
 }
 
-void TemperatureRosI::timerCallback(const ros::TimerEvent& /* event */)
+void TemperatureRosI::timerCallback()
 {
     std::lock_guard<std::mutex> lock(temperature_mutex_);
     if (got_first_data_)
@@ -151,3 +149,5 @@ void TemperatureRosI::temperatureChangeCallback(double temperature)
 }
 
 }  // namespace phidgets
+
+RCLCPP_COMPONENTS_REGISTER_NODE(phidgets::TemperatureRosI)

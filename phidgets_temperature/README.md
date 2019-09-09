@@ -1,7 +1,7 @@
-Phidgets temperature ROS driver
+Phidgets temperature ROS 2 driver
 ===========================
 
-This is the ROS driver for Phidgets temperature.  The various topics, services, and parameters that the node operates with are listed below.
+This is the ROS 2 driver for Phidgets temperature.  The various topics, services, and parameters that the node operates with are listed below.
 
 Topics
 ------
