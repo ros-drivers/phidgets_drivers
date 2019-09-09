@@ -1,9 +1,0 @@
-<!-- Phidgets Digital Inputs nodelet publisher -->
-<library path="lib/libphidgets_digital_inputs_nodelet">
-  <class name="phidgets_digital_inputs/PhidgetsDigitalInputsNodelet" type="PhidgetsDigitalInputsNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Digital Inputs nodelet publisher.
-    </description>
-  </class>
-</library>
