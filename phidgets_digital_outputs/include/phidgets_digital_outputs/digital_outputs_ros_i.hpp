@@ -27,26 +27,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_DIGITAL_OUTPUTS_PHIDGETS_DIGITAL_OUTPUTS_NODELET_H
-#define PHIDGETS_DIGITAL_OUTPUTS_PHIDGETS_DIGITAL_OUTPUTS_NODELET_H
+#ifndef PHIDGETS_DIGITAL_OUTPUTS_DIGITAL_OUTPUTS_ROS_I_H
+#define PHIDGETS_DIGITAL_OUTPUTS_DIGITAL_OUTPUTS_ROS_I_H
 
 #include <memory>
+#include <string>
+#include <vector>
 
-#include <nodelet/nodelet.h>
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/bool.hpp>
 
-#include "phidgets_digital_outputs/digital_outputs_ros_i.h"
+#include "phidgets_api/digital_outputs.hpp"
+#include "phidgets_msgs/srv/set_digital_output.hpp"
 
 namespace phidgets {
 
-class PhidgetsDigitalOutputsNodelet : public nodelet::Nodelet
+class DigitalOutputsRosI;
+
+class DigitalOutputSetter final
 {
   public:
-    virtual void onInit();
+    explicit DigitalOutputSetter(DigitalOutputs* dos, int index,
+                                 DigitalOutputsRosI* node,
+                                 const std::string& topicname);
 
   private:
-    std::unique_ptr<DigitalOutputsRosI> dos_;
+    void setMsgCallback(const std_msgs::msg::Bool::SharedPtr msg);
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr subscription_;
+    DigitalOutputs* dos_;
+    int index_;
+};
+
+class DigitalOutputsRosI final : public rclcpp::Node
+{
+  public:
+    explicit DigitalOutputsRosI(const rclcpp::NodeOptions& options);
+
+  private:
+    std::unique_ptr<DigitalOutputs> dos_;
+    std::vector<std::unique_ptr<DigitalOutputSetter>> out_subs_;
+
+    rclcpp::Service<phidgets_msgs::srv::SetDigitalOutput>::SharedPtr out_srv_;
+
+    void setSrvCallback(
+        const std::shared_ptr<phidgets_msgs::srv::SetDigitalOutput::Request>
+            req,
+        std::shared_ptr<phidgets_msgs::srv::SetDigitalOutput::Response> res);
 };
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_DIGITAL_OUTPUTS_PHIDGETS_DIGITAL_OUTPUTS_NODELET_H
+#endif  // PHIDGETS_DIGITAL_OUTPUTS_DIGITAL_OUTPUTS_ROS_I_H
