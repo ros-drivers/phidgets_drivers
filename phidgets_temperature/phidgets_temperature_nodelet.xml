@@ -1,9 +1,0 @@
-<!-- Phidgets Temperature nodelet publisher -->
-<library path="lib/libphidgets_temperature_nodelet">
-  <class name="phidgets_temperature/PhidgetsTemperatureNodelet" type="PhidgetsTemperatureNodelet"
-    base_class_type="nodelet::Nodelet">
-    <description>
-      Phidgets Temperature nodelet publisher.
-    </description>
-  </class>
-</library>

@@ -27,26 +27,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef PHIDGETS_TEMPERATURE_TEMPERATURE_ROS_I_H
+#define PHIDGETS_TEMPERATURE_TEMPERATURE_ROS_I_H
+
 #include <memory>
+#include <mutex>
 
-#include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_temperature/phidgets_temperature_nodelet.h"
-#include "phidgets_temperature/temperature_ros_i.h"
+#include "phidgets_api/temperature.hpp"
 
-typedef phidgets::PhidgetsTemperatureNodelet PhidgetsTemperatureNodelet;
+namespace phidgets {
 
-PLUGINLIB_EXPORT_CLASS(PhidgetsTemperatureNodelet, nodelet::Nodelet)
-
-void PhidgetsTemperatureNodelet::onInit()
+class TemperatureRosI final : public rclcpp::Node
 {
-    NODELET_INFO("Initializing Phidgets Temperature Nodelet");
+  public:
+    explicit TemperatureRosI(const rclcpp::NodeOptions& options);
 
-    // TODO: Do we want the single threaded or multithreaded NH?
-    ros::NodeHandle nh = getMTNodeHandle();
-    ros::NodeHandle nh_private = getMTPrivateNodeHandle();
+  private:
+    std::unique_ptr<Temperature> temperature_;
+    std::mutex temperature_mutex_;
+    double last_temperature_reading_;
+    bool got_first_data_;
 
-    temperature_ = std::make_unique<TemperatureRosI>(nh, nh_private);
-}
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr temperature_pub_;
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
+    int publish_rate_;
+
+    void publishLatest();
+
+    void temperatureChangeCallback(double temperature);
+};
+
+}  // namespace phidgets
+
+#endif  // PHIDGETS_TEMPERATURE_TEMPERATURE_ROS_I_H
