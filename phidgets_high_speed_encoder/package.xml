@@ -12,17 +12,17 @@
   <author email="geoffrey.viola@asirobots.com">Geoff Viola</author>
   <author email="jlblanco@ual.es">José-Luis Blanco Claraco</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>nodelet</depend>
   <depend>phidgets_api</depend>
   <depend>phidgets_msgs</depend>
-  <depend>pluginlib</depend>
-  <depend>roscpp</depend>
-  <depend>roslaunch</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
 
+  <exec_depend>launch</exec_depend>
+
   <export>
-    <nodelet plugin="${prefix}/phidgets_high_speed_encoder_nodelet.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
