@@ -1,7 +1,7 @@
-Phidgets analog inputs ROS driver
+Phidgets analog inputs ROS 2 driver
 =================================
 
-This is the ROS driver for Phidgets analog inputs.  The various topics, services, and parameters that the node operates with are listed below.
+This is the ROS 2 driver for Phidgets analog inputs.  The various topics, services, and parameters that the node operates with are listed below.
 
 Topics
 ------
