@@ -15,20 +15,18 @@
 
   <author email="ccnyroboticslab@gmail.com">Ivan Dryanovski</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>nodelet</depend>
   <depend>phidgets_api</depend>
-  <depend>pluginlib</depend>
-  <depend>roscpp</depend>
-  <depend>roslaunch</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
 
-  <exec_depend>imu_filter_madgwick</exec_depend>
+  <exec_depend>launch</exec_depend>
 
   <export>
-    <nodelet plugin="${prefix}/phidgets_spatial_nodelet.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

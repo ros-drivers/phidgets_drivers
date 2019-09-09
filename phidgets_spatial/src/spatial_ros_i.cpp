@@ -27,94 +27,71 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <chrono>
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
+#include <thread>
 
-#include <ros/ros.h>
-#include <ros/service_server.h>
-#include <sensor_msgs/Imu.h>
-#include <sensor_msgs/MagneticField.h>
-#include <std_msgs/Bool.h>
-#include <std_srvs/Empty.h>
+#include <sensor_msgs/msg/imu.h>
+#include <std_msgs/msg/bool.h>
+#include <std_srvs/srv/empty.h>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+#include <sensor_msgs/msg/magnetic_field.hpp>
 
-#include "phidgets_api/spatial.h"
-#include "phidgets_spatial/spatial_ros_i.h"
+#include "phidgets_api/spatial.hpp"
+#include "phidgets_spatial/spatial_ros_i.hpp"
 
 namespace phidgets {
 
-SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
-    : nh_(nh), nh_private_(nh_private)
+SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
+    : rclcpp::Node("phidgets_spatial_node", options)
 {
-    ROS_INFO("Starting Phidgets SPATIAL");
+    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-    ROS_INFO("Opening spatial");
-    int serial_num;
-    if (!nh_private_.getParam("serial", serial_num))
-    {
-        serial_num = -1;  // default open any device
-    }
-    int hub_port;
-    if (!nh_private.getParam("hub_port", hub_port))
-    {
-        hub_port = 0;  // only used if the device is on a VINT hub_port
-    }
-    if (!nh_private_.getParam("frame_id", frame_id_))
-    {
-        // As specified in http://www.ros.org/reps/rep-0145.html
-        frame_id_ = "imu_link";
-    }
+    RCLCPP_INFO(get_logger(), "Starting Phidgets Spatial");
 
-    double linear_acceleration_stdev;
-    if (!nh_private_.getParam("linear_acceleration_stdev",
-                              linear_acceleration_stdev))
-    {
-        // 280 ug accelerometer white noise sigma, as per manual
-        linear_acceleration_stdev = 280.0 * 1e-6 * G;
-    }
+    int serial_num =
+        this->declare_parameter("serial", -1);  // default open any device
+
+    int hub_port = this->declare_parameter(
+        "hub_port", 0);  // only used if the device is on a VINT hub_port
+
+    // As specified in http://www.ros.org/reps/rep-0145.html
+    frame_id_ = this->declare_parameter("frame_id", "imu_link");
+
+    double linear_acceleration_stdev = this->declare_parameter(
+        "linear_acceleration_stdev",
+        280.0 * 1e-6 *
+            G);  // 280 ug accelerometer white noise sigma, as per manual
     linear_acceleration_variance_ =
         linear_acceleration_stdev * linear_acceleration_stdev;
 
-    double angular_velocity_stdev;
-    if (!nh_private_.getParam("angular_velocity_stdev", angular_velocity_stdev))
-    {
-        // 0.095 deg/s gyroscope white noise sigma, as per manual
-        angular_velocity_stdev = 0.095 * (M_PI / 180.0);
-    }
+    // 0.095 deg/s gyroscope white noise sigma, as per manual
+    double angular_velocity_stdev = this->declare_parameter(
+        "angular_velocity_stdev", 0.095 * (M_PI / 180.0));
     angular_velocity_variance_ =
         angular_velocity_stdev * angular_velocity_stdev;
 
-    double magnetic_field_stdev;
-    if (!nh_private_.getParam("magnetic_field_stdev", magnetic_field_stdev))
-    {
-        // 1.1 milligauss magnetometer white noise sigma, as per manual
-        magnetic_field_stdev = 1.1 * 1e-3 * 1e-4;
-    }
+    // 1.1 milligauss magnetometer white noise sigma, as per manual
+    double magnetic_field_stdev =
+        this->declare_parameter("magnetic_field_stdev", 1.1 * 1e-3 * 1e-4);
     magnetic_field_variance_ = magnetic_field_stdev * magnetic_field_stdev;
 
-    int time_resync_ms;
-    if (!nh_private_.getParam("time_resynchronization_interval_ms",
-                              time_resync_ms))
-    {
-        time_resync_ms = 5000;
-    }
+    int time_resync_ms =
+        this->declare_parameter("time_resynchronization_interval_ms", 5000);
     time_resync_interval_ns_ =
         static_cast<int64_t>(time_resync_ms) * 1000 * 1000;
 
-    int data_interval_ms;
-    if (!nh_private.getParam("data_interval_ms", data_interval_ms))
-    {
-        data_interval_ms = 8;
-    }
+    int data_interval_ms = this->declare_parameter("data_interval_ms", 8);
     data_interval_ns_ = data_interval_ms * 1000 * 1000;
 
-    int cb_delta_epsilon_ms;
-    if (!nh_private.getParam("callback_delta_epsilon_ms", cb_delta_epsilon_ms))
-    {
-        cb_delta_epsilon_ms = 1;
-    }
+    int cb_delta_epsilon_ms =
+        this->declare_parameter("callback_delta_epsilon_ms", 1);
     cb_delta_epsilon_ns_ = cb_delta_epsilon_ms * 1000 * 1000;
-
     if (cb_delta_epsilon_ms >= data_interval_ms)
     {
         throw std::runtime_error(
@@ -122,13 +99,29 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             "work");
     }
 
-    if (!nh_private.getParam("publish_rate", publish_rate_))
+    publish_rate_ = this->declare_parameter("publish_rate", 0);
+    if (publish_rate_ > 1000)
     {
-        publish_rate_ = 0;
+        throw std::runtime_error("Publish rate must be <= 1000");
     }
 
     // compass correction params (see
     // http://www.phidgets.com/docs/1044_User_Guide)
+    this->declare_parameter("cc_mag_field");
+    this->declare_parameter("cc_offset0");
+    this->declare_parameter("cc_offset1");
+    this->declare_parameter("cc_offset2");
+    this->declare_parameter("cc_gain0");
+    this->declare_parameter("cc_gain1");
+    this->declare_parameter("cc_gain2");
+    this->declare_parameter("cc_t0");
+    this->declare_parameter("cc_t1");
+    this->declare_parameter("cc_t2");
+    this->declare_parameter("cc_t3");
+    this->declare_parameter("cc_t4");
+    this->declare_parameter("cc_t5");
+
+    bool has_compass_params = false;
     double cc_mag_field;
     double cc_offset0;
     double cc_offset1;
@@ -143,23 +136,29 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     double cc_T4;
     double cc_T5;
 
-    bool has_compass_params =
-        nh_private_.getParam("cc_mag_field", cc_mag_field) &&
-        nh_private_.getParam("cc_offset0", cc_offset0) &&
-        nh_private_.getParam("cc_offset1", cc_offset1) &&
-        nh_private_.getParam("cc_offset2", cc_offset2) &&
-        nh_private_.getParam("cc_gain0", cc_gain0) &&
-        nh_private_.getParam("cc_gain1", cc_gain1) &&
-        nh_private_.getParam("cc_gain2", cc_gain2) &&
-        nh_private_.getParam("cc_t0", cc_T0) &&
-        nh_private_.getParam("cc_t1", cc_T1) &&
-        nh_private_.getParam("cc_t2", cc_T2) &&
-        nh_private_.getParam("cc_t3", cc_T3) &&
-        nh_private_.getParam("cc_t4", cc_T4) &&
-        nh_private_.getParam("cc_t5", cc_T5);
+    try
+    {
+        cc_mag_field = this->get_parameter("cc_mag_field").get_value<double>();
+        cc_offset0 = this->get_parameter("cc_offset0").get_value<double>();
+        cc_offset1 = this->get_parameter("cc_offset1").get_value<double>();
+        cc_offset2 = this->get_parameter("cc_offset2").get_value<double>();
+        cc_gain0 = this->get_parameter("cc_gain0").get_value<double>();
+        cc_gain1 = this->get_parameter("cc_gain1").get_value<double>();
+        cc_gain2 = this->get_parameter("cc_gain2").get_value<double>();
+        cc_T0 = this->get_parameter("cc_t0").get_value<double>();
+        cc_T1 = this->get_parameter("cc_t1").get_value<double>();
+        cc_T2 = this->get_parameter("cc_t2").get_value<double>();
+        cc_T3 = this->get_parameter("cc_t3").get_value<double>();
+        cc_T4 = this->get_parameter("cc_t4").get_value<double>();
+        cc_T5 = this->get_parameter("cc_t5").get_value<double>();
+        has_compass_params = true;
+    } catch (const rclcpp::exceptions::ParameterNotDeclaredException)
+    {
+    }
 
-    ROS_INFO("Connecting to Phidgets Spatial serial %d, hub port %d ...",
-             serial_num, hub_port);
+    RCLCPP_INFO(get_logger(),
+                "Connecting to Phidgets Spatial serial %d, hub port %d ...",
+                serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -174,14 +173,12 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
                       std::placeholders::_1, std::placeholders::_2,
                       std::placeholders::_3, std::placeholders::_4));
 
-        ROS_INFO("Connected");
+        RCLCPP_INFO(get_logger(), "Connected");
 
         spatial_->setDataInterval(data_interval_ms);
 
-        imu_pub_ = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
-
-        cal_publisher_ = nh_.advertise<std_msgs::Bool>("imu/is_calibrated", 5,
-                                                       true /* latched */);
+        cal_publisher_ = this->create_publisher<std_msgs::msg::Bool>(
+            "imu/is_calibrated", rclcpp::SystemDefaultsQoS().transient_local());
 
         calibrate();
 
@@ -192,60 +189,65 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
                 cc_gain1, cc_gain2, cc_T0, cc_T1, cc_T2, cc_T3, cc_T4, cc_T5);
         } else
         {
-            ROS_INFO("No compass correction params found.");
+            RCLCPP_INFO(get_logger(), "No compass correction params found.");
         }
     } catch (const Phidget22Error &err)
     {
-        ROS_ERROR("Spatial: %s", err.what());
+        RCLCPP_ERROR(get_logger(), "Spatial: %s", err.what());
         throw;
     }
 
-    cal_srv_ = nh_.advertiseService("imu/calibrate",
-                                    &SpatialRosI::calibrateService, this);
+    imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("imu/data_raw", 1);
+
+    cal_srv_ = this->create_service<std_srvs::srv::Empty>(
+        "imu/calibrate",
+        std::bind(&SpatialRosI::calibrateService, this, std::placeholders::_1,
+                  std::placeholders::_2));
 
     magnetic_field_pub_ =
-        nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);
+        this->create_publisher<sensor_msgs::msg::MagneticField>("imu/mag", 1);
 
     if (publish_rate_ > 0)
     {
-        timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
-                                 &SpatialRosI::timerCallback, this);
+        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
+            std::bind(&SpatialRosI::timerCallback, this));
     }
-}
-
-bool SpatialRosI::calibrateService(std_srvs::Empty::Request &req,
-                                   std_srvs::Empty::Response &res)
-{
-    (void)req;
-    (void)res;
-    calibrate();
-    return true;
 }
 
 void SpatialRosI::calibrate()
 {
-    ROS_INFO(
-        "Calibrating IMU, this takes around 2 seconds to finish. "
-        "Make sure that the device is not moved during this time.");
+    RCLCPP_INFO(get_logger(),
+                "Calibrating IMU, this takes around 2 seconds to finish. "
+                "Make sure that the device is not moved during this time.");
     spatial_->zero();
     // The API call returns directly, so we "enforce" the recommended 2 sec
     // here. See: https://github.com/ros-drivers/phidgets_drivers/issues/40
-    ros::Duration(2.).sleep();
-    ROS_INFO("Calibrating IMU done.");
+    // FIXME: this should use a method that honors use_sim_time
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    RCLCPP_INFO(get_logger(), "Calibrating IMU done.");
 
     // publish message
-    std_msgs::Bool is_calibrated_msg;
-    is_calibrated_msg.data = true;
-    cal_publisher_.publish(is_calibrated_msg);
+    auto is_calibrated_msg = std::make_unique<std_msgs::msg::Bool>();
+    is_calibrated_msg->data = true;
+    cal_publisher_->publish(std::move(is_calibrated_msg));
+}
+
+void SpatialRosI::calibrateService(
+    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+    std::shared_ptr<std_srvs::srv::Empty::Response> res)
+{
+    (void)req;
+    (void)res;
+    calibrate();
 }
 
 void SpatialRosI::publishLatest()
 {
-    std::shared_ptr<sensor_msgs::Imu> msg =
-        std::make_shared<sensor_msgs::Imu>();
+    auto msg = std::make_unique<sensor_msgs::msg::Imu>();
 
-    std::shared_ptr<sensor_msgs::MagneticField> mag_msg =
-        std::make_shared<sensor_msgs::MagneticField>();
+    auto mag_msg = std::make_unique<sensor_msgs::msg::MagneticField>();
 
     // build covariance matrices
     for (int i = 0; i < 3; ++i)
@@ -269,17 +271,17 @@ void SpatialRosI::publishLatest()
     msg->header.frame_id = frame_id_;
 
     uint64_t imu_diff_in_ns = last_data_timestamp_ns_ - data_time_zero_ns_;
-    uint64_t time_in_ns = ros_time_zero_.toNSec() + imu_diff_in_ns;
+    uint64_t time_in_ns = ros_time_zero_.nanoseconds() + imu_diff_in_ns;
 
     if (time_in_ns < last_ros_stamp_ns_)
     {
-        ROS_WARN("Time went backwards (%lu < %lu)!", time_in_ns,
-                 last_ros_stamp_ns_);
+        RCLCPP_WARN(get_logger(), "Time went backwards (%lu < %lu)!",
+                    time_in_ns, last_ros_stamp_ns_);
     }
 
     last_ros_stamp_ns_ = time_in_ns;
 
-    ros::Time ros_time = ros::Time().fromNSec(time_in_ns);
+    rclcpp::Time ros_time = rclcpp::Time(time_in_ns);
 
     msg->header.stamp = ros_time;
 
@@ -293,7 +295,7 @@ void SpatialRosI::publishLatest()
     msg->angular_velocity.y = last_gyro_y_;
     msg->angular_velocity.z = last_gyro_z_;
 
-    imu_pub_.publish(*msg);
+    imu_pub_->publish(std::move(msg));
 
     // Fill out and publish magnetic message
     mag_msg->header.frame_id = frame_id_;
@@ -304,7 +306,16 @@ void SpatialRosI::publishLatest()
     mag_msg->magnetic_field.y = last_mag_y_;
     mag_msg->magnetic_field.z = last_mag_z_;
 
-    magnetic_field_pub_.publish(*mag_msg);
+    magnetic_field_pub_->publish(std::move(mag_msg));
+}
+
+void SpatialRosI::timerCallback()
+{
+    std::lock_guard<std::mutex> lock(spatial_mutex_);
+    if (can_publish_)
+    {
+        publishLatest();
+    }
 }
 
 void SpatialRosI::spatialDataCallback(const double acceleration[3],
@@ -344,17 +355,23 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
 
     std::lock_guard<std::mutex> lock(spatial_mutex_);
 
-    ros::Time now = ros::Time::now();
+    rclcpp::Time now = this->now();
 
     // At the beginning of time, need to initialize last_cb_time for later use;
     // last_cb_time is used to figure out the time between callbacks
-    if (last_cb_time_.sec == 0 && last_cb_time_.nsec == 0)
+    if (last_cb_time_.nanoseconds() == 0)
     {
         last_cb_time_ = now;
+        // We need to initialize the ros_time_zero since rclcpp::Duration
+        // below won't let us subtract an essentially uninitialized
+        // rclcpp::Time from another one.  However, we'll still do an initial
+        // synchronization since the default value of synchronize_timestamp
+        // is true.
+        ros_time_zero_ = now;
         return;
     }
 
-    ros::Duration time_since_last_cb = now - last_cb_time_;
+    rclcpp::Duration time_since_last_cb = now - last_cb_time_;
     uint64_t this_ts_ns = static_cast<uint64_t>(timestamp * 1000.0 * 1000.0);
 
     if (synchronize_timestamps_)
@@ -367,9 +384,9 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
         // data that is within the data interval +/- an epsilon since we will
         // have taken some time to process and/or a short delay (maybe USB
         // comms) may have happened
-        if (time_since_last_cb.toNSec() >=
+        if (time_since_last_cb.nanoseconds() >=
                 (data_interval_ns_ - cb_delta_epsilon_ns_) &&
-            time_since_last_cb.toNSec() <=
+            time_since_last_cb.nanoseconds() <=
                 (data_interval_ns_ + cb_delta_epsilon_ns_))
         {
             ros_time_zero_ = now;
@@ -378,12 +395,13 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
             can_publish_ = true;
         } else
         {
-            ROS_WARN(
+            RCLCPP_WARN(
+                get_logger(),
                 "Data not within acceptable window for synchronization: "
                 "expected between %ld and %ld, saw %ld",
                 data_interval_ns_ - cb_delta_epsilon_ns_,
                 data_interval_ns_ + cb_delta_epsilon_ns_,
-                time_since_last_cb.toNSec());
+                time_since_last_cb.nanoseconds());
         }
     }
 
@@ -415,9 +433,9 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
 
     // Determine if we need to resynchronize - time between IMU and ROS Node can
     // drift, periodically resync to deal with this issue
-    ros::Duration diff = now - ros_time_zero_;
+    rclcpp::Duration diff = now - ros_time_zero_;
     if (time_resync_interval_ns_ > 0 &&
-        diff.toNSec() >= time_resync_interval_ns_)
+        diff.nanoseconds() >= time_resync_interval_ns_)
     {
         synchronize_timestamps_ = true;
     }
@@ -425,13 +443,6 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
     last_cb_time_ = now;
 }
 
-void SpatialRosI::timerCallback(const ros::TimerEvent & /* event */)
-{
-    std::lock_guard<std::mutex> lock(spatial_mutex_);
-    if (can_publish_)
-    {
-        publishLatest();
-    }
-}
-
 }  // namespace phidgets
+
+RCLCPP_COMPONENTS_REGISTER_NODE(phidgets::SpatialRosI)

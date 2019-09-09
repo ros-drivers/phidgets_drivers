@@ -34,35 +34,37 @@
 #include <mutex>
 #include <string>
 
-#include <ros/ros.h>
-#include <ros/service_server.h>
-#include <std_srvs/Empty.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_srvs/srv/empty.hpp>
 
-#include "phidgets_api/spatial.h"
+#include "phidgets_api/spatial.hpp"
 
 namespace phidgets {
 
 const float G = 9.80665;
 
-class SpatialRosI final
+class SpatialRosI final : public rclcpp::Node
 {
   public:
-    explicit SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+    explicit SpatialRosI(const rclcpp::NodeOptions& options);
 
   private:
-    ros::NodeHandle nh_;
-    ros::NodeHandle nh_private_;
+    std::unique_ptr<Spatial> spatial_;
     std::string frame_id_;
     std::mutex spatial_mutex_;
-    void timerCallback(const ros::TimerEvent &event);
-    ros::Timer timer_;
-    int publish_rate_;
-    ros::Publisher cal_publisher_;
-    ros::ServiceServer cal_srv_;
-    ros::Publisher imu_pub_;
-    ros::Publisher magnetic_field_pub_;
 
-    ros::Time ros_time_zero_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr cal_publisher_;
+    rclcpp::Service<std_srvs::srv::Empty>::SharedPtr cal_srv_;
+    rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::MagneticField>::SharedPtr
+        magnetic_field_pub_;
+    void timerCallback();
+    rclcpp::TimerBase::SharedPtr timer_;
+    int publish_rate_;
+
+    rclcpp::Time ros_time_zero_;
     bool synchronize_timestamps_{true};
     uint64_t data_time_zero_ns_{0};
     uint64_t last_data_timestamp_ns_{0};
@@ -70,15 +72,14 @@ class SpatialRosI final
     int64_t time_resync_interval_ns_{0};
     int64_t data_interval_ns_{0};
     bool can_publish_{false};
-    ros::Time last_cb_time_;
+    rclcpp::Time last_cb_time_;
     int64_t cb_delta_epsilon_ns_{0};
 
     void calibrate();
 
-    bool calibrateService(std_srvs::Empty::Request &req,
-                          std_srvs::Empty::Response &res);
-
-    std::unique_ptr<Spatial> spatial_;
+    void calibrateService(
+        const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+        std::shared_ptr<std_srvs::srv::Empty::Response> res);
 
     // Accelerometer
     double linear_acceleration_variance_;
