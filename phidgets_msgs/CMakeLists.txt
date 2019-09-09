@@ -1,39 +1,34 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(phidgets_msgs)
 
-# Use C++14
-if (CMAKE_VERSION VERSION_LESS "3.1")
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "-std=gnu++14 ${CMAKE_CXX_FLAGS}")
-    endif()
-else()
-    set (CMAKE_CXX_STANDARD 14)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
 endif()
 
-# High level of warnings:
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS message_generation std_msgs)
+find_package(ament_cmake REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
 
-add_message_files(
-    DIRECTORY msg
-    FILES
-    EncoderDecimatedSpeed.msg
+set(msg_files
+  "msg/EncoderDecimatedSpeed.msg"
 )
 
-add_service_files(
-    DIRECTORY srv
-    FILES
-    SetDigitalOutput.srv
+set(srv_files
+  "srv/SetDigitalOutput.srv"
 )
 
-generate_messages(
-    DEPENDENCIES
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${srv_files}
+  ${msg_files}
+  DEPENDENCIES
     std_msgs
 )
 
-catkin_package(
-    CATKIN_DEPENDS message_runtime std_msgs
-)
+ament_export_dependencies(rosidl_default_runtime)
+
+ament_package()
