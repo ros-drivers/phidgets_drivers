@@ -11,15 +11,16 @@
 
   <author>Chris Lalancette</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>nodelet</depend>
   <depend>phidgets_api</depend>
-  <depend>roscpp</depend>
-  <depend>roslaunch</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
 
+  <exec_depend>launch</exec_depend>
+
   <export>
-    <nodelet plugin="${prefix}/phidgets_magnetometer_nodelet.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
