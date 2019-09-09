@@ -27,50 +27,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 
-#include <ros/ros.h>
-#include <std_msgs/Float64.h>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+#include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_api/motors.h"
-#include "phidgets_motors/motors_ros_i.h"
+#include "phidgets_api/motors.hpp"
+#include "phidgets_motors/motors_ros_i.hpp"
 
 namespace phidgets {
 
-MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
-    : nh_(nh), nh_private_(nh_private)
+MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
+    : rclcpp::Node("phidgets_motors_node", options)
 {
-    ROS_INFO("Starting Phidgets Motors");
+    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-    int serial_num;
-    if (!nh_private_.getParam("serial", serial_num))
+    RCLCPP_INFO(get_logger(), "Starting Phidgets Motors");
+
+    int serial_num =
+        this->declare_parameter("serial", -1);  // default open any device
+
+    int hub_port = this->declare_parameter(
+        "hub_port", 0);  // only used if the device is on a VINT hub_port
+
+    int data_interval_ms = this->declare_parameter("data_interval_ms", 250);
+
+    double braking_strength = this->declare_parameter("braking_strength", 0.0);
+
+    publish_rate_ = this->declare_parameter("publish_rate", 0);
+    if (publish_rate_ > 1000)
     {
-        serial_num = -1;  // default open any device
-    }
-    int hub_port;
-    if (!nh_private.getParam("hub_port", hub_port))
-    {
-        hub_port = 0;  // only used if the device is on a VINT hub_port
-    }
-    int data_interval_ms;
-    if (!nh_private.getParam("data_interval_ms", data_interval_ms))
-    {
-        data_interval_ms = 256;
-    }
-    double braking_strength;
-    if (!nh_private.getParam("braking_strength", braking_strength))
-    {
-        braking_strength = 0.0;
-    }
-    if (!nh_private.getParam("publish_rate", publish_rate_))
-    {
-        publish_rate_ = 0;
+        throw std::runtime_error("Publish rate must be <= 1000");
     }
 
-    ROS_INFO("Connecting to Phidgets Motors serial %d, hub port %d ...",
-             serial_num, hub_port);
+    RCLCPP_INFO(get_logger(),
+                "Connecting to Phidgets Motors serial %d, hub port %d ...",
+                serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -87,7 +84,7 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             std::bind(&MotorsRosI::backEMFChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2));
 
-        ROS_INFO("Connected");
+        RCLCPP_INFO(get_logger(), "Connected");
 
         n_motors = motors_->getMotorCount();
         motor_vals_.resize(n_motors);
@@ -97,18 +94,18 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             snprintf(topicname, sizeof(topicname), "set_motor_duty_cycle%02d",
                      i);
             motor_vals_[i].duty_cycle_sub = std::make_unique<DutyCycleSetter>(
-                motors_.get(), i, nh, topicname);
+                motors_.get(), i, this, topicname);
 
             char pubtopic[] = "motor_duty_cycle00";
             snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
             motor_vals_[i].duty_cycle_pub =
-                nh_.advertise<std_msgs::Float64>(pubtopic, 1);
+                this->create_publisher<std_msgs::msg::Float64>(pubtopic, 1);
 
             char backemftopic[] = "motor_back_emf00";
             snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
                      i);
             motor_vals_[i].back_emf_pub =
-                nh_.advertise<std_msgs::Float64>(backemftopic, 1);
+                this->create_publisher<std_msgs::msg::Float64>(backemftopic, 1);
 
             motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
             motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
@@ -118,14 +115,16 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         }
     } catch (const Phidget22Error& err)
     {
-        ROS_ERROR("Motors: %s", err.what());
+        RCLCPP_ERROR(get_logger(), "Motors: %s", err.what());
         throw;
     }
 
     if (publish_rate_ > 0)
     {
-        timer_ = nh_.createTimer(ros::Duration(1.0 / publish_rate_),
-                                 &MotorsRosI::timerCallback, this);
+        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
+            std::bind(&MotorsRosI::timerCallback, this));
     } else
     {
         // If we are *not* publishing periodically, then we are event driven and
@@ -142,19 +141,19 @@ MotorsRosI::MotorsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
 void MotorsRosI::publishLatestDutyCycle(int index)
 {
-    std_msgs::Float64 msg;
-    msg.data = motor_vals_[index].last_duty_cycle_val;
-    motor_vals_[index].duty_cycle_pub.publish(msg);
+    auto msg = std::make_unique<std_msgs::msg::Float64>();
+    msg->data = motor_vals_[index].last_duty_cycle_val;
+    motor_vals_[index].duty_cycle_pub->publish(std::move(msg));
 }
 
 void MotorsRosI::publishLatestBackEMF(int index)
 {
-    std_msgs::Float64 backemf_msg;
-    backemf_msg.data = motor_vals_[index].last_back_emf_val;
-    motor_vals_[index].back_emf_pub.publish(backemf_msg);
+    auto backemf_msg = std::make_unique<std_msgs::msg::Float64>();
+    backemf_msg->data = motor_vals_[index].last_back_emf_val;
+    motor_vals_[index].back_emf_pub->publish(std::move(backemf_msg));
 }
 
-void MotorsRosI::timerCallback(const ros::TimerEvent& /* event */)
+void MotorsRosI::timerCallback()
 {
     std::lock_guard<std::mutex> lock(motor_mutex_);
     for (int i = 0; i < static_cast<int>(motor_vals_.size()); ++i)
@@ -164,15 +163,18 @@ void MotorsRosI::timerCallback(const ros::TimerEvent& /* event */)
     }
 }
 
-DutyCycleSetter::DutyCycleSetter(Motors* motors, int index, ros::NodeHandle nh,
+DutyCycleSetter::DutyCycleSetter(Motors* motors, int index, rclcpp::Node* node,
                                  const std::string& topicname)
     : motors_(motors), index_(index)
 {
-    subscription_ =
-        nh.subscribe(topicname, 1, &DutyCycleSetter::setMsgCallback, this);
+    subscription_ = node->create_subscription<std_msgs::msg::Float64>(
+        topicname, rclcpp::QoS(1),
+        std::bind(&DutyCycleSetter::setMsgCallback, this,
+                  std::placeholders::_1));
 }
 
-void DutyCycleSetter::setMsgCallback(const std_msgs::Float64::ConstPtr& msg)
+void DutyCycleSetter::setMsgCallback(
+    const std_msgs::msg::Float64::SharedPtr msg)
 {
     try
     {
@@ -213,3 +215,5 @@ void MotorsRosI::backEMFChangeCallback(int channel, double back_emf)
 }
 
 }  // namespace phidgets
+
+RCLCPP_COMPONENTS_REGISTER_NODE(phidgets::MotorsRosI)
