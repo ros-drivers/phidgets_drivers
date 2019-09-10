@@ -21,7 +21,7 @@
   <author>José-Luis Blanco Claraco</author>
   <author>Chris Lalancette</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>libphidget22</exec_depend>
   <exec_depend>phidgets_accelerometer</exec_depend>
@@ -39,6 +39,6 @@
   <exec_depend>phidgets_temperature</exec_depend>
 
   <export>
-    <metapackage />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
