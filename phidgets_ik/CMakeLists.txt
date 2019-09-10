@@ -1,12 +1,10 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(phidgets_ik)
 
-find_package(catkin REQUIRED COMPONENTS roslaunch)
-
-catkin_package()
+find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY launch
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
 )
 
-roslaunch_add_file_check(launch)
+ament_package()
