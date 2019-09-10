@@ -16,14 +16,14 @@
   <author>James Sarrett</author>
   <author email="russel@appliedinvention.com">Russel Howe</author>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
-
-  <depend>roslaunch</depend>
-
-  <exec_depend>nodelet</exec_depend>
+  <exec_depend>launch</exec_depend>
   <exec_depend>phidgets_analog_inputs</exec_depend>
   <exec_depend>phidgets_digital_inputs</exec_depend>
   <exec_depend>phidgets_digital_outputs</exec_depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
