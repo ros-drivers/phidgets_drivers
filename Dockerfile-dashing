@@ -13,4 +13,4 @@ RUN rosdep install --from-paths src -i -y --rosdistro dashing
 RUN /bin/bash -c "source /opt/ros/dashing/setup.bash && \
     python3 src/phidgets_drivers/clang-check-style.py && \
     colcon build --parallel-workers 1 && \
-    colcon test --parallel-workers 1
+    colcon test --parallel-workers 1"
