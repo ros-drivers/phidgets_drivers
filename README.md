@@ -1,17 +1,17 @@
-Phidgets drivers for ROS
-========================
+Phidgets drivers for ROS 2
+==========================
 
 Overview
 --------
 
-Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin metapackage includes:
+Drivers for various [Phidgets](https://www.phidgets.com) devices. This package includes:
 
 * `phidgets_api`: a package which downloads and builds the Phidgets C API from
    phidgets.com (as an external project). It also implements a C++ wrapper
    for the C API, providing some base Phidget helper functions and various classes
    for different phidget devices.
 
-* ROS nodelets exposing the functionality of specific phidgets devices:
+* ROS 2 nodes exposing the functionality of specific phidgets devices:
 
   * [`phidgets_accelerometer`](phidgets_accelerometer/README.md)
 
@@ -35,45 +35,24 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin me
 
   * [`phidgets_temperature`](phidgets_temperature/README.md)
 
-Migrating from earlier versions
--------------------------------
-
-Prior to ROS Noetic, this library was based on the older libphidget21 library.  While it is still supported by Phidgets, they no longer add new features to it and [VINT hub](https://www.phidgets.com/?tier=3&catid=2&pcid=1&prodid=643) style devices cannot be used with it.  In ROS Noetic, this library was rewritten to use the libphidget22 library, which is the latest supported and contains all of the newest features.  However, the new libphidget22 library is very different from the old libphidget21 library, and some of those differences leak through to the drivers themselves.  The following is a list of things that may help in migrating to the new drivers.
-
-## General ##
-* All drivers now have nodelets.
-* No drivers have nodes anymore.  While this makes debugging somewhat harder, nodelets are the only way to support devices on a VINT hub.
-* The "serial_number" parameter has been renamed to "serial".
-
-## Specific nodes ##
-### IMU ###
-* The "imu" node was renamed to the "spatial" node.
-* Diagnostics have been removed from the spatial driver.  They will be reinstated later.
-* The "period" parameter has been renamed to "data_interval_ms".
-* The default "frame_id" has been changed from "imu" to "imu_link" to comply with [REP-0145](http://www.ros.org/reps/rep-0145.html).
-
-### IK ###
-* The "ik" node is now just a launch file which composes an Analog Input, Digital Input, and Digital Output nodelet together.
-
 Installing
 ----------
 
 ### From source ###
 
-Make sure you have a working catkin workspace, as described at:
-http://www.ros.org/wiki/catkin/Tutorials/create_a_workspace
+Make sure you have ROS 2 Dashing installed: https://index.ros.org/doc/ros2/Installation/Dashing/
 
 Also make sure you have git installed:
 
     sudo apt-get install git-core
 
-Change directory to the source folder of your catkin workspace.
-If, for instance, your workspace is `~/catkin_ws`, make sure there is
+Change directory to the source folder of your colcon workspace.
+If, for instance, your workspace is `~/colcon_ws`, make sure there is
 a `src/` folder within it, then execute:
 
-    cd ~/catkin_ws/src
+    cd ~/colcon_ws/src
 
-Download the metapackage from the github repository (<ros_distro> may be `groovy`, `hydro`, `indigo`...):
+Download the metapackage from the github repository (<ros_distro> may be `dashing`, ...)
 
     git clone -b <ros_distro> https://github.com/ros-drivers/phidgets_drivers.git
 
@@ -85,10 +64,10 @@ Alternatively, if rosdep does not work, install the following packages:
 
     sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev
 
-Compile your catkin workspace:
+Compile your colcon workspace:
 
-    cd ~/catkin_ws
-    catkin_make
+    cd ~/colcon_ws
+    colcon build
 
 ### Udev rules setup ###
 
@@ -96,11 +75,10 @@ Compile your catkin workspace:
 from source. When installing a binary debian package of `phidgets_api` >= 0.7.8,
 the udev rules are set up automatically.
 
-Make sure your catkin workspace has been successfully compiled.
+Make sure your colcon workspace has been successfully compiled.
 To set up the udev rules for the Phidgets USB devices, run the following commands:
 
-    roscd phidgets_api
-    sudo cp debian/udev /etc/udev/rules.d/99-phidgets.rules
+    sudo cp ~/colcon_ws/src/phidgets_drivers/phidgets_api/debian/udev /etc/udev/rules.d/99-phidgets.rules
     sudo udevadm control --reload-rules
 
 Afterwards, disconnect the USB cable and plug it in again (or run `sudo udevadm trigger`).
