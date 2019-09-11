@@ -146,7 +146,10 @@ void GyroscopeRosI::calibrate()
     gyroscope_->zero();
     // The API call returns directly, so we "enforce" the recommended 2 sec
     // here. See: https://github.com/ros-drivers/phidgets_drivers/issues/40
-    // FIXME: this should use a method that honors use_sim_time
+
+    // FIXME: Ideally we'd use an rclcpp method that honors use_sim_time here,
+    // but that doesn't actually exist.  Once
+    // https://github.com/ros2/rclcpp/issues/465 is solved, we can revisit this.
     std::this_thread::sleep_for(std::chrono::seconds(2));
     RCLCPP_INFO(get_logger(), "Calibrating Gyro done.");
 
