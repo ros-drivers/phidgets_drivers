@@ -101,15 +101,18 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
             snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
             motor_vals_[i].duty_cycle_pub =
                 this->create_publisher<std_msgs::msg::Float64>(pubtopic, 1);
-
-            char backemftopic[] = "motor_back_emf00";
-            snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
-                     i);
-            motor_vals_[i].back_emf_pub =
-                this->create_publisher<std_msgs::msg::Float64>(backemftopic, 1);
-
             motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
-            motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+
+            if (motors_->backEMFSensingSupported(i))
+            {
+                char backemftopic[] = "motor_back_emf00";
+                snprintf(backemftopic, sizeof(backemftopic),
+                         "motor_back_emf%02d", i);
+                motor_vals_[i].back_emf_pub =
+                    this->create_publisher<std_msgs::msg::Float64>(backemftopic,
+                                                                   1);
+                motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+            }
 
             motors_->setDataInterval(i, data_interval_ms);
             motors_->setBraking(i, braking_strength);
@@ -135,7 +138,10 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
         for (int i = 0; i < n_motors; ++i)
         {
             publishLatestDutyCycle(i);
-            publishLatestBackEMF(i);
+            if (motors_->backEMFSensingSupported(i))
+            {
+                publishLatestBackEMF(i);
+            }
         }
     }
 }
@@ -160,7 +166,10 @@ void MotorsRosI::timerCallback()
     for (int i = 0; i < static_cast<int>(motor_vals_.size()); ++i)
     {
         publishLatestDutyCycle(i);
-        publishLatestBackEMF(i);
+        if (motors_->backEMFSensingSupported(i))
+        {
+            publishLatestBackEMF(i);
+        }
     }
 }
 

@@ -68,6 +68,22 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
             ret);
     }
 
+    back_emf_sensing_supported_ = true;
+    ret = PhidgetDCMotor_setBackEMFSensingState(motor_handle_, 1);
+    if (ret != EPHIDGET_OK)
+    {
+        if (ret == EPHIDGET_UNSUPPORTED)
+        {
+            back_emf_sensing_supported_ = false;
+        } else
+        {
+            throw Phidget22Error(
+                "Failed to set back EMF sensing state Motor channel " +
+                    std::to_string(channel),
+                ret);
+        }
+    }
+
     ret = PhidgetDCMotor_setOnBackEMFChangeHandler(motor_handle_,
                                                    BackEMFChangeHandler, this);
     if (ret != EPHIDGET_OK)
@@ -155,15 +171,24 @@ void Motor::setAcceleration(double acceleration) const
     }
 }
 
+bool Motor::backEMFSensingSupported() const
+{
+    return back_emf_sensing_supported_;
+}
+
 double Motor::getBackEMF() const
 {
-    double backemf;
-    PhidgetReturnCode ret = PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
-    if (ret != EPHIDGET_OK)
+    double backemf = 0.0;
+    if (back_emf_sensing_supported_)
     {
-        throw Phidget22Error("Failed to get back EMF for Motor channel " +
-                                 std::to_string(channel_),
-                             ret);
+        PhidgetReturnCode ret =
+            PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to get back EMF for Motor channel " +
+                                     std::to_string(channel_),
+                                 ret);
+        }
     }
     return backemf;
 }
@@ -215,7 +240,10 @@ void Motor::dutyCycleChangeHandler(double duty_cycle) const
 
 void Motor::backEMFChangeHandler(double back_emf) const
 {
-    back_emf_change_handler_(channel_, back_emf);
+    if (back_emf_sensing_supported_)
+    {
+        back_emf_change_handler_(channel_, back_emf);
+    }
 }
 
 void Motor::DutyCycleChangeHandler(PhidgetDCMotorHandle /* motor_handle */,

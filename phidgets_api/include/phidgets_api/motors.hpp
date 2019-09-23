@@ -58,6 +58,7 @@ class Motors final
     void setDutyCycle(int index, double duty_cycle) const;
     double getAcceleration(int index) const;
     void setAcceleration(int index, double acceleration) const;
+    bool backEMFSensingSupported(int index) const;
     double getBackEMF(int index) const;
     void setDataInterval(int index, uint32_t data_interval_ms) const;
 

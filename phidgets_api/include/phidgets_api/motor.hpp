@@ -56,6 +56,7 @@ class Motor final
     void setDutyCycle(double duty_cycle) const;
     double getAcceleration() const;
     void setAcceleration(double acceleration) const;
+    bool backEMFSensingSupported() const;
     double getBackEMF() const;
     void setDataInterval(uint32_t data_interval_ms) const;
 
@@ -72,6 +73,7 @@ class Motor final
     std::function<void(int, double)> duty_cycle_change_handler_;
     std::function<void(int, double)> back_emf_change_handler_;
     PhidgetDCMotorHandle motor_handle_;
+    bool back_emf_sensing_supported_;
 
     static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
                                        void *ctx, double duty_cycle);
