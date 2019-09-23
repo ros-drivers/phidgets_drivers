@@ -125,12 +125,8 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
 
 void AnalogInputsRosI::publishLatest(int index)
 {
-    double VREF = 5.0;
-    // get rawsensorvalue and divide by 4096, which according to the
-    // documentation for both the IK888 and IK222 are the maximum sensor value
-    // Multiply by VREF=5.0V to get voltage
     auto msg = std::make_unique<std_msgs::msg::Float64>();
-    msg->data = VREF * val_to_pubs_[index].last_val / 4095.0;
+    msg->data = val_to_pubs_[index].last_val;
     val_to_pubs_[index].pub->publish(std::move(msg));
 }
 
