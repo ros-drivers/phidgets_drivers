@@ -59,8 +59,8 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
 
     double braking_strength = this->declare_parameter("braking_strength", 0.0);
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -120,9 +120,9 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&MotorsRosI::timerCallback, this));
@@ -194,7 +194,7 @@ void MotorsRosI::dutyCycleChangeCallback(int channel, double duty_cycle)
         std::lock_guard<std::mutex> lock(motor_mutex_);
         motor_vals_[channel].last_duty_cycle_val = duty_cycle;
 
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatestDutyCycle(channel);
         }
@@ -208,7 +208,7 @@ void MotorsRosI::backEMFChangeCallback(int channel, double back_emf)
         std::lock_guard<std::mutex> lock(motor_mutex_);
         motor_vals_[channel].last_back_emf_val = back_emf;
 
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatestBackEMF(channel);
         }

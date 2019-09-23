@@ -74,7 +74,7 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr encoder_pub_;
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
-    int publish_rate_;
+    double publish_rate_;
 
     void publishLatest(int channel);
 

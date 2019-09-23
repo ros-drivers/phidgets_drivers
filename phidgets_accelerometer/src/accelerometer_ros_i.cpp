@@ -84,8 +84,8 @@ AccelerometerRosI::AccelerometerRosI(const rclcpp::NodeOptions& options)
             "work");
     }
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -120,9 +120,9 @@ AccelerometerRosI::AccelerometerRosI(const rclcpp::NodeOptions& options)
     accelerometer_pub_ =
         this->create_publisher<sensor_msgs::msg::Imu>("imu/data_raw", 1);
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&AccelerometerRosI::timerCallback, this));
@@ -274,7 +274,7 @@ void AccelerometerRosI::accelerometerChangeCallback(
         last_data_timestamp_ns_ = this_ts_ns;
 
         // Publish if we aren't publishing on a timer
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatest();
         }

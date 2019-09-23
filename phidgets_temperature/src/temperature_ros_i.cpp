@@ -57,8 +57,8 @@ TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
 
     int data_interval_ms = this->declare_parameter("data_interval_ms", 500);
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -102,9 +102,9 @@ TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
 
     got_first_data_ = false;
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&TemperatureRosI::timerCallback, this));
@@ -143,7 +143,7 @@ void TemperatureRosI::temperatureChangeCallback(double temperature)
         got_first_data_ = true;
     }
 
-    if (publish_rate_ <= 0)
+    if (publish_rate_ <= 0.0)
     {
         publishLatest();
     }
