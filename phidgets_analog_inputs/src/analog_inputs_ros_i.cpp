@@ -91,6 +91,13 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
         val_to_pubs_.resize(n_in);
         for (int i = 0; i < n_in; i++)
         {
+            char str[100];
+            snprintf(str, sizeof(str), "gain%02d", i);
+            val_to_pubs_[i].gain = this->declare_parameter(str, 1.0);
+
+            snprintf(str, sizeof(str), "offset%02d", i);
+            val_to_pubs_[i].offset = this->declare_parameter(str, 0.0);
+
             char topicname[] = "analog_input00";
             snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
             val_to_pubs_[i].pub =
@@ -126,7 +133,8 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
 void AnalogInputsRosI::publishLatest(int index)
 {
     auto msg = std::make_unique<std_msgs::msg::Float64>();
-    msg->data = val_to_pubs_[index].last_val;
+    msg->data = val_to_pubs_[index].last_val * val_to_pubs_[index].gain +
+                val_to_pubs_[index].offset;
     val_to_pubs_[index].pub->publish(std::move(msg));
 }
 
