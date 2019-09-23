@@ -43,7 +43,7 @@ namespace phidgets {
 
 struct ValToPub {
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub;
-    double last_val;
+    double last_val{0.0};
 };
 
 class AnalogInputsRosI final : public rclcpp::Node
