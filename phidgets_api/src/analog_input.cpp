@@ -59,6 +59,17 @@ AnalogInput::AnalogInput(int32_t serial_number, int hub_port,
                                    serial_number, hub_port, is_hub_port_device,
                                    channel);
 
+    if (!is_hub_port_device)
+    {
+        ret =
+            PhidgetVoltageInput_setVoltageRange(ai_handle_, VOLTAGE_RANGE_AUTO);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to set analog input voltage range",
+                                 ret);
+        }
+    }
+
     ret = PhidgetVoltageInput_setOnVoltageChangeHandler(
         ai_handle_, VoltageChangeHandler, this);
     if (ret != EPHIDGET_OK)
