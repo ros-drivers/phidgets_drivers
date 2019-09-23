@@ -97,8 +97,6 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
                 this->create_publisher<std_msgs::msg::Float64>(topicname, 1);
 
             ais_->setDataInterval(i, data_interval_ms);
-
-            val_to_pubs_[i].last_val = ais_->getSensorValue(i);
         }
     } catch (const Phidget22Error& err)
     {
