@@ -118,7 +118,7 @@ TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
 
 void TemperatureRosI::publishLatest()
 {
-    auto msg = std::unique_ptr<std_msgs::msg::Float64>();
+    auto msg = std::make_unique<std_msgs::msg::Float64>();
     msg->data = last_temperature_reading_;
     temperature_pub_->publish(std::move(msg));
 }
