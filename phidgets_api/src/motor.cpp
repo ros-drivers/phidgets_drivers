@@ -178,8 +178,14 @@ bool Motor::backEMFSensingSupported() const
 
 double Motor::getBackEMF() const
 {
-    double backemf = 0.0;
-    if (back_emf_sensing_supported_)
+    if (!back_emf_sensing_supported_)
+    {
+        throw Phidget22Error("Back EMF sensing not supported",
+                             EPHIDGET_UNSUPPORTED);
+    }
+    double backemf;
+    PhidgetReturnCode ret = PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
+    if (ret != EPHIDGET_OK)
     {
         PhidgetReturnCode ret =
             PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
