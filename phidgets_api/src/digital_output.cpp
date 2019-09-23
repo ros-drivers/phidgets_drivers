@@ -39,6 +39,7 @@ namespace phidgets {
 
 DigitalOutput::DigitalOutput(int32_t serial_number, int hub_port,
                              bool is_hub_port_device, int channel)
+    : serial_number_(serial_number)
 {
     PhidgetReturnCode ret;
 
@@ -54,12 +55,30 @@ DigitalOutput::DigitalOutput(int32_t serial_number, int hub_port,
     helpers::openWaitForAttachment(reinterpret_cast<PhidgetHandle>(do_handle_),
                                    serial_number, hub_port, is_hub_port_device,
                                    channel);
+
+    if (serial_number_ == -1)
+    {
+        ret = Phidget_getDeviceSerialNumber(
+            reinterpret_cast<PhidgetHandle>(do_handle_), &serial_number_);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error(
+                "Failed to get serial number for digital output channel " +
+                    std::to_string(channel),
+                ret);
+        }
+    }
 }
 
 DigitalOutput::~DigitalOutput()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(do_handle_);
     helpers::closeAndDelete(&handle);
+}
+
+int32_t DigitalOutput::getSerialNumber() const noexcept
+{
+    return serial_number_;
 }
 
 void DigitalOutput::setOutputState(bool state) const

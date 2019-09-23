@@ -49,11 +49,14 @@ class DigitalInput
 
     ~DigitalInput();
 
+    int32_t getSerialNumber() const noexcept;
+
     bool getInputValue() const;
 
     void stateChangeHandler(int state) const;
 
   private:
+    int32_t serial_number_;
     int channel_;
     std::function<void(int, int)> input_handler_;
     PhidgetDigitalInputHandle di_handle_;

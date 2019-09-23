@@ -48,9 +48,12 @@ class IR final
 
     ~IR();
 
+    int32_t getSerialNumber() const noexcept;
+
     void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
 
   private:
+    int32_t serial_number_;
     std::function<void(const char *, uint32_t, int)> code_handler_;
     PhidgetIRHandle ir_handle_;
 

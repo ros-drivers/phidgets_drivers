@@ -173,7 +173,8 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
                       std::placeholders::_1, std::placeholders::_2,
                       std::placeholders::_3, std::placeholders::_4));
 
-        RCLCPP_INFO(get_logger(), "Connected");
+        RCLCPP_INFO(get_logger(), "Connected to serial %d",
+                    spatial_->getSerialNumber());
 
         spatial_->setDataInterval(data_interval_ms);
 

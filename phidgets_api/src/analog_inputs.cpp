@@ -85,6 +85,11 @@ AnalogInputs::~AnalogInputs()
 {
 }
 
+int32_t AnalogInputs::getSerialNumber() const noexcept
+{
+    return ais_.at(0)->getSerialNumber();
+}
+
 uint32_t AnalogInputs::getInputCount() const noexcept
 {
     return input_count_;

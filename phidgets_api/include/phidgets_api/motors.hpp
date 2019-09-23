@@ -51,6 +51,8 @@ class Motors final
 
     ~Motors();
 
+    int32_t getSerialNumber() const noexcept;
+
     uint32_t getMotorCount() const noexcept;
     double getDutyCycle(int index) const;
     void setDutyCycle(int index, double duty_cycle) const;

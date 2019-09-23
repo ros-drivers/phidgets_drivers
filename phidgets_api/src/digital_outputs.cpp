@@ -82,6 +82,11 @@ DigitalOutputs::~DigitalOutputs()
 {
 }
 
+int32_t DigitalOutputs::getSerialNumber() const noexcept
+{
+    return dos_.at(0)->getSerialNumber();
+}
+
 uint32_t DigitalOutputs::getOutputCount() const noexcept
 {
     return output_count_;

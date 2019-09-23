@@ -107,7 +107,8 @@ GyroscopeRosI::GyroscopeRosI(const rclcpp::NodeOptions &options)
             std::bind(&GyroscopeRosI::gyroscopeChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2));
 
-        RCLCPP_INFO(get_logger(), "Connected");
+        RCLCPP_INFO(get_logger(), "Connected to serial %d",
+                    gyroscope_->getSerialNumber());
 
         gyroscope_->setDataInterval(data_interval_ms);
 

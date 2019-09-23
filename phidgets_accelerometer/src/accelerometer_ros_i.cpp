@@ -107,7 +107,8 @@ AccelerometerRosI::AccelerometerRosI(const rclcpp::NodeOptions& options)
             std::bind(&AccelerometerRosI::accelerometerChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2));
 
-        RCLCPP_INFO(get_logger(), "Connected");
+        RCLCPP_INFO(get_logger(), "Connected to serial %d",
+                    accelerometer_->getSerialNumber());
 
         accelerometer_->setDataInterval(data_interval_ms);
     } catch (const Phidget22Error& err)

@@ -50,6 +50,8 @@ class Encoder final
 
     ~Encoder();
 
+    int32_t getSerialNumber() const noexcept;
+
     /** @brief Reads the current position of an encoder
      */
     int64_t getPosition() const;
@@ -80,6 +82,7 @@ class Encoder final
                                int index_triggered);
 
   private:
+    int32_t serial_number_;
     int channel_;
     std::function<void(int, int, double, int)> position_change_handler_;
     PhidgetEncoderHandle encoder_handle_;

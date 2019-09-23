@@ -50,6 +50,8 @@ class Encoders final
 
     ~Encoders();
 
+    int32_t getSerialNumber() const noexcept;
+
     /**@brief Gets the number of encoder input channels supported by this board
      */
     uint32_t getEncoderCount() const;

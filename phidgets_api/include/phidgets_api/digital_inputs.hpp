@@ -50,6 +50,8 @@ class DigitalInputs
 
     ~DigitalInputs();
 
+    int32_t getSerialNumber() const noexcept;
+
     uint32_t getInputCount() const noexcept;
 
     bool getInputValue(int index) const;

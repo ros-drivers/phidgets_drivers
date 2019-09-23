@@ -56,6 +56,8 @@ class Temperature final
 
     ~Temperature();
 
+    int32_t getSerialNumber() const noexcept;
+
     void setThermocoupleType(ThermocoupleType type);
 
     double getTemperature() const;
@@ -65,9 +67,11 @@ class Temperature final
     void temperatureChangeHandler(double temperature) const;
 
   private:
+    int32_t serial_number_;
     std::function<void(double)> temperature_handler_;
     PhidgetTemperatureSensorHandle temperature_handle_;
-    static void TemperatureChangeHandler(
+
+  static void TemperatureChangeHandler(
         PhidgetTemperatureSensorHandle temperature_handle, void *ctx,
         double temperature);
 };

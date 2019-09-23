@@ -40,7 +40,7 @@ namespace phidgets {
 Temperature::Temperature(int32_t serial_number, int hub_port,
                          bool is_hub_port_device,
                          std::function<void(double)> temperature_handler)
-    : temperature_handler_(temperature_handler)
+    : serial_number_(serial_number), temperature_handler_(temperature_handler)
 {
     PhidgetReturnCode ret =
         PhidgetTemperatureSensor_create(&temperature_handle_);
@@ -60,12 +60,29 @@ Temperature::Temperature(int32_t serial_number, int hub_port,
         throw Phidget22Error("Failed to set change handler for Temperature",
                              ret);
     }
+
+    if (serial_number_ == -1)
+    {
+        ret = Phidget_getDeviceSerialNumber(
+            reinterpret_cast<PhidgetHandle>(temperature_handle_),
+            &serial_number_);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to get serial number for temperature",
+                                 ret);
+        }
+    }
 }
 
 Temperature::~Temperature()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(temperature_handle_);
     helpers::closeAndDelete(&handle);
+}
+
+int32_t Temperature::getSerialNumber() const noexcept
+{
+    return serial_number_;
 }
 
 void Temperature::setThermocoupleType(ThermocoupleType type)

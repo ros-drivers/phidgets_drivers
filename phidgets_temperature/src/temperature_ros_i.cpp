@@ -81,7 +81,8 @@ TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
             std::bind(&TemperatureRosI::temperatureChangeCallback, this,
                       std::placeholders::_1));
 
-        RCLCPP_INFO(get_logger(), "Connected");
+        RCLCPP_INFO(get_logger(), "Connected to serial %d",
+                    temperature_->getSerialNumber());
 
         temperature_->setDataInterval(data_interval_ms);
 

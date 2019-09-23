@@ -39,7 +39,9 @@ namespace phidgets {
 Encoder::Encoder(
     int32_t serial_number, int hub_port, bool is_hub_port_device, int channel,
     std::function<void(int, int, double, int)> position_change_handler)
-    : channel_(channel), position_change_handler_(position_change_handler)
+    : serial_number_(serial_number),
+      channel_(channel),
+      position_change_handler_(position_change_handler)
 {
     // create the handle
     PhidgetReturnCode ret = PhidgetEncoder_create(&encoder_handle_);
@@ -61,12 +63,30 @@ Encoder::Encoder(
                 std::to_string(channel),
             ret);
     }
+
+    if (serial_number_ == -1)
+    {
+        ret = Phidget_getDeviceSerialNumber(
+            reinterpret_cast<PhidgetHandle>(encoder_handle_), &serial_number_);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error(
+                "Failed to get serial number for encoder channel " +
+                    std::to_string(channel),
+                ret);
+        }
+    }
 }
 
 Encoder::~Encoder()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(encoder_handle_);
     helpers::closeAndDelete(&handle);
+}
+
+int32_t Encoder::getSerialNumber() const noexcept
+{
+    return serial_number_;
 }
 
 int64_t Encoder::getPosition() const
