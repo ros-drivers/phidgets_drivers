@@ -64,8 +64,8 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
     speed_filter_idle_iter_loops_before_reset_ =
         this->declare_parameter("speed_filter_idle_iter_loops_before_reset", 1);
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -124,9 +124,9 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
     encoder_pub_ = this->create_publisher<sensor_msgs::msg::JointState>(
         "joint_states", 100);
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&HighSpeedEncoderRosI::timerCallback, this));
@@ -237,7 +237,7 @@ void HighSpeedEncoderRosI::positionChangeHandler(int channel,
         enc_data_to_pub_[channel].speed_buffer_updated = true;
         enc_data_to_pub_[channel].loops_without_update_speed_buffer = 0;
 
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatest(channel);
         }

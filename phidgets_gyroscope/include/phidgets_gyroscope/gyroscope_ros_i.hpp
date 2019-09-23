@@ -62,7 +62,7 @@ class GyroscopeRosI final : public rclcpp::Node
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr gyroscope_pub_;
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
-    int publish_rate_;
+    double publish_rate_;
 
     rclcpp::Time ros_time_zero_;
     bool synchronize_timestamps_{true};

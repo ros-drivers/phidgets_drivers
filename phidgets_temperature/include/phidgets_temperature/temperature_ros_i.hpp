@@ -54,7 +54,7 @@ class TemperatureRosI final : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr temperature_pub_;
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
-    int publish_rate_;
+    double publish_rate_;
 
     void publishLatest();
 

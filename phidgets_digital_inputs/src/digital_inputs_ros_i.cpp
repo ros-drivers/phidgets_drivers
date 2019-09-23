@@ -59,8 +59,8 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
     bool is_hub_port_device =
         this->declare_parameter("is_hub_port_device", false);
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -101,9 +101,9 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&DigitalInputsRosI::timerCallback, this));
@@ -143,7 +143,7 @@ void DigitalInputsRosI::stateChangeCallback(int index, int input_value)
         std::lock_guard<std::mutex> lock(di_mutex_);
         val_to_pubs_[index].last_val = input_value == 0;
 
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatest(index);
         }

@@ -61,8 +61,8 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
 
     int data_interval_ms = this->declare_parameter("data_interval_ms", 250);
 
-    publish_rate_ = this->declare_parameter("publish_rate", 0);
-    if (publish_rate_ > 1000)
+    publish_rate_ = this->declare_parameter("publish_rate", 0.0);
+    if (publish_rate_ > 1000.0)
     {
         throw std::runtime_error("Publish rate must be <= 1000");
     }
@@ -111,9 +111,9 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    if (publish_rate_ > 0)
+    if (publish_rate_ > 0.0)
     {
-        double pub_msec = 1000.0 / static_cast<double>(publish_rate_);
+        double pub_msec = 1000.0 / publish_rate_;
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(static_cast<int64_t>(pub_msec)),
             std::bind(&AnalogInputsRosI::timerCallback, this));
@@ -154,7 +154,7 @@ void AnalogInputsRosI::sensorChangeCallback(int index, double sensor_value)
         std::lock_guard<std::mutex> lock(ai_mutex_);
         val_to_pubs_[index].last_val = sensor_value;
 
-        if (publish_rate_ <= 0)
+        if (publish_rate_ <= 0.0)
         {
             publishLatest(index);
         }

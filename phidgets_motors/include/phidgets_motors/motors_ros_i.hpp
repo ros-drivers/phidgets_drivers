@@ -75,7 +75,7 @@ class MotorsRosI final : public rclcpp::Node
 
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
-    int publish_rate_;
+    double publish_rate_;
 
     void publishLatestDutyCycle(int index);
     void publishLatestBackEMF(int index);
