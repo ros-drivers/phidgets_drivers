@@ -38,7 +38,7 @@ namespace phidgets {
 
 IR::IR(int32_t serial_number,
        std::function<void(const char *, uint32_t, int)> code_handler)
-    : code_handler_(code_handler)
+    : serial_number_(serial_number), code_handler_(code_handler)
 {
     // create the handle
     PhidgetReturnCode ret = PhidgetIR_create(&ir_handle_);
@@ -51,13 +51,32 @@ IR::IR(int32_t serial_number,
                                    serial_number, 0, false, 0);
 
     // register ir data callback
-    PhidgetIR_setOnCodeHandler(ir_handle_, CodeHandler, this);
+    ret = PhidgetIR_setOnCodeHandler(ir_handle_, CodeHandler, this);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set code handler for ir", ret);
+    }
+
+    if (serial_number_ == -1)
+    {
+        ret = Phidget_getDeviceSerialNumber(
+            reinterpret_cast<PhidgetHandle>(ir_handle_), &serial_number_);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to get serial number for IR", ret);
+        }
+    }
 }
 
 IR::~IR()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(ir_handle_);
     helpers::closeAndDelete(&handle);
+}
+
+int32_t IR::getSerialNumber() const noexcept
+{
+    return serial_number_;
 }
 
 void IR::codeHandler(const char *code, uint32_t bit_count, int is_repeat) const

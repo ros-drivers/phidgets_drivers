@@ -48,6 +48,8 @@ class DigitalOutputs final
 
     ~DigitalOutputs();
 
+    int32_t getSerialNumber() const noexcept;
+
     uint32_t getOutputCount() const noexcept;
 
     void setOutputState(int index, bool state) const;

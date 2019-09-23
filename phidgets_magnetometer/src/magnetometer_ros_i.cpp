@@ -155,7 +155,8 @@ MagnetometerRosI::MagnetometerRosI(const rclcpp::NodeOptions& options)
             std::bind(&MagnetometerRosI::magnetometerChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2));
 
-        RCLCPP_INFO(get_logger(), "Connected");
+        RCLCPP_INFO(get_logger(), "Connected to serial %d",
+                    magnetometer_->getSerialNumber());
 
         magnetometer_->setDataInterval(data_interval_ms);
 

@@ -82,6 +82,11 @@ Motors::~Motors()
 {
 }
 
+int32_t Motors::getSerialNumber() const noexcept
+{
+    return motors_.at(0)->getSerialNumber();
+}
+
 uint32_t Motors::getMotorCount() const noexcept
 {
     return motor_count_;

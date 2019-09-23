@@ -49,6 +49,8 @@ class Accelerometer final
 
     ~Accelerometer();
 
+    int32_t getSerialNumber() const noexcept;
+
     void getAcceleration(double &x, double &y, double &z,
                          double &timestamp) const;
 
@@ -57,6 +59,7 @@ class Accelerometer final
     void dataHandler(const double acceleration[3], double timestamp) const;
 
   private:
+    int32_t serial_number_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetAccelerometerHandle accel_handle_;
 

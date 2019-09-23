@@ -50,6 +50,8 @@ class Motor final
 
     ~Motor();
 
+    int32_t getSerialNumber() const noexcept;
+
     double getDutyCycle() const;
     void setDutyCycle(double duty_cycle) const;
     double getAcceleration() const;
@@ -65,6 +67,7 @@ class Motor final
     void backEMFChangeHandler(double back_emf) const;
 
   private:
+    int32_t serial_number_;
     int channel_;
     std::function<void(int, double)> duty_cycle_change_handler_;
     std::function<void(int, double)> back_emf_change_handler_;

@@ -75,7 +75,8 @@ DigitalOutputsRosI::DigitalOutputsRosI(const rclcpp::NodeOptions& options)
     }
 
     int n_out = dos_->getOutputCount();
-    RCLCPP_INFO(get_logger(), "Connected %d outputs", n_out);
+    RCLCPP_INFO(get_logger(), "Connected to serial %d, %d outputs",
+                dos_->getSerialNumber(), n_out);
     out_subs_.resize(n_out);
     for (int i = 0; i < n_out; i++)
     {

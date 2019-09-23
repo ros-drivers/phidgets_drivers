@@ -84,9 +84,10 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
             std::bind(&MotorsRosI::backEMFChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2));
 
-        RCLCPP_INFO(get_logger(), "Connected");
-
         n_motors = motors_->getMotorCount();
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d motors",
+                    motors_->getSerialNumber(), n_motors);
+
         motor_vals_.resize(n_motors);
         for (int i = 0; i < n_motors; i++)
         {

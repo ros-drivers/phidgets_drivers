@@ -83,6 +83,11 @@ DigitalInputs::~DigitalInputs()
 {
 }
 
+int32_t DigitalInputs::getSerialNumber() const noexcept
+{
+    return dis_.at(0)->getSerialNumber();
+}
+
 uint32_t DigitalInputs::getInputCount() const noexcept
 {
     return input_count_;

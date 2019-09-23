@@ -84,7 +84,8 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
                       std::placeholders::_1, std::placeholders::_2));
 
         n_in = dis_->getInputCount();
-        RCLCPP_INFO(get_logger(), "Connected %d inputs", n_in);
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d inputs",
+                    dis_->getSerialNumber(), n_in);
         val_to_pubs_.resize(n_in);
         for (int i = 0; i < n_in; i++)
         {

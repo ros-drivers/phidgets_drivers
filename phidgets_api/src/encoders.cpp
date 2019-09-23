@@ -82,6 +82,11 @@ Encoders::~Encoders()
 {
 }
 
+int32_t Encoders::getSerialNumber() const noexcept
+{
+    return encs_.at(0)->getSerialNumber();
+}
+
 uint32_t Encoders::getEncoderCount() const
 {
     return encoder_count_;

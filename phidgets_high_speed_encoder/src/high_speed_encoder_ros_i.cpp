@@ -89,7 +89,8 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
                       std::placeholders::_3, std::placeholders::_4));
 
         n_encs = encs_->getEncoderCount();
-        RCLCPP_INFO(get_logger(), "Connected %d encoders", n_encs);
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d encoders",
+                    encs_->getSerialNumber(), n_encs);
         enc_data_to_pub_.resize(n_encs);
         for (int i = 0; i < n_encs; i++)
         {

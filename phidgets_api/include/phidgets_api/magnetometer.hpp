@@ -49,6 +49,8 @@ class Magnetometer final
 
     ~Magnetometer();
 
+    int32_t getSerialNumber() const noexcept;
+
     void setCompassCorrectionParameters(double cc_mag_field, double cc_offset0,
                                         double cc_offset1, double cc_offset2,
                                         double cc_gain0, double cc_gain1,
@@ -65,6 +67,7 @@ class Magnetometer final
     void dataHandler(const double magnetic_field[3], double timestamp) const;
 
   private:
+    int32_t serial_number_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetMagnetometerHandle mag_handle_;
 

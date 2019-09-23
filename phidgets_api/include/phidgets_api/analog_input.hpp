@@ -49,6 +49,8 @@ class AnalogInput final
 
     ~AnalogInput();
 
+    int32_t getSerialNumber() const noexcept;
+
     double getSensorValue() const;
 
     void setDataInterval(uint32_t data_interval_ms) const;
@@ -56,6 +58,7 @@ class AnalogInput final
     void voltageChangeHandler(double sensorValue) const;
 
   private:
+    int32_t serial_number_;
     int channel_;
     std::function<void(int, double)> input_handler_;
     PhidgetVoltageInputHandle ai_handle_;

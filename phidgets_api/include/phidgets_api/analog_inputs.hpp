@@ -50,6 +50,8 @@ class AnalogInputs final
 
     ~AnalogInputs();
 
+    int32_t getSerialNumber() const noexcept;
+
     uint32_t getInputCount() const noexcept;
 
     double getSensorValue(int index) const;

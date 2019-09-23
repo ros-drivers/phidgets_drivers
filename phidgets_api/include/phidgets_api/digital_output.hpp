@@ -46,9 +46,12 @@ class DigitalOutput final
 
     ~DigitalOutput();
 
+    int32_t getSerialNumber() const noexcept;
+
     void setOutputState(bool state) const;
 
   private:
+    int32_t serial_number_;
     PhidgetDigitalOutputHandle do_handle_;
 };
 
