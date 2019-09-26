@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::TemperatureRosI',
                     node_name='phidgets_temperature'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

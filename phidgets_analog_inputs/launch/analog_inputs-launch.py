@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::AnalogInputsRosI',
                     node_name='phidgets_analog_inputs'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

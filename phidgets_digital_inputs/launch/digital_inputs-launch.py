@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::DigitalInputsRosI',
                     node_name='phidgets_digital_inputs'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

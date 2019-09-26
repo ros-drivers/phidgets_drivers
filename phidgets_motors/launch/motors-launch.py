@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::MotorsRosI',
                     node_name='phidgets_motors'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])
