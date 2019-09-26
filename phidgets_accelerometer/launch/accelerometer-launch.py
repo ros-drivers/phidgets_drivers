@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::AccelerometerRosI',
                     node_name='phidgets_accelerometer'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

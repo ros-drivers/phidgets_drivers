@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::MagnetometerRosI',
                     node_name='phidgets_magnetometer'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

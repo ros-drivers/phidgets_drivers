@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::HighSpeedEncoderRosI',
                     node_name='phidgets_high_speed_encoder'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])

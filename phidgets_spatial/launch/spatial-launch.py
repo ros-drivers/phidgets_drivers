@@ -32,7 +32,7 @@ def generate_launch_description():
                     node_plugin='phidgets::SpatialRosI',
                     node_name='phidgets_spatial'),
             ],
-            output='screen',
+            output='both',
     )
 
     return launch.LaunchDescription([container])
