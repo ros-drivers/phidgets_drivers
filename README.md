@@ -35,6 +35,49 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This package i
 
   * [`phidgets_temperature`](phidgets_temperature/README.md)
 
+Concerning Phidgets
+-------------------
+
+Phidgets are typically plugged into USB on a host computer (though there are
+wireless ones, they will be ignored here).  In the "old-style" Phidgets, there
+was one USB plug per device.  So if you have a
+[temperature Phidget](https://www.phidgets.com/?tier=3&catid=14&pcid=12&prodid=1042),
+and an [accelerometer Phidget](https://www.phidgets.com/?tier=3&catid=10&pcid=8&prodid=1026),
+they take up 2 USB plugs on the computer.  These "old-style" Phidgets are still
+around and still available for sale, but most of the new development and
+sensors are in "new-style" Phidgets.  In "new-style" Phidgets, a
+[VINT hub](https://www.phidgets.com/?tier=3&catid=2&pcid=1&prodid=643) is
+connected to the host computer via USB, and then the other Phidgets connect to
+a port on the VINT hub.  Most of the "old-style" Phidget functions (temperature,
+acclerometer, etc.) are also available as "new-style" Phidgets, and most new
+functionality is only available as VINT devices.
+
+### Identifying Phidgets devices ###
+
+All Phidgets that plug directly into a USB port (including the VINT hub) have a
+unique serial number. This serial number is printed on the back of the device,
+and is also printed out by the phidgets drivers when they start up.  The serial
+number can be specified as a parameter when the driver starts up; otherwise, the
+default is to connect to *any* Phidgets that are of the correct type at startup.
+
+Uniquely identifying a "new-style" Phidget also requires one more piece of
+information, which is the VINT hub port it is connected to.  This also must be
+provided as a parameter when starting up the driver.
+
+Note that there are "smart" and "simple" VINT hub devices.  "Smart" devices have
+their own microcontrollers on board and use a protocol to communicate with the
+VINT hub.
+
+"Simple" VINT hub devices don't have a microcontroller.  They just provide
+or accept a voltage from the VINT hub port (which can act as a digital input,
+digital output, or analog inputs).
+
+Whether the Phidget is "smart" or "simple" can be determined by looking at the
+"Connection and Compatibility" portion of the webpage for the individual sensor.
+If the device is "smart", then "is_hub_port_device" must be set to "false"
+when launching a driver; if the device is "simple", then "is_hub_port_device"
+must be set to "true".
+
 Installing
 ----------
 
@@ -82,9 +125,3 @@ To set up the udev rules for the Phidgets USB devices, run the following command
     sudo udevadm control --reload-rules
 
 Afterwards, disconnect the USB cable and plug it in again (or run `sudo udevadm trigger`).
-
-
-For documentation regarding nodes, topics, etc:
----------------------------------------------
-
-http://ros.org/wiki/phidgets_drivers
