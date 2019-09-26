@@ -101,15 +101,22 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
             snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
             motor_vals_[i].duty_cycle_pub =
                 this->create_publisher<std_msgs::msg::Float64>(pubtopic, 1);
+            motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
 
             char backemftopic[] = "motor_back_emf00";
             snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
                      i);
             motor_vals_[i].back_emf_pub =
                 this->create_publisher<std_msgs::msg::Float64>(backemftopic, 1);
-
-            motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
-            motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+            if (motors_->backEMFSensingSupported(i))
+            {
+                motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+            } else
+            {
+                RCLCPP_INFO(get_logger(),
+                            "Back EMF sensing not supported for %s",
+                            backemftopic);
+            }
 
             motors_->setDataInterval(i, data_interval_ms);
             motors_->setBraking(i, braking_strength);
@@ -149,9 +156,12 @@ void MotorsRosI::publishLatestDutyCycle(int index)
 
 void MotorsRosI::publishLatestBackEMF(int index)
 {
-    auto backemf_msg = std::make_unique<std_msgs::msg::Float64>();
-    backemf_msg->data = motor_vals_[index].last_back_emf_val;
-    motor_vals_[index].back_emf_pub->publish(std::move(backemf_msg));
+    if (motors_->backEMFSensingSupported(index))
+    {
+        auto backemf_msg = std::make_unique<std_msgs::msg::Float64>();
+        backemf_msg->data = motor_vals_[index].last_back_emf_val;
+        motor_vals_[index].back_emf_pub->publish(std::move(backemf_msg));
+    }
 }
 
 void MotorsRosI::timerCallback()

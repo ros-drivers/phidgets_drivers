@@ -112,6 +112,11 @@ void Motors::setAcceleration(int index, double acceleration) const
     motors_.at(index)->setAcceleration(acceleration);
 }
 
+bool Motors::backEMFSensingSupported(int index) const
+{
+    return motors_.at(index)->backEMFSensingSupported();
+}
+
 double Motors::getBackEMF(int index) const
 {
     return motors_.at(index)->getBackEMF();

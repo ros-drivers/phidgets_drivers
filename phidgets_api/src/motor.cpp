@@ -68,12 +68,26 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
             ret);
     }
 
-    ret = PhidgetDCMotor_setOnBackEMFChangeHandler(motor_handle_,
-                                                   BackEMFChangeHandler, this);
-    if (ret != EPHIDGET_OK)
+    back_emf_sensing_supported_ = true;
+    ret = PhidgetDCMotor_setBackEMFSensingState(motor_handle_, 1);
+    if (ret == EPHIDGET_UNSUPPORTED)
+    {
+        back_emf_sensing_supported_ = false;
+    } else if (ret == EPHIDGET_OK)
+    {
+        ret = PhidgetDCMotor_setOnBackEMFChangeHandler(
+            motor_handle_, BackEMFChangeHandler, this);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error(
+                "Failed to set back EMF update handler for Motor channel " +
+                    std::to_string(channel),
+                ret);
+        }
+    } else
     {
         throw Phidget22Error(
-            "Failed to set back EMF update handler for Motor channel " +
+            "Failed to set back EMF sensing state Motor channel " +
                 std::to_string(channel),
             ret);
     }
@@ -155,8 +169,18 @@ void Motor::setAcceleration(double acceleration) const
     }
 }
 
+bool Motor::backEMFSensingSupported() const
+{
+    return back_emf_sensing_supported_;
+}
+
 double Motor::getBackEMF() const
 {
+    if (!back_emf_sensing_supported_)
+    {
+        throw Phidget22Error("Back EMF sensing not supported",
+                             EPHIDGET_UNSUPPORTED);
+    }
     double backemf;
     PhidgetReturnCode ret = PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
     if (ret != EPHIDGET_OK)

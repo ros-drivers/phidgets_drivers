@@ -7,7 +7,7 @@ Topics
 ------
 * `/set_motor_duty_cycleXX` (`std_msgs/Float64`) - Set the motor duty cycle.  One topic is created for each motor attached.
 * `/motor_duty_cycleXX` (`std_msgs/Float64`) - Get the motor duty cycle.  One topic is created for each motor attached.
-* `/motor_back_emfXX` (`std_msgs/Float64`) - Get the motor back EMF value.  One topic is created for each motor attached.
+* `/motor_back_emfXX` (`std_msgs/Float64`) - Get the motor back EMF value if supported by device.  One topic is created for each motor attached.
 
 Parameters
 ----------
