@@ -70,26 +70,24 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
 
     back_emf_sensing_supported_ = true;
     ret = PhidgetDCMotor_setBackEMFSensingState(motor_handle_, 1);
-    if (ret != EPHIDGET_OK)
+    if (ret == EPHIDGET_UNSUPPORTED)
     {
-        if (ret == EPHIDGET_UNSUPPORTED)
-        {
-            back_emf_sensing_supported_ = false;
-        } else
+        back_emf_sensing_supported_ = false;
+    } else if (ret == EPHIDGET_OK)
+    {
+        ret = PhidgetDCMotor_setOnBackEMFChangeHandler(
+            motor_handle_, BackEMFChangeHandler, this);
+        if (ret != EPHIDGET_OK)
         {
             throw Phidget22Error(
-                "Failed to set back EMF sensing state Motor channel " +
+                "Failed to set back EMF update handler for Motor channel " +
                     std::to_string(channel),
                 ret);
         }
-    }
-
-    ret = PhidgetDCMotor_setOnBackEMFChangeHandler(motor_handle_,
-                                                   BackEMFChangeHandler, this);
-    if (ret != EPHIDGET_OK)
+    } else
     {
         throw Phidget22Error(
-            "Failed to set back EMF update handler for Motor channel " +
+            "Failed to set back EMF sensing state Motor channel " +
                 std::to_string(channel),
             ret);
     }
@@ -187,14 +185,9 @@ double Motor::getBackEMF() const
     PhidgetReturnCode ret = PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
     if (ret != EPHIDGET_OK)
     {
-        PhidgetReturnCode ret =
-            PhidgetDCMotor_getBackEMF(motor_handle_, &backemf);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error("Failed to get back EMF for Motor channel " +
-                                     std::to_string(channel_),
-                                 ret);
-        }
+        throw Phidget22Error("Failed to get back EMF for Motor channel " +
+                                 std::to_string(channel_),
+                             ret);
     }
     return backemf;
 }
@@ -246,10 +239,7 @@ void Motor::dutyCycleChangeHandler(double duty_cycle) const
 
 void Motor::backEMFChangeHandler(double back_emf) const
 {
-    if (back_emf_sensing_supported_)
-    {
-        back_emf_change_handler_(channel_, back_emf);
-    }
+    back_emf_change_handler_(channel_, back_emf);
 }
 
 void Motor::DutyCycleChangeHandler(PhidgetDCMotorHandle /* motor_handle */,

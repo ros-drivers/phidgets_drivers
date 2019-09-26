@@ -142,10 +142,7 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
         for (int i = 0; i < n_motors; ++i)
         {
             publishLatestDutyCycle(i);
-            if (motors_->backEMFSensingSupported(i))
-            {
-                publishLatestBackEMF(i);
-            }
+            publishLatestBackEMF(i);
         }
     }
 }
@@ -173,10 +170,7 @@ void MotorsRosI::timerCallback()
     for (int i = 0; i < static_cast<int>(motor_vals_.size()); ++i)
     {
         publishLatestDutyCycle(i);
-        if (motors_->backEMFSensingSupported(i))
-        {
-            publishLatestBackEMF(i);
-        }
+        publishLatestBackEMF(i);
     }
 }
 
