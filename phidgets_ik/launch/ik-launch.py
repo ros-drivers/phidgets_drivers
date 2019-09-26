@@ -21,6 +21,28 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     """Generate launch description with multiple components."""
+
+    do_params = {
+        'serial': -1,
+        'hub_port': 0,
+        'is_hub_port_device': False,
+    }
+
+    di_params = {
+        'serial': -1,
+        'hub_port': 0,
+        'is_hub_port_device': False,
+        'publish_rate': 0.0,
+    }
+
+    ai_params = {
+        'serial': -1,
+        'hub_port': 0,
+        'is_hub_port_device': False,
+        'data_interval_ms': 250,
+        'publish_rate': 0.0,
+    }
+
     container = ComposableNodeContainer(
             node_name='phidgets_ik',
             node_namespace='',
@@ -30,15 +52,18 @@ def generate_launch_description():
                 ComposableNode(
                     package='phidgets_digital_outputs',
                     node_plugin='phidgets::DigitalOutputsRosI',
-                    node_name='phidgets_digital_outputs'),
+                    node_name='phidgets_digital_outputs',
+                    parameters=[do_params]),
                 ComposableNode(
                     package='phidgets_digital_inputs',
                     node_plugin='phidgets::DigitalInputsRosI',
-                    node_name='phidgets_digital_inputs'),
+                    node_name='phidgets_digital_inputs',
+                    parameters=[di_params]),
                 ComposableNode(
                     package='phidgets_analog_inputs',
                     node_plugin='phidgets::AnalogInputsRosI',
-                    node_name='phidgets_analog_inputs'),
+                    node_name='phidgets_analog_inputs',
+                    parameters=[ai_params]),
             ],
             output='both',
     )
