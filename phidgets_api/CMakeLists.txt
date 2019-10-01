@@ -32,6 +32,8 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/motors.cpp
                          src/phidget22.cpp
                          src/spatial.cpp
+                         src/stepper.cpp
+                         src/steppers.cpp
                          src/temperature.cpp)
 
 ament_target_dependencies(phidgets_api

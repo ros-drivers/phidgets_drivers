@@ -1,0 +1,6 @@
+---
+bool success   # indicate successful run of triggered service
+Range position
+Range velocity_limit
+Range acceleration
+Range current_limit

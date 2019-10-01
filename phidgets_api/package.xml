@@ -15,6 +15,7 @@
 
   <author>Tully Foote</author>
   <author>Ivan Dryanovski</author>
+  <author>Peter Polidoro</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

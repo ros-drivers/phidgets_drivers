@@ -1,0 +1,8 @@
+---
+bool success   # indicate successful run of triggered service
+bool enabled
+float64 target_position
+float64 velocity_limit
+float64 acceleration
+float64 current_limit
+float64 holding_current_limit

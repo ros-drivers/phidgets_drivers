@@ -33,6 +33,8 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This package i
 
   * [`phidgets_spatial`](phidgets_spatial/README.md)
 
+  * [`phidgets_stepper`](phidgets_stepper/README.md)
+
   * [`phidgets_temperature`](phidgets_temperature/README.md)
 
 Concerning Phidgets

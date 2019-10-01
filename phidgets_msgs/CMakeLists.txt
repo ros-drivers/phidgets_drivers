@@ -16,10 +16,14 @@ find_package(std_msgs REQUIRED)
 
 set(msg_files
   "msg/EncoderDecimatedSpeed.msg"
+  "msg/Range.msg"
 )
 
 set(srv_files
+  "srv/GetStepperSettings.srv"
+  "srv/GetStepperSettingRanges.srv"
   "srv/SetDigitalOutput.srv"
+  "srv/SetFloat64.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
