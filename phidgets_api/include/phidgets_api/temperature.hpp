@@ -71,7 +71,7 @@ class Temperature final
     std::function<void(double)> temperature_handler_;
     PhidgetTemperatureSensorHandle temperature_handle_;
 
-  static void TemperatureChangeHandler(
+    static void TemperatureChangeHandler(
         PhidgetTemperatureSensorHandle temperature_handle, void *ctx,
         double temperature);
 };
