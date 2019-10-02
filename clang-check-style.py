@@ -87,7 +87,7 @@ def main():
         return 1
 
     # Now find the list of files to run it against
-    extensions = ['cpp', 'h']
+    extensions = ['cpp', 'h', 'hpp']
     files = get_files('.', extensions)
 
     # Now build up the command
