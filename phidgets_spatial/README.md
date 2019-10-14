@@ -1,10 +1,10 @@
 Phidgets spatial ROS 2 driver
-===========================
+=============================
 
 This is the ROS 2 driver for Phidgets spatial.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/imu/data_raw` (`sensor_msgs/Imu`) - The raw accelerometer and gyroscope data.
 * `imu/is_calibrated` (`std_msgs/Bool`) - Whether the gyroscope has been calibrated; this will be done automatically at startup time, but can also be re-done at any time by calling the `imu/calibrate` service.
 * `/imu/mag` (`sensor_msgs/MagneticField`) - The raw magnetometer data.
