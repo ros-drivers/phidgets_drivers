@@ -54,30 +54,31 @@ const char *Phidget22Error::what() const noexcept
 
 namespace helpers {
 
-void openWaitForAttachment(PhidgetHandle handle, int32_t serial_number,
-                           int hub_port, bool is_hub_port_device, int channel)
+void openWaitForAttachment(PhidgetHandle handle,
+                           const ChannelAddress &channel_address)
 {
     PhidgetReturnCode ret;
 
-    ret = Phidget_setDeviceSerialNumber(handle, serial_number);
+    ret = Phidget_setDeviceSerialNumber(handle, channel_address.serial_number);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set device serial number", ret);
     }
 
-    ret = Phidget_setHubPort(handle, hub_port);
+    ret = Phidget_setHubPort(handle, channel_address.hub_port);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set device hub port", ret);
     }
 
-    ret = Phidget_setIsHubPortDevice(handle, is_hub_port_device);
+    ret =
+        Phidget_setIsHubPortDevice(handle, channel_address.is_hub_port_device);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set device is hub port device", ret);
     }
 
-    ret = Phidget_setChannel(handle, channel);
+    ret = Phidget_setChannel(handle, channel_address.channel);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set device channel", ret);

@@ -54,10 +54,17 @@ class Phidget22Error final : public std::exception
     std::string msg_;
 };
 
+struct ChannelAddress {
+    int32_t serial_number = PHIDGET_SERIALNUMBER_ANY;
+    int hub_port = PHIDGET_HUBPORT_ANY;
+    bool is_hub_port_device = false;
+    int channel = PHIDGET_CHANNEL_ANY;
+};
+
 namespace helpers {
 
-void openWaitForAttachment(PhidgetHandle handle, int32_t serial_number,
-                           int hub_port, bool is_hub_port_device, int channel);
+void openWaitForAttachment(PhidgetHandle handle,
+                           const ChannelAddress &channel_address);
 
 void closeAndDelete(PhidgetHandle *handle) noexcept;
 
