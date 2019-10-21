@@ -43,8 +43,7 @@ class Spatial final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Spatial)
 
-    explicit Spatial(int32_t serial_number, int hub_port,
-                     bool is_hub_port_device,
+    explicit Spatial(const ChannelAddress &channel_address,
                      std::function<void(const double[3], const double[3],
                                         const double[3], double)>
                          data_handler);
@@ -69,7 +68,7 @@ class Spatial final
                      const double magnetic_field[3], double timestamp) const;
 
   private:
-    int32_t serial_number_;
+    ChannelAddress channel_address_;
     std::function<void(const double[3], const double[3], const double[3],
                        double)>
         data_handler_;

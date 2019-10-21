@@ -41,8 +41,7 @@ class DigitalOutput final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalOutput)
 
-    explicit DigitalOutput(int32_t serial_number, int hub_port,
-                           bool is_hub_port_device, int channel);
+    explicit DigitalOutput(const ChannelAddress &channel_address);
 
     ~DigitalOutput();
 
@@ -51,7 +50,7 @@ class DigitalOutput final
     void setOutputState(bool state) const;
 
   private:
-    int32_t serial_number_;
+    ChannelAddress channel_address_;
     PhidgetDigitalOutputHandle do_handle_;
 };
 

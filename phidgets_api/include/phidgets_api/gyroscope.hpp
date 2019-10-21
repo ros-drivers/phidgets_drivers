@@ -44,7 +44,7 @@ class Gyroscope final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Gyroscope)
 
     explicit Gyroscope(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        const ChannelAddress &channel_address,
         std::function<void(const double[3], double)> data_handler);
 
     ~Gyroscope();
@@ -61,7 +61,7 @@ class Gyroscope final
     void dataHandler(const double angular_rate[3], double timestamp) const;
 
   private:
-    int32_t serial_number_;
+    ChannelAddress channel_address_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetGyroscopeHandle gyro_handle_;
 

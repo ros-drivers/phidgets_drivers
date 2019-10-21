@@ -37,10 +37,9 @@
 namespace phidgets {
 
 Encoder::Encoder(
-    int32_t serial_number, int hub_port, bool is_hub_port_device, int channel,
+    const ChannelAddress &channel_address,
     std::function<void(int, int, double, int)> position_change_handler)
-    : serial_number_(serial_number),
-      channel_(channel),
+    : channel_address_(channel_address),
       position_change_handler_(position_change_handler)
 {
     // create the handle
@@ -51,8 +50,7 @@ Encoder::Encoder(
     }
 
     helpers::openWaitForAttachment(
-        reinterpret_cast<PhidgetHandle>(encoder_handle_), serial_number,
-        hub_port, is_hub_port_device, channel);
+        reinterpret_cast<PhidgetHandle>(encoder_handle_), channel_address_);
 
     ret = PhidgetEncoder_setOnPositionChangeHandler(
         encoder_handle_, PositionChangeHandler, this);
@@ -60,19 +58,20 @@ Encoder::Encoder(
     {
         throw Phidget22Error(
             "Failed to set change handler for Encoder channel " +
-                std::to_string(channel),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
-    if (serial_number_ == -1)
+    if (channel_address_.serial_number == -1)
     {
         ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(encoder_handle_), &serial_number_);
+            reinterpret_cast<PhidgetHandle>(encoder_handle_),
+            &channel_address_.serial_number);
         if (ret != EPHIDGET_OK)
         {
             throw Phidget22Error(
                 "Failed to get serial number for encoder channel " +
-                    std::to_string(channel),
+                    std::to_string(channel_address_.channel),
                 ret);
         }
     }
@@ -86,7 +85,7 @@ Encoder::~Encoder()
 
 int32_t Encoder::getSerialNumber() const noexcept
 {
-    return serial_number_;
+    return channel_address_.serial_number;
 }
 
 int64_t Encoder::getPosition() const
@@ -97,7 +96,7 @@ int64_t Encoder::getPosition() const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get position for Encoder channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 
@@ -111,7 +110,7 @@ void Encoder::setPosition(int64_t position) const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set position for Encoder channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 }
@@ -125,7 +124,7 @@ int64_t Encoder::getIndexPosition() const
     {
         throw Phidget22Error(
             "Failed to get index position for Encoder channel " +
-                std::to_string(channel_),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
@@ -140,7 +139,7 @@ bool Encoder::getEnabled() const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get enabled for Encoder channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 
@@ -154,7 +153,7 @@ void Encoder::setEnabled(bool enabled) const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set enabled for Encoder channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 }
@@ -162,7 +161,8 @@ void Encoder::setEnabled(bool enabled) const
 void Encoder::positionChangeHandler(int position_change, double time,
                                     int index_triggered)
 {
-    position_change_handler_(channel_, position_change, time, index_triggered);
+    position_change_handler_(channel_address_.channel, position_change, time,
+                             index_triggered);
 }
 
 void Encoder::PositionChangeHandler(PhidgetEncoderHandle /* phid */, void *ctx,

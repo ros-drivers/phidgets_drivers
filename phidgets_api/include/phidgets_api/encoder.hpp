@@ -44,8 +44,7 @@ class Encoder final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Encoder)
 
     explicit Encoder(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
-        int channel,
+        const ChannelAddress &channel_address,
         std::function<void(int, int, double, int)> position_change_handler);
 
     ~Encoder();
@@ -82,8 +81,7 @@ class Encoder final
                                int index_triggered);
 
   private:
-    int32_t serial_number_;
-    int channel_;
+    ChannelAddress channel_address_;
     std::function<void(int, int, double, int)> position_change_handler_;
     PhidgetEncoderHandle encoder_handle_;
 

@@ -44,7 +44,7 @@ class Magnetometer final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Magnetometer)
 
     explicit Magnetometer(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        const ChannelAddress &channel_address,
         std::function<void(const double[3], double)> data_handler);
 
     ~Magnetometer();
@@ -67,7 +67,7 @@ class Magnetometer final
     void dataHandler(const double magnetic_field[3], double timestamp) const;
 
   private:
-    int32_t serial_number_;
+    ChannelAddress channel_address_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetMagnetometerHandle mag_handle_;
 
