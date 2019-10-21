@@ -1,10 +1,10 @@
 Phidgets high speed encoder ROS 2 driver
-==================================
+========================================
 
 This is the ROS 2 driver for Phidgets high speed encoder.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/joint_states` (`sensor_msgs/JointState`) - A joint state message containing the current state of all encoders.
 * `/joint_states_chXX_decim_speed` (`phidgets_msgs/EncoderDecimatedSpeed`) - One topic per encoder of the decimated (average) speed reading from the encoder.
 

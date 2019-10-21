@@ -1,10 +1,10 @@
 Phidgets magnetometer ROS 2 driver
-================================
+==================================
 
 This is the ROS 2 driver for Phidgets magnetometer.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/imu/mag` (`sensor_msgs/MagneticField`) - The raw magnetometer data.
 
 Parameters

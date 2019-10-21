@@ -1,10 +1,10 @@
 Phidgets temperature ROS 2 driver
-===========================
+=================================
 
 This is the ROS 2 driver for Phidgets temperature.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/temperature` (`std_msgs/Float64`) - The current temperature in degrees Celsius.
 
 Parameters
