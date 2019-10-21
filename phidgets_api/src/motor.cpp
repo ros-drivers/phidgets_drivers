@@ -37,12 +37,10 @@
 
 namespace phidgets {
 
-Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
-             int channel,
+Motor::Motor(const ChannelAddress &channel_address,
              std::function<void(int, double)> duty_cycle_change_handler,
              std::function<void(int, double)> back_emf_change_handler)
-    : serial_number_(serial_number),
-      channel_(channel),
+    : channel_address_(channel_address),
       duty_cycle_change_handler_(duty_cycle_change_handler),
       back_emf_change_handler_(back_emf_change_handler)
 {
@@ -50,13 +48,12 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to create Motor handle for channel " +
-                                 std::to_string(channel),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 
     helpers::openWaitForAttachment(
-        reinterpret_cast<PhidgetHandle>(motor_handle_), serial_number, hub_port,
-        is_hub_port_device, channel);
+        reinterpret_cast<PhidgetHandle>(motor_handle_), channel_address_);
 
     ret = PhidgetDCMotor_setOnVelocityUpdateHandler(
         motor_handle_, DutyCycleChangeHandler, this);
@@ -64,7 +61,7 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
     {
         throw Phidget22Error(
             "Failed to set duty cycle update handler for Motor channel " +
-                std::to_string(channel),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
@@ -81,26 +78,27 @@ Motor::Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
         {
             throw Phidget22Error(
                 "Failed to set back EMF update handler for Motor channel " +
-                    std::to_string(channel),
+                    std::to_string(channel_address_.channel),
                 ret);
         }
     } else
     {
         throw Phidget22Error(
             "Failed to set back EMF sensing state Motor channel " +
-                std::to_string(channel),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
-    if (serial_number_ == -1)
+    if (channel_address_.serial_number == -1)
     {
         ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(motor_handle_), &serial_number_);
+            reinterpret_cast<PhidgetHandle>(motor_handle_),
+            &channel_address_.serial_number);
         if (ret != EPHIDGET_OK)
         {
             throw Phidget22Error(
                 "Failed to get serial number for motor channel " +
-                    std::to_string(channel),
+                    std::to_string(channel_address_.channel),
                 ret);
         }
     }
@@ -114,7 +112,7 @@ Motor::~Motor()
 
 int32_t Motor::getSerialNumber() const noexcept
 {
-    return serial_number_;
+    return channel_address_.serial_number;
 }
 
 double Motor::getDutyCycle() const
@@ -125,7 +123,7 @@ double Motor::getDutyCycle() const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get duty cycle for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
     return duty_cycle;
@@ -138,7 +136,7 @@ void Motor::setDutyCycle(double duty_cycle) const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set duty cycle for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 }
@@ -151,7 +149,7 @@ double Motor::getAcceleration() const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get acceleration for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
     return accel;
@@ -164,7 +162,7 @@ void Motor::setAcceleration(double acceleration) const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set acceleration for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 }
@@ -186,7 +184,7 @@ double Motor::getBackEMF() const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get back EMF for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
     return backemf;
@@ -199,7 +197,7 @@ void Motor::setDataInterval(uint32_t data_interval_ms) const
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set data interval for Motor channel " +
-                                 std::to_string(channel_),
+                                 std::to_string(channel_address_.channel),
                              ret);
     }
 }
@@ -213,7 +211,7 @@ double Motor::getBraking() const
     {
         throw Phidget22Error(
             "Failed to get braking strength for Motor channel " +
-                std::to_string(channel_),
+                std::to_string(channel_address_.channel),
             ret);
     }
     return braking;
@@ -227,19 +225,19 @@ void Motor::setBraking(double braking) const
     {
         throw Phidget22Error(
             "Failed to set braking strength for Motor channel " +
-                std::to_string(channel_),
+                std::to_string(channel_address_.channel),
             ret);
     }
 }
 
 void Motor::dutyCycleChangeHandler(double duty_cycle) const
 {
-    duty_cycle_change_handler_(channel_, duty_cycle);
+    duty_cycle_change_handler_(channel_address_.channel, duty_cycle);
 }
 
 void Motor::backEMFChangeHandler(double back_emf) const
 {
-    back_emf_change_handler_(channel_, back_emf);
+    back_emf_change_handler_(channel_address_.channel, back_emf);
 }
 
 void Motor::DutyCycleChangeHandler(PhidgetDCMotorHandle /* motor_handle */,

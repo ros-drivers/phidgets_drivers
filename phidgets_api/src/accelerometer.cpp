@@ -40,9 +40,9 @@
 namespace phidgets {
 
 Accelerometer::Accelerometer(
-    int32_t serial_number, int hub_port, bool is_hub_port_device,
+    const ChannelAddress &channel_address,
     std::function<void(const double[3], double)> data_handler)
-    : serial_number_(serial_number), data_handler_(data_handler)
+    : channel_address_(channel_address), data_handler_(data_handler)
 {
     PhidgetReturnCode ret = PhidgetAccelerometer_create(&accel_handle_);
     if (ret != EPHIDGET_OK)
@@ -51,8 +51,7 @@ Accelerometer::Accelerometer(
     }
 
     helpers::openWaitForAttachment(
-        reinterpret_cast<PhidgetHandle>(accel_handle_), serial_number, hub_port,
-        is_hub_port_device, 0);
+        reinterpret_cast<PhidgetHandle>(accel_handle_), channel_address_);
 
     ret = PhidgetAccelerometer_setOnAccelerationChangeHandler(
         accel_handle_, DataHandler, this);
@@ -62,10 +61,11 @@ Accelerometer::Accelerometer(
                              ret);
     }
 
-    if (serial_number_ == -1)
+    if (channel_address_.serial_number == -1)
     {
         ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(accel_handle_), &serial_number_);
+            reinterpret_cast<PhidgetHandle>(accel_handle_),
+            &channel_address_.serial_number);
         if (ret != EPHIDGET_OK)
         {
             throw Phidget22Error("Failed to get serial number for acceleration",
@@ -82,7 +82,7 @@ Accelerometer::~Accelerometer()
 
 int32_t Accelerometer::getSerialNumber() const noexcept
 {
-    return serial_number_;
+    return channel_address_.serial_number;
 }
 
 void Accelerometer::getAcceleration(double &x, double &y, double &z,

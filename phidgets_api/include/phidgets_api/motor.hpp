@@ -43,8 +43,7 @@ class Motor final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
 
-    explicit Motor(int32_t serial_number, int hub_port, bool is_hub_port_device,
-                   int channel,
+    explicit Motor(const ChannelAddress &channel_address,
                    std::function<void(int, double)> duty_cycle_change_handler,
                    std::function<void(int, double)> back_emf_change_handler);
 
@@ -68,8 +67,7 @@ class Motor final
     void backEMFChangeHandler(double back_emf) const;
 
   private:
-    int32_t serial_number_;
-    int channel_;
+    ChannelAddress channel_address_;
     std::function<void(int, double)> duty_cycle_change_handler_;
     std::function<void(int, double)> back_emf_change_handler_;
     PhidgetDCMotorHandle motor_handle_;

@@ -39,27 +39,23 @@
 
 namespace phidgets {
 
-AnalogInput::AnalogInput(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device, int channel,
+AnalogInput::AnalogInput(const ChannelAddress &channel_address,
                          std::function<void(int, double)> input_handler)
-    : serial_number_(serial_number),
-      channel_(channel),
-      input_handler_(input_handler)
+    : channel_address_(channel_address), input_handler_(input_handler)
 {
     PhidgetReturnCode ret = PhidgetVoltageInput_create(&ai_handle_);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error(
             "Failed to create AnalogInput handle for channel " +
-                std::to_string(channel),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
     helpers::openWaitForAttachment(reinterpret_cast<PhidgetHandle>(ai_handle_),
-                                   serial_number, hub_port, is_hub_port_device,
-                                   channel);
+                                   channel_address_);
 
-    if (!is_hub_port_device)
+    if (!channel_address_.is_hub_port_device)
     {
         ret =
             PhidgetVoltageInput_setVoltageRange(ai_handle_, VOLTAGE_RANGE_AUTO);
@@ -76,19 +72,20 @@ AnalogInput::AnalogInput(int32_t serial_number, int hub_port,
     {
         throw Phidget22Error(
             "Failed to set change handler for AnalogInput channel " +
-                std::to_string(channel),
+                std::to_string(channel_address_.channel),
             ret);
     }
 
-    if (serial_number_ == -1)
+    if (channel_address_.serial_number == -1)
     {
         ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(ai_handle_), &serial_number_);
+            reinterpret_cast<PhidgetHandle>(ai_handle_),
+            &channel_address_.serial_number);
         if (ret != EPHIDGET_OK)
         {
             throw Phidget22Error(
                 "Failed to get serial number for analog input channel " +
-                    std::to_string(channel),
+                    std::to_string(channel_address_.channel),
                 ret);
         }
     }
@@ -102,7 +99,7 @@ AnalogInput::~AnalogInput()
 
 int32_t AnalogInput::getSerialNumber() const noexcept
 {
-    return serial_number_;
+    return channel_address_.serial_number;
 }
 
 double AnalogInput::getSensorValue() const
@@ -130,7 +127,7 @@ void AnalogInput::setDataInterval(uint32_t data_interval_ms) const
 
 void AnalogInput::voltageChangeHandler(double sensorValue) const
 {
-    input_handler_(channel_, sensorValue);
+    input_handler_(channel_address_.channel, sensorValue);
 }
 
 void AnalogInput::VoltageChangeHandler(

@@ -43,8 +43,7 @@ class AnalogInput final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogInput)
 
-    explicit AnalogInput(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device, int channel,
+    explicit AnalogInput(const ChannelAddress &channel_address,
                          std::function<void(int, double)> input_handler);
 
     ~AnalogInput();
@@ -58,8 +57,7 @@ class AnalogInput final
     void voltageChangeHandler(double sensorValue) const;
 
   private:
-    int32_t serial_number_;
-    int channel_;
+    ChannelAddress channel_address_;
     std::function<void(int, double)> input_handler_;
     PhidgetVoltageInputHandle ai_handle_;
 

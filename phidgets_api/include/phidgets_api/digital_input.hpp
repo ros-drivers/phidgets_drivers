@@ -43,8 +43,7 @@ class DigitalInput
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalInput)
 
-    explicit DigitalInput(int32_t serial_number, int hub_port,
-                          bool is_hub_port_device, int channel,
+    explicit DigitalInput(const ChannelAddress &channel_address,
                           std::function<void(int, int)> input_handler);
 
     ~DigitalInput();
@@ -56,8 +55,7 @@ class DigitalInput
     void stateChangeHandler(int state) const;
 
   private:
-    int32_t serial_number_;
-    int channel_;
+    ChannelAddress channel_address_;
     std::function<void(int, int)> input_handler_;
     PhidgetDigitalInputHandle di_handle_;
 

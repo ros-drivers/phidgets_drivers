@@ -44,7 +44,7 @@ class Accelerometer final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Accelerometer)
 
     explicit Accelerometer(
-        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        const ChannelAddress &channel_address,
         std::function<void(const double[3], double)> data_handler);
 
     ~Accelerometer();
@@ -59,7 +59,7 @@ class Accelerometer final
     void dataHandler(const double acceleration[3], double timestamp) const;
 
   private:
-    int32_t serial_number_;
+    ChannelAddress channel_address_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetAccelerometerHandle accel_handle_;
 
