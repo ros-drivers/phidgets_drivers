@@ -127,3 +127,14 @@ To set up the udev rules for the Phidgets USB devices, run the following command
     sudo udevadm control --reload-rules
 
 Afterwards, disconnect the USB cable and plug it in again (or run `sudo udevadm trigger`).
+
+Developing
+----------
+
+To check formatting after modifying source code:
+
+    python3 clang-check-style.py
+
+To reformat source code:
+
+    find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-6.0 -i -style=file $1
