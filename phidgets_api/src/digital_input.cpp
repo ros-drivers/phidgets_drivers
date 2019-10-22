@@ -39,7 +39,7 @@ namespace phidgets {
 
 DigitalInput::DigitalInput(const ChannelAddress &channel_address,
                            std::function<void(int, int)> input_handler)
-    : channel_address_(channel_address), input_handler_(input_handler)
+    : PhidgetChannel(channel_address), input_handler_(input_handler)
 {
     PhidgetReturnCode ret = PhidgetDigitalInput_create(&di_handle_);
     if (ret != EPHIDGET_OK)
@@ -63,30 +63,13 @@ DigitalInput::DigitalInput(const ChannelAddress &channel_address,
             ret);
     }
 
-    if (channel_address_.serial_number == -1)
-    {
-        ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(di_handle_),
-            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error(
-                "Failed to get serial number for digital input channel " +
-                    std::to_string(channel_address_.channel),
-                ret);
-        }
-    }
+    updateSerialNumber(reinterpret_cast<PhidgetHandle>(di_handle_));
 }
 
 DigitalInput::~DigitalInput()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(di_handle_);
     helpers::closeAndDelete(&handle);
-}
-
-int32_t DigitalInput::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
 }
 
 bool DigitalInput::getInputValue() const

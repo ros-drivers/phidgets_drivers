@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class DigitalInput
+class DigitalInput : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalInput)
@@ -48,14 +48,11 @@ class DigitalInput
 
     ~DigitalInput();
 
-    int32_t getSerialNumber() const noexcept;
-
     bool getInputValue() const;
 
     void stateChangeHandler(int state) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(int, int)> input_handler_;
     PhidgetDigitalInputHandle di_handle_;
 

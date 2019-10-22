@@ -43,7 +43,7 @@ Spatial::Spatial(const ChannelAddress &channel_address,
                  std::function<void(const double[3], const double[3],
                                     const double[3], double)>
                      data_handler)
-    : channel_address_(channel_address), data_handler_(data_handler)
+    : PhidgetChannel(channel_address), data_handler_(data_handler)
 {
     PhidgetReturnCode ret = PhidgetSpatial_create(&spatial_handle_);
     if (ret != EPHIDGET_OK)
@@ -61,28 +61,13 @@ Spatial::Spatial(const ChannelAddress &channel_address,
         throw Phidget22Error("Failed to set change handler for Spatial", ret);
     }
 
-    if (channel_address_.serial_number == -1)
-    {
-        ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(spatial_handle_),
-            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error("Failed to get serial number for spatial",
-                                 ret);
-        }
-    }
+    updateSerialNumber(reinterpret_cast<PhidgetHandle>(spatial_handle_));
 }
 
 Spatial::~Spatial()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(spatial_handle_);
     helpers::closeAndDelete(&handle);
-}
-
-int32_t Spatial::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
 }
 
 void Spatial::zero() const

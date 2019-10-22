@@ -36,7 +36,7 @@
 
 namespace phidgets {
 
-class DigitalOutput final
+class DigitalOutput final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(DigitalOutput)
@@ -45,12 +45,9 @@ class DigitalOutput final
 
     ~DigitalOutput();
 
-    int32_t getSerialNumber() const noexcept;
-
     void setOutputState(bool state) const;
 
   private:
-    ChannelAddress channel_address_;
     PhidgetDigitalOutputHandle do_handle_;
 };
 

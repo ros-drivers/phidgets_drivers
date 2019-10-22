@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Accelerometer final
+class Accelerometer final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Accelerometer)
@@ -49,8 +49,6 @@ class Accelerometer final
 
     ~Accelerometer();
 
-    int32_t getSerialNumber() const noexcept;
-
     void getAcceleration(double &x, double &y, double &z,
                          double &timestamp) const;
 
@@ -59,7 +57,6 @@ class Accelerometer final
     void dataHandler(const double acceleration[3], double timestamp) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetAccelerometerHandle accel_handle_;
 

@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class IR final
+class IR final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(IR)
@@ -48,12 +48,9 @@ class IR final
 
     ~IR();
 
-    int32_t getSerialNumber() const noexcept;
-
     void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(const char *, uint32_t, int)> code_handler_;
     PhidgetIRHandle ir_handle_;
 

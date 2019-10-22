@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Spatial final
+class Spatial final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Spatial)
@@ -49,8 +49,6 @@ class Spatial final
                          data_handler);
 
     ~Spatial();
-
-    int32_t getSerialNumber() const noexcept;
 
     void setCompassCorrectionParameters(double cc_mag_field, double cc_offset0,
                                         double cc_offset1, double cc_offset2,
@@ -68,7 +66,6 @@ class Spatial final
                      const double magnetic_field[3], double timestamp) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(const double[3], const double[3], const double[3],
                        double)>
         data_handler_;

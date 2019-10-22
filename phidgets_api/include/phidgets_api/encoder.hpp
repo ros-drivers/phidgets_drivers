@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Encoder final
+class Encoder final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Encoder)
@@ -48,8 +48,6 @@ class Encoder final
         std::function<void(int, int, double, int)> position_change_handler);
 
     ~Encoder();
-
-    int32_t getSerialNumber() const noexcept;
 
     /** @brief Reads the current position of an encoder
      */
@@ -81,7 +79,6 @@ class Encoder final
                                int index_triggered);
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(int, int, double, int)> position_change_handler_;
     PhidgetEncoderHandle encoder_handle_;
 

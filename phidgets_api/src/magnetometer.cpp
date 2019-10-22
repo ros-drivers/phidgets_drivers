@@ -42,7 +42,7 @@ namespace phidgets {
 Magnetometer::Magnetometer(
     const ChannelAddress &channel_address,
     std::function<void(const double[3], double)> data_handler)
-    : channel_address_(channel_address), data_handler_(data_handler)
+    : PhidgetChannel(channel_address), data_handler_(data_handler)
 {
     PhidgetReturnCode ret = PhidgetMagnetometer_create(&mag_handle_);
     if (ret != EPHIDGET_OK)
@@ -61,28 +61,13 @@ Magnetometer::Magnetometer(
                              ret);
     }
 
-    if (channel_address_.serial_number == -1)
-    {
-        ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(mag_handle_),
-            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error("Failed to get serial number for magnetometer",
-                                 ret);
-        }
-    }
+    updateSerialNumber(reinterpret_cast<PhidgetHandle>(mag_handle_));
 }
 
 Magnetometer::~Magnetometer()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(mag_handle_);
     helpers::closeAndDelete(&handle);
-}
-
-int32_t Magnetometer::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
 }
 
 void Magnetometer::setCompassCorrectionParameters(

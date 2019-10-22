@@ -45,7 +45,7 @@ enum class ThermocoupleType {
     T_TYPE = 4,
 };
 
-class Temperature final
+class Temperature final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Temperature)
@@ -54,8 +54,6 @@ class Temperature final
                          std::function<void(double)> temperature_handler);
 
     ~Temperature();
-
-    int32_t getSerialNumber() const noexcept;
 
     void setThermocoupleType(ThermocoupleType type);
 
@@ -66,7 +64,6 @@ class Temperature final
     void temperatureChangeHandler(double temperature) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(double)> temperature_handler_;
     PhidgetTemperatureSensorHandle temperature_handle_;
 

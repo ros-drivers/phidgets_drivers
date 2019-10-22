@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Motor final
+class Motor final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
@@ -48,8 +48,6 @@ class Motor final
                    std::function<void(int, double)> back_emf_change_handler);
 
     ~Motor();
-
-    int32_t getSerialNumber() const noexcept;
 
     double getDutyCycle() const;
     void setDutyCycle(double duty_cycle) const;
@@ -67,7 +65,6 @@ class Motor final
     void backEMFChangeHandler(double back_emf) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(int, double)> duty_cycle_change_handler_;
     std::function<void(int, double)> back_emf_change_handler_;
     PhidgetDCMotorHandle motor_handle_;

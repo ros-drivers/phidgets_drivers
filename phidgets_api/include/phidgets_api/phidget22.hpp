@@ -61,6 +61,19 @@ struct ChannelAddress {
     int channel = PHIDGET_CHANNEL_ANY;
 };
 
+class PhidgetChannel
+{
+  public:
+    explicit PhidgetChannel(const ChannelAddress &channel_address);
+
+    int32_t getSerialNumber() const noexcept;
+
+  protected:
+    ChannelAddress channel_address_;
+
+    void updateSerialNumber(PhidgetHandle handle);
+};
+
 namespace helpers {
 
 void openWaitForAttachment(PhidgetHandle handle,

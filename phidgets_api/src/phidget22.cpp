@@ -52,6 +52,29 @@ const char *Phidget22Error::what() const noexcept
     return msg_.c_str();
 }
 
+PhidgetChannel::PhidgetChannel(const ChannelAddress &channel_address)
+    : channel_address_(channel_address)
+{
+}
+
+int32_t PhidgetChannel::getSerialNumber() const noexcept
+{
+    return channel_address_.serial_number;
+}
+
+PhidgetChannel::updateSerialNumber(PhidgetHandle handle)
+{
+    if (channel_address_.serial_number == -1)
+    {
+        ret = Phidget_getDeviceSerialNumber(handle,
+                                            &channel_address_.serial_number);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to get serial number", ret);
+        }
+    }
+}
+
 namespace helpers {
 
 void openWaitForAttachment(PhidgetHandle handle,

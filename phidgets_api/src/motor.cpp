@@ -40,7 +40,7 @@ namespace phidgets {
 Motor::Motor(const ChannelAddress &channel_address,
              std::function<void(int, double)> duty_cycle_change_handler,
              std::function<void(int, double)> back_emf_change_handler)
-    : channel_address_(channel_address),
+    : PhidgetChannel(channel_address),
       duty_cycle_change_handler_(duty_cycle_change_handler),
       back_emf_change_handler_(back_emf_change_handler)
 {
@@ -89,30 +89,13 @@ Motor::Motor(const ChannelAddress &channel_address,
             ret);
     }
 
-    if (channel_address_.serial_number == -1)
-    {
-        ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(motor_handle_),
-            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error(
-                "Failed to get serial number for motor channel " +
-                    std::to_string(channel_address_.channel),
-                ret);
-        }
-    }
+    updateSerialNumber(reinterpret_cast<PhidgetHandle>(motor_handle_));
 }
 
 Motor::~Motor()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(motor_handle_);
     helpers::closeAndDelete(&handle);
-}
-
-int32_t Motor::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
 }
 
 double Motor::getDutyCycle() const

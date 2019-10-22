@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class AnalogInput final
+class AnalogInput final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogInput)
@@ -48,8 +48,6 @@ class AnalogInput final
 
     ~AnalogInput();
 
-    int32_t getSerialNumber() const noexcept;
-
     double getSensorValue() const;
 
     void setDataInterval(uint32_t data_interval_ms) const;
@@ -57,7 +55,6 @@ class AnalogInput final
     void voltageChangeHandler(double sensorValue) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(int, double)> input_handler_;
     PhidgetVoltageInputHandle ai_handle_;
 

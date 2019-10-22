@@ -39,8 +39,7 @@ namespace phidgets {
 
 Temperature::Temperature(const ChannelAddress &channel_address,
                          std::function<void(double)> temperature_handler)
-    : channel_address_(channel_address),
-      temperature_handler_(temperature_handler)
+    : PhidgetChannel(channel_address), temperature_handler_(temperature_handler)
 {
     PhidgetReturnCode ret =
         PhidgetTemperatureSensor_create(&temperature_handle_);
@@ -60,28 +59,13 @@ Temperature::Temperature(const ChannelAddress &channel_address,
                              ret);
     }
 
-    if (channel_address_.serial_number == -1)
-    {
-        ret = Phidget_getDeviceSerialNumber(
-            reinterpret_cast<PhidgetHandle>(temperature_handle_),
-            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error("Failed to get serial number for temperature",
-                                 ret);
-        }
-    }
+    updateSerialNumber(reinterpret_cast<PhidgetHandle>(temperature_handle_));
 }
 
 Temperature::~Temperature()
 {
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(temperature_handle_);
     helpers::closeAndDelete(&handle);
-}
-
-int32_t Temperature::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
 }
 
 void Temperature::setThermocoupleType(ThermocoupleType type)

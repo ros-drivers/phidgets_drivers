@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Gyroscope final
+class Gyroscope final : PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Gyroscope)
@@ -48,8 +48,6 @@ class Gyroscope final
         std::function<void(const double[3], double)> data_handler);
 
     ~Gyroscope();
-
-    int32_t getSerialNumber() const noexcept;
 
     void getAngularRate(double &x, double &y, double &z,
                         double &timestamp) const;
@@ -61,7 +59,6 @@ class Gyroscope final
     void dataHandler(const double angular_rate[3], double timestamp) const;
 
   private:
-    ChannelAddress channel_address_;
     std::function<void(const double[3], double)> data_handler_;
     PhidgetGyroscopeHandle gyro_handle_;
 
