@@ -1,10 +1,10 @@
 Phidgets accelerometer ROS 2 driver
-=================================
+===================================
 
 This is the ROS 2 driver for Phidgets accelerometers.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/imu/data_raw` (`sensor_msgs/Imu`) - The raw accelerometer data.
 
 Parameters

@@ -1,10 +1,10 @@
 Phidgets digital inputs ROS 2 driver
-==================================
+====================================
 
 This is the ROS 2 driver for Phidgets digital inputs.  The various topics, services, and parameters that the node operates with are listed below.
 
-Topics
-------
+Published Topics
+----------------
 * `/digital_inputXX` (`std_msgs/Bool`) - The digital input state; one topic will be created for each digital input on the device.
 
 Parameters
