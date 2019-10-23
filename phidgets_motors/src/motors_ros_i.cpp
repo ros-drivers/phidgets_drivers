@@ -49,11 +49,15 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Motors");
 
+    ChannelAddress channel_address;
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 
     int hub_port = this->declare_parameter(
         "hub_port", 0);  // only used if the device is on a VINT hub_port
+
+    channel_address.serial_number = serial_num;
+    channel_address.hub_port = hub_port;
 
     int data_interval_ms = this->declare_parameter("data_interval_ms", 250);
 
@@ -78,7 +82,7 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
     try
     {
         motors_ = std::make_unique<Motors>(
-            serial_num, hub_port, false,
+          channel_address,
             std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2),
             std::bind(&MotorsRosI::backEMFChangeCallback, this,

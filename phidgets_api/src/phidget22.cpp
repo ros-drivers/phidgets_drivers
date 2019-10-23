@@ -62,11 +62,11 @@ int32_t PhidgetChannel::getSerialNumber() const noexcept
     return channel_address_.serial_number;
 }
 
-PhidgetChannel::updateSerialNumber(PhidgetHandle handle)
+void PhidgetChannel::updateSerialNumber(PhidgetHandle handle)
 {
     if (channel_address_.serial_number == -1)
     {
-        ret = Phidget_getDeviceSerialNumber(handle,
+        PhidgetReturnCode ret = Phidget_getDeviceSerialNumber(handle,
                                             &channel_address_.serial_number);
         if (ret != EPHIDGET_OK)
         {

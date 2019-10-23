@@ -37,7 +37,7 @@
 
 namespace phidgets {
 
-Motors::Motors(int32_t serial_number, int hub_port, bool is_hub_port_device,
+Motors::Motors(const ChannelAddress &channel_address,
                std::function<void(int, double)> duty_cycle_change_handler,
                std::function<void(int, double)> back_emf_change_handler)
 {
@@ -56,8 +56,7 @@ Motors::Motors(int32_t serial_number, int hub_port, bool is_hub_port_device,
 
     PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(motor_handle);
 
-    helpers::openWaitForAttachment(handle, serial_number, hub_port,
-                                   is_hub_port_device, 0);
+    helpers::openWaitForAttachment(handle, channel_address);
 
     ret = Phidget_getDeviceChannelCount(handle, PHIDCHCLASS_DCMOTOR,
                                         &motor_count_);
@@ -73,7 +72,7 @@ Motors::Motors(int32_t serial_number, int hub_port, bool is_hub_port_device,
     for (uint32_t i = 0; i < motor_count_; ++i)
     {
         motors_[i] = std::make_unique<Motor>(
-            serial_number, hub_port, is_hub_port_device, i,
+          channel_address,
             duty_cycle_change_handler, back_emf_change_handler);
     }
 }

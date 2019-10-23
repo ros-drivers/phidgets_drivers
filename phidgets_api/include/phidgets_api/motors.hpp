@@ -44,8 +44,7 @@ class Motors final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motors)
 
-    explicit Motors(int32_t serial_number, int hub_port,
-                    bool is_hub_port_device,
+    explicit Motors(const ChannelAddress &channel_address,
                     std::function<void(int, double)> duty_cycle_change_handler,
                     std::function<void(int, double)> back_emf_change_handler);
 

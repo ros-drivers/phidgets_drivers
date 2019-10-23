@@ -38,7 +38,7 @@
 
 namespace phidgets {
 
-class Motor final : PhidgetChannel
+class Motor final : public PhidgetChannel
 {
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Motor)
