@@ -71,9 +71,9 @@ Motors::Motors(const ChannelAddress &channel_address,
     motors_.resize(motor_count_);
     for (uint32_t i = 0; i < motor_count_; ++i)
     {
-        motors_[i] = std::make_unique<Motor>(
-          channel_address,
-            duty_cycle_change_handler, back_emf_change_handler);
+        motors_[i] =
+            std::make_unique<Motor>(channel_address, duty_cycle_change_handler,
+                                    back_emf_change_handler);
     }
 }
 

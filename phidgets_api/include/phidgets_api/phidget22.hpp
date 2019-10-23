@@ -66,22 +66,17 @@ class PhidgetChannel
   public:
     explicit PhidgetChannel(const ChannelAddress &channel_address);
 
-    int32_t getSerialNumber() const noexcept;
+    void openWaitForAttachment(PhidgetHandle handle,
+                               const ChannelAddress &channel_address);
+
+    void closeAndDelete(PhidgetHandle *handle) noexcept;
+
+    ChannelAddress getChannelAddress() const noexcept;
 
   protected:
     ChannelAddress channel_address_;
-
-    void updateSerialNumber(PhidgetHandle handle);
 };
 
-namespace helpers {
-
-void openWaitForAttachment(PhidgetHandle handle,
-                           const ChannelAddress &channel_address);
-
-void closeAndDelete(PhidgetHandle *handle) noexcept;
-
-}  // namespace helpers
 }  // namespace phidgets
 
 #endif  // PHIDGETS_API_PHIDGET22_H

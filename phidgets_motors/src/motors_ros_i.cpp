@@ -50,14 +50,11 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
     RCLCPP_INFO(get_logger(), "Starting Phidgets Motors");
 
     ChannelAddress channel_address;
-    int serial_num =
+    channel_address.serial_number =
         this->declare_parameter("serial", -1);  // default open any device
 
-    int hub_port = this->declare_parameter(
+    channel_address.hub_port = this->declare_parameter(
         "hub_port", 0);  // only used if the device is on a VINT hub_port
-
-    channel_address.serial_number = serial_num;
-    channel_address.hub_port = hub_port;
 
     int data_interval_ms = this->declare_parameter("data_interval_ms", 250);
 
@@ -71,7 +68,7 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
 
     RCLCPP_INFO(get_logger(),
                 "Connecting to Phidgets Motors serial %d, hub port %d ...",
-                serial_num, hub_port);
+                channel_address.serial_number, channel_address.hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -82,7 +79,7 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
     try
     {
         motors_ = std::make_unique<Motors>(
-          channel_address,
+            channel_address,
             std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2),
             std::bind(&MotorsRosI::backEMFChangeCallback, this,

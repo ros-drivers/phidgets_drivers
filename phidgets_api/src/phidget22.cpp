@@ -57,28 +57,8 @@ PhidgetChannel::PhidgetChannel(const ChannelAddress &channel_address)
 {
 }
 
-int32_t PhidgetChannel::getSerialNumber() const noexcept
-{
-    return channel_address_.serial_number;
-}
-
-void PhidgetChannel::updateSerialNumber(PhidgetHandle handle)
-{
-    if (channel_address_.serial_number == -1)
-    {
-        PhidgetReturnCode ret = Phidget_getDeviceSerialNumber(handle,
-                                            &channel_address_.serial_number);
-        if (ret != EPHIDGET_OK)
-        {
-            throw Phidget22Error("Failed to get serial number", ret);
-        }
-    }
-}
-
-namespace helpers {
-
-void openWaitForAttachment(PhidgetHandle handle,
-                           const ChannelAddress &channel_address)
+void PhidgetChannel::openWaitForAttachment(
+    PhidgetHandle handle, const ChannelAddress &channel_address)
 {
     PhidgetReturnCode ret;
 
@@ -112,13 +92,24 @@ void openWaitForAttachment(PhidgetHandle handle,
     {
         throw Phidget22Error("Failed to open device", ret);
     }
+
+    ret =
+        Phidget_getDeviceSerialNumber(handle, &channel_address_.serial_number);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get serial number", ret);
+    }
 }
 
-void closeAndDelete(PhidgetHandle *handle) noexcept
+void PhidgetChannel::closeAndDelete(PhidgetHandle *handle) noexcept
 {
     Phidget_close(*handle);
     Phidget_delete(handle);
 }
 
-}  // namespace helpers
+ChannelAddress PhidgetChannel::getChannelAddress() const noexcept
+{
+    return channel_address_;
+}
+
 }  // namespace phidgets

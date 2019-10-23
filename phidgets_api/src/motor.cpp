@@ -52,8 +52,8 @@ Motor::Motor(const ChannelAddress &channel_address,
                              ret);
     }
 
-    helpers::openWaitForAttachment(
-        reinterpret_cast<PhidgetHandle>(motor_handle_), channel_address_);
+    openWaitForAttachment(reinterpret_cast<PhidgetHandle>(motor_handle_),
+                          channel_address_);
 
     ret = PhidgetDCMotor_setOnVelocityUpdateHandler(
         motor_handle_, DutyCycleChangeHandler, this);
