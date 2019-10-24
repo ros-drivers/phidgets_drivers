@@ -17,7 +17,6 @@ find_package(libphidget22 REQUIRED)
 include_directories(include)
 
 add_library(phidgets_api src/motor.cpp
-                         src/motors.cpp
                          src/phidget22.cpp)
 
 ament_target_dependencies(phidgets_api

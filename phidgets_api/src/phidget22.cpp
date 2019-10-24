@@ -58,7 +58,7 @@ PhidgetChannel::PhidgetChannel(const ChannelAddress &channel_address)
 }
 
 void PhidgetChannel::openWaitForAttachment(
-    PhidgetHandle handle, const ChannelAddress &channel_address)
+    const PhidgetHandle &handle, const ChannelAddress &channel_address)
 {
     PhidgetReturnCode ret;
 
@@ -97,17 +97,35 @@ void PhidgetChannel::openWaitForAttachment(
         Phidget_getDeviceSerialNumber(handle, &channel_address_.serial_number);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to get serial number", ret);
+        throw Phidget22Error("Failed to get device serial number", ret);
+    }
+
+    ret = Phidget_getHubPort(handle, &channel_address_.hub_port);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get device hub port", ret);
+    }
+
+    ret = Phidget_getIsHubPortDevice(
+        handle, (int *)&channel_address_.is_hub_port_device);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get device is hub port device", ret);
+    }
+
+    ret = Phidget_getChannel(handle, &channel_address_.channel);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get device channel", ret);
     }
 }
 
-void PhidgetChannel::closeAndDelete(PhidgetHandle *handle) noexcept
+void PhidgetChannel::close(const PhidgetHandle &handle) noexcept
 {
-    Phidget_close(*handle);
-    Phidget_delete(handle);
+    Phidget_close(handle);
 }
 
-ChannelAddress PhidgetChannel::getChannelAddress() const noexcept
+const ChannelAddress &PhidgetChannel::getChannelAddress() const noexcept
 {
     return channel_address_;
 }

@@ -38,20 +38,20 @@
 #include <std_msgs/msg/float64.h>
 #include <rclcpp/rclcpp.hpp>
 
-#include "phidgets_api/motors.hpp"
+#include "phidgets_api/motor.hpp"
 
 namespace phidgets {
 
 class DutyCycleSetter final
 {
   public:
-    explicit DutyCycleSetter(Motors* motors, int index, rclcpp::Node* node,
-                             const std::string& topicname);
+    explicit DutyCycleSetter(PhidgetChannels<Motor>* motors, int index,
+                             rclcpp::Node* node, const std::string& topicname);
 
   private:
     void setMsgCallback(const std_msgs::msg::Float64::SharedPtr msg);
     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription_;
-    Motors* motors_;
+    PhidgetChannels<Motor>* motors_;
     int index_;
 };
 
@@ -69,7 +69,7 @@ class MotorsRosI final : public rclcpp::Node
     explicit MotorsRosI(const rclcpp::NodeOptions& options);
 
   private:
-    std::unique_ptr<Motors> motors_;
+    std::unique_ptr<PhidgetChannels<Motor>> motors_;
     std::mutex motor_mutex_;
     std::vector<MotorVals> motor_vals_;
 

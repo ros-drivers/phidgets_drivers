@@ -30,8 +30,10 @@
 #ifndef PHIDGETS_API_PHIDGET22_H
 #define PHIDGETS_API_PHIDGET22_H
 
+#include <memory>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include <libphidget22/phidget22.h>
 
@@ -66,15 +68,36 @@ class PhidgetChannel
   public:
     explicit PhidgetChannel(const ChannelAddress &channel_address);
 
-    void openWaitForAttachment(PhidgetHandle handle,
+    void openWaitForAttachment(const PhidgetHandle &handle,
                                const ChannelAddress &channel_address);
 
-    void closeAndDelete(PhidgetHandle *handle) noexcept;
+    void close(const PhidgetHandle &handle) noexcept;
 
-    ChannelAddress getChannelAddress() const noexcept;
+    const ChannelAddress &getChannelAddress() const noexcept;
 
-  protected:
+  private:
     ChannelAddress channel_address_;
+};
+
+template <typename T>
+class PhidgetChannels
+{
+  public:
+    std::vector<std::unique_ptr<T>> &channels()
+    {
+        return channels_;
+    }
+    size_t getChannelCount()
+    {
+        return channels_.size();
+    }
+    const T &at(size_t index) const
+    {
+        return *(channels_.at(index));
+    }
+
+  private:
+    std::vector<std::unique_ptr<T>> channels_;
 };
 
 }  // namespace phidgets

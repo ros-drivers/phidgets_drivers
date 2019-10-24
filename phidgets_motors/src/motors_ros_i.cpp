@@ -37,7 +37,6 @@
 #include <rclcpp_components/register_node_macro.hpp>
 #include <std_msgs/msg/float64.hpp>
 
-#include "phidgets_api/motors.hpp"
 #include "phidgets_motors/motors_ros_i.hpp"
 
 namespace phidgets {
@@ -78,20 +77,22 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
     int n_motors;
     try
     {
-        motors_ = std::make_unique<Motors>(
-            channel_address,
-            std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
-                      std::placeholders::_1, std::placeholders::_2),
-            std::bind(&MotorsRosI::backEMFChangeCallback, this,
-                      std::placeholders::_1, std::placeholders::_2));
+        motors_ = std::make_unique<PhidgetChannels<Motor>>();
 
-        n_motors = motors_->getMotorCount();
-        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d motors",
-                    motors_->getSerialNumber(), n_motors);
+        n_motors = 1;
 
         motor_vals_.resize(n_motors);
         for (int i = 0; i < n_motors; i++)
         {
+            motors_->channels().push_back(std::make_unique<Motor>(
+                channel_address,
+                std::bind(&MotorsRosI::dutyCycleChangeCallback, this,
+                          std::placeholders::_1, std::placeholders::_2),
+                std::bind(&MotorsRosI::backEMFChangeCallback, this,
+                          std::placeholders::_1, std::placeholders::_2)));
+            RCLCPP_INFO(get_logger(), "Connected to serial %d, %d motors",
+                        motors_->at(i).getChannelAddress().serial_number,
+                        n_motors);
             char topicname[] = "set_motor_duty_cycle00";
             snprintf(topicname, sizeof(topicname), "set_motor_duty_cycle%02d",
                      i);
@@ -102,16 +103,16 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
             snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
             motor_vals_[i].duty_cycle_pub =
                 this->create_publisher<std_msgs::msg::Float64>(pubtopic, 1);
-            motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
+            motor_vals_[i].last_duty_cycle_val = motors_->at(i).getDutyCycle();
 
             char backemftopic[] = "motor_back_emf00";
             snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
                      i);
             motor_vals_[i].back_emf_pub =
                 this->create_publisher<std_msgs::msg::Float64>(backemftopic, 1);
-            if (motors_->backEMFSensingSupported(i))
+            if (motors_->at(i).backEMFSensingSupported())
             {
-                motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
+                motor_vals_[i].last_back_emf_val = motors_->at(i).getBackEMF();
             } else
             {
                 RCLCPP_INFO(get_logger(),
@@ -119,8 +120,8 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
                             backemftopic);
             }
 
-            motors_->setDataInterval(i, data_interval_ms);
-            motors_->setBraking(i, braking_strength);
+            motors_->at(i).setDataInterval(data_interval_ms);
+            motors_->at(i).setBraking(braking_strength);
         }
     } catch (const Phidget22Error& err)
     {
@@ -157,7 +158,7 @@ void MotorsRosI::publishLatestDutyCycle(int index)
 
 void MotorsRosI::publishLatestBackEMF(int index)
 {
-    if (motors_->backEMFSensingSupported(index))
+    if (motors_->at(index).backEMFSensingSupported())
     {
         auto backemf_msg = std::make_unique<std_msgs::msg::Float64>();
         backemf_msg->data = motor_vals_[index].last_back_emf_val;
@@ -175,7 +176,8 @@ void MotorsRosI::timerCallback()
     }
 }
 
-DutyCycleSetter::DutyCycleSetter(Motors* motors, int index, rclcpp::Node* node,
+DutyCycleSetter::DutyCycleSetter(PhidgetChannels<Motor>* motors, int index,
+                                 rclcpp::Node* node,
                                  const std::string& topicname)
     : motors_(motors), index_(index)
 {
@@ -190,7 +192,7 @@ void DutyCycleSetter::setMsgCallback(
 {
     try
     {
-        motors_->setDutyCycle(index_, msg->data);
+        motors_->at(index_).setDutyCycle(msg->data);
     } catch (const phidgets::Phidget22Error& err)
     {
         // If the data was wrong, the lower layers will throw an exception; just
@@ -200,7 +202,7 @@ void DutyCycleSetter::setMsgCallback(
 
 void MotorsRosI::dutyCycleChangeCallback(int channel, double duty_cycle)
 {
-    if (static_cast<int>(motor_vals_.size()) > channel)
+    if ((channel >= 0) && (static_cast<int>(motor_vals_.size()) > channel))
     {
         std::lock_guard<std::mutex> lock(motor_mutex_);
         motor_vals_[channel].last_duty_cycle_val = duty_cycle;
@@ -214,7 +216,7 @@ void MotorsRosI::dutyCycleChangeCallback(int channel, double duty_cycle)
 
 void MotorsRosI::backEMFChangeCallback(int channel, double back_emf)
 {
-    if (static_cast<int>(motor_vals_.size()) > channel)
+    if ((channel >= 0) && (channel < static_cast<int>(motor_vals_.size())))
     {
         std::lock_guard<std::mutex> lock(motor_mutex_);
         motor_vals_[channel].last_back_emf_val = back_emf;
