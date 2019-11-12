@@ -85,7 +85,7 @@ class Encoder final
     int32_t serial_number_;
     int channel_;
     std::function<void(int, int, double, int)> position_change_handler_;
-    PhidgetEncoderHandle encoder_handle_;
+    PhidgetEncoderHandle encoder_handle_{nullptr};
 
     static void PositionChangeHandler(PhidgetEncoderHandle phid, void *ctx,
                                       int position_change, double time_change,

@@ -85,7 +85,7 @@ class Encoders final
     void setEnabled(int index, bool enabled) const;
 
   private:
-    uint32_t encoder_count_;
+    uint32_t encoder_count_{0};
     std::vector<std::unique_ptr<Encoder>> encs_;
 };
 

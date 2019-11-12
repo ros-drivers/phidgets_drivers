@@ -57,7 +57,7 @@ class DigitalInputs
     bool getInputValue(int index) const;
 
   private:
-    uint32_t input_count_;
+    uint32_t input_count_{0};
     std::vector<std::unique_ptr<DigitalInput>> dis_;
 };
 

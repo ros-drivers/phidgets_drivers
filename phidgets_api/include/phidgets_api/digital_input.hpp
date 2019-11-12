@@ -59,7 +59,7 @@ class DigitalInput
     int32_t serial_number_;
     int channel_;
     std::function<void(int, int)> input_handler_;
-    PhidgetDigitalInputHandle di_handle_;
+    PhidgetDigitalInputHandle di_handle_{nullptr};
 
     static void StateChangeHandler(PhidgetDigitalInputHandle input_handle,
                                    void *ctx, int state);

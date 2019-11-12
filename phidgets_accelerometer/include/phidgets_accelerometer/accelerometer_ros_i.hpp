@@ -51,11 +51,11 @@ class AccelerometerRosI final : public rclcpp::Node
   private:
     std::unique_ptr<Accelerometer> accelerometer_;
     std::string frame_id_;
-    double linear_acceleration_variance_;
+    double linear_acceleration_variance_{0.0};
     std::mutex accel_mutex_;
-    double last_accel_x_;
-    double last_accel_y_;
-    double last_accel_z_;
+    double last_accel_x_{0.0};
+    double last_accel_y_{0.0};
+    double last_accel_z_{0.0};
 
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr accelerometer_pub_;
     void timerCallback();

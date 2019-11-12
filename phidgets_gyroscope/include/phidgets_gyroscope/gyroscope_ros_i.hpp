@@ -51,11 +51,11 @@ class GyroscopeRosI final : public rclcpp::Node
   private:
     std::unique_ptr<Gyroscope> gyroscope_;
     std::string frame_id_;
-    double angular_velocity_variance_;
+    double angular_velocity_variance_{0.0};
     std::mutex gyro_mutex_;
-    double last_gyro_x_;
-    double last_gyro_y_;
-    double last_gyro_z_;
+    double last_gyro_x_{0.0};
+    double last_gyro_y_{0.0};
+    double last_gyro_z_{0.0};
 
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr cal_publisher_;
     rclcpp::Service<std_srvs::srv::Empty>::SharedPtr cal_srv_;

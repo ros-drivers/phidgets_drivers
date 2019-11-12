@@ -82,22 +82,22 @@ class SpatialRosI final : public rclcpp::Node
         std::shared_ptr<std_srvs::srv::Empty::Response> res);
 
     // Accelerometer
-    double linear_acceleration_variance_;
-    double last_accel_x_;
-    double last_accel_y_;
-    double last_accel_z_;
+    double linear_acceleration_variance_{0.0};
+    double last_accel_x_{0.0};
+    double last_accel_y_{0.0};
+    double last_accel_z_{0.0};
 
     // Gyroscope
-    double angular_velocity_variance_;
-    double last_gyro_x_;
-    double last_gyro_y_;
-    double last_gyro_z_;
+    double angular_velocity_variance_{0.0};
+    double last_gyro_x_{0.0};
+    double last_gyro_y_{0.0};
+    double last_gyro_z_{0.0};
 
     // Magnetometer
-    double magnetic_field_variance_;
-    double last_mag_x_;
-    double last_mag_y_;
-    double last_mag_z_;
+    double magnetic_field_variance_{0.0};
+    double last_mag_x_{0.0};
+    double last_mag_y_{0.0};
+    double last_mag_z_{0.0};
 
     void publishLatest();
 

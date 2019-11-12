@@ -61,7 +61,7 @@ class Accelerometer final
   private:
     int32_t serial_number_;
     std::function<void(const double[3], double)> data_handler_;
-    PhidgetAccelerometerHandle accel_handle_;
+    PhidgetAccelerometerHandle accel_handle_{nullptr};
 
     static void DataHandler(PhidgetAccelerometerHandle input_handle, void *ctx,
                             const double acceleration[3], double timestamp);

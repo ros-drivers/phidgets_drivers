@@ -48,7 +48,7 @@ class TemperatureRosI final : public rclcpp::Node
   private:
     std::unique_ptr<Temperature> temperature_;
     std::mutex temperature_mutex_;
-    double last_temperature_reading_;
+    double last_temperature_reading_{0.0};
     bool got_first_data_;
 
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr temperature_pub_;

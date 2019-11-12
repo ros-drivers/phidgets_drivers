@@ -69,7 +69,7 @@ class Magnetometer final
   private:
     int32_t serial_number_;
     std::function<void(const double[3], double)> data_handler_;
-    PhidgetMagnetometerHandle mag_handle_;
+    PhidgetMagnetometerHandle mag_handle_{nullptr};
 
     static void DataHandler(PhidgetMagnetometerHandle input_handle, void *ctx,
                             const double magnetic_field[3], double timestamp);
