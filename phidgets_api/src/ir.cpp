@@ -87,7 +87,7 @@ void IR::codeHandler(const char *code, uint32_t bit_count, int is_repeat) const
 void IR::CodeHandler(PhidgetIRHandle /* ir */, void *ctx, const char *code,
                      uint32_t bit_count, int is_repeat)
 {
-    ((IR *)ctx)->codeHandler(code, bit_count, is_repeat);
+    (reinterpret_cast<IR *>(ctx))->codeHandler(code, bit_count, is_repeat);
 }
 
 }  // namespace phidgets

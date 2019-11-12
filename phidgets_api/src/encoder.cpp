@@ -169,7 +169,7 @@ void Encoder::PositionChangeHandler(PhidgetEncoderHandle /* phid */, void *ctx,
                                     int position_change, double time,
                                     int index_triggered)
 {
-    ((Encoder *)ctx)
+    (reinterpret_cast<Encoder *>(ctx))
         ->positionChangeHandler(position_change, time, index_triggered);
 }
 

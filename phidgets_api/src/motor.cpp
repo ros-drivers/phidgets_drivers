@@ -245,13 +245,13 @@ void Motor::backEMFChangeHandler(double back_emf) const
 void Motor::DutyCycleChangeHandler(PhidgetDCMotorHandle /* motor_handle */,
                                    void *ctx, double duty_cycle)
 {
-    ((Motor *)ctx)->dutyCycleChangeHandler(duty_cycle);
+    (reinterpret_cast<Motor *>(ctx))->dutyCycleChangeHandler(duty_cycle);
 }
 
 void Motor::BackEMFChangeHandler(PhidgetDCMotorHandle /* motor_handle */,
                                  void *ctx, double back_emf)
 {
-    ((Motor *)ctx)->backEMFChangeHandler(back_emf);
+    (reinterpret_cast<Motor *>(ctx))->backEMFChangeHandler(back_emf);
 }
 
 }  // namespace phidgets
