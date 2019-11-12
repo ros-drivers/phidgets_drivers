@@ -43,7 +43,7 @@ namespace phidgets {
 MagnetometerRosI::MagnetometerRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_magnetometer_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Magnetometer");
 

@@ -46,7 +46,7 @@ namespace phidgets {
 HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_high_speed_encoder_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Encoders");
 
