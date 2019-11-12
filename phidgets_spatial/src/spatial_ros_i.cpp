@@ -35,12 +35,12 @@
 #include <stdexcept>
 #include <thread>
 
-#include <sensor_msgs/msg/imu.h>
-#include <std_msgs/msg/bool.h>
-#include <std_srvs/srv/empty.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/magnetic_field.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_srvs/srv/empty.hpp>
 
 #include "phidgets_api/spatial.hpp"
 #include "phidgets_spatial/spatial_ros_i.hpp"

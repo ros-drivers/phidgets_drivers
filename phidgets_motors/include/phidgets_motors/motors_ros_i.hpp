@@ -35,8 +35,8 @@
 #include <string>
 #include <vector>
 
-#include <std_msgs/msg/float64.h>
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/float64.hpp>
 
 #include "phidgets_api/motors.hpp"
 
