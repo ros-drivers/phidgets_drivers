@@ -55,7 +55,7 @@ class IR final
   private:
     int32_t serial_number_;
     std::function<void(const char *, uint32_t, int)> code_handler_;
-    PhidgetIRHandle ir_handle_;
+    PhidgetIRHandle ir_handle_{nullptr};
 
     static void CodeHandler(PhidgetIRHandle ir, void *ctx, const char *code,
                             uint32_t bit_count, int is_repeat);

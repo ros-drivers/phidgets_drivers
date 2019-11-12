@@ -49,11 +49,11 @@ class MagnetometerRosI final : public rclcpp::Node
   private:
     std::unique_ptr<Magnetometer> magnetometer_;
     std::string frame_id_;
-    double magnetic_field_variance_;
+    double magnetic_field_variance_{0.0};
     std::mutex mag_mutex_;
-    double last_mag_x_;
-    double last_mag_y_;
-    double last_mag_z_;
+    double last_mag_x_{0.0};
+    double last_mag_y_{0.0};
+    double last_mag_z_{0.0};
 
     rclcpp::Publisher<sensor_msgs::msg::MagneticField>::SharedPtr
         magnetometer_pub_;

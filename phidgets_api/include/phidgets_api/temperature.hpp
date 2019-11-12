@@ -69,7 +69,7 @@ class Temperature final
   private:
     int32_t serial_number_;
     std::function<void(double)> temperature_handler_;
-    PhidgetTemperatureSensorHandle temperature_handle_;
+    PhidgetTemperatureSensorHandle temperature_handle_{nullptr};
 
     static void TemperatureChangeHandler(
         PhidgetTemperatureSensorHandle temperature_handle, void *ctx,

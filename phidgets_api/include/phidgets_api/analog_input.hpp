@@ -61,7 +61,7 @@ class AnalogInput final
     int32_t serial_number_;
     int channel_;
     std::function<void(int, double)> input_handler_;
-    PhidgetVoltageInputHandle ai_handle_;
+    PhidgetVoltageInputHandle ai_handle_{nullptr};
 
     static void VoltageChangeHandler(PhidgetVoltageInputHandle input_handle,
                                      void *ctx, double sensorValue);

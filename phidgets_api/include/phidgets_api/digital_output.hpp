@@ -52,7 +52,7 @@ class DigitalOutput final
 
   private:
     int32_t serial_number_;
-    PhidgetDigitalOutputHandle do_handle_;
+    PhidgetDigitalOutputHandle do_handle_{nullptr};
 };
 
 }  // namespace phidgets

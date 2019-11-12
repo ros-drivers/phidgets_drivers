@@ -55,7 +55,7 @@ class DigitalOutputs final
     void setOutputState(int index, bool state) const;
 
   private:
-    uint32_t output_count_;
+    uint32_t output_count_{0};
     std::vector<std::unique_ptr<DigitalOutput>> dos_;
 };
 

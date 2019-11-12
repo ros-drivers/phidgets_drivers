@@ -66,7 +66,7 @@ class Motors final
     void setBraking(int index, double braking) const;
 
   private:
-    uint32_t motor_count_;
+    uint32_t motor_count_{0};
     std::vector<std::unique_ptr<Motor>> motors_;
 };
 

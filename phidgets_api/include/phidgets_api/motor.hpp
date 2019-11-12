@@ -72,7 +72,7 @@ class Motor final
     int channel_;
     std::function<void(int, double)> duty_cycle_change_handler_;
     std::function<void(int, double)> back_emf_change_handler_;
-    PhidgetDCMotorHandle motor_handle_;
+    PhidgetDCMotorHandle motor_handle_{nullptr};
     bool back_emf_sensing_supported_;
 
     static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
