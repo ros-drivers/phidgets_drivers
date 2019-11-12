@@ -44,7 +44,7 @@ namespace phidgets {
 DigitalOutputsRosI::DigitalOutputsRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_digital_outputs_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Digital Outputs");
 

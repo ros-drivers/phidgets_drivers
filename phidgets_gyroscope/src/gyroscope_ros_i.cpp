@@ -48,7 +48,7 @@ namespace phidgets {
 GyroscopeRosI::GyroscopeRosI(const rclcpp::NodeOptions &options)
     : rclcpp::Node("phidgets_gyroscope_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Gyroscope");
 

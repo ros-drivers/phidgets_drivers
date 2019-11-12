@@ -45,7 +45,7 @@ namespace phidgets {
 DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_digital_inputs_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets DigitalInputs");
 

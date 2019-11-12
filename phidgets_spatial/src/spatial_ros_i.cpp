@@ -50,7 +50,7 @@ namespace phidgets {
 SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
     : rclcpp::Node("phidgets_spatial_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Spatial");
 

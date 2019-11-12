@@ -43,7 +43,7 @@ namespace phidgets {
 TemperatureRosI::TemperatureRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_temperature_node", options)
 {
-    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Temperature");
 
