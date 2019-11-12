@@ -130,7 +130,8 @@ void Accelerometer::DataHandler(PhidgetAccelerometerHandle /* input_handle */,
                                 void *ctx, const double acceleration[3],
                                 double timestamp)
 {
-    ((Accelerometer *)ctx)->dataHandler(acceleration, timestamp);
+    (reinterpret_cast<Accelerometer *>(ctx))
+        ->dataHandler(acceleration, timestamp);
 }
 
 }  // namespace phidgets
