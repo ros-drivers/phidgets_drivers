@@ -152,7 +152,7 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
         cc_T4 = this->get_parameter("cc_t4").get_value<double>();
         cc_T5 = this->get_parameter("cc_t5").get_value<double>();
         has_compass_params = true;
-    } catch (const rclcpp::exceptions::ParameterNotDeclaredException)
+    } catch (const rclcpp::exceptions::ParameterNotDeclaredException &)
     {
     }
 
