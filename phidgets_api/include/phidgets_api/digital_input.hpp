@@ -30,6 +30,7 @@
 #ifndef PHIDGETS_API_DIGITAL_INPUT_H
 #define PHIDGETS_API_DIGITAL_INPUT_H
 
+#include <cstddef>
 #include <functional>
 
 #include <libphidget22/phidget22.h>

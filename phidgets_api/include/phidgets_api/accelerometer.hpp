@@ -30,6 +30,7 @@
 #ifndef PHIDGETS_API_ACCELEROMETER_H
 #define PHIDGETS_API_ACCELEROMETER_H
 
+#include <cstddef>
 #include <functional>
 
 #include <libphidget22/phidget22.h>
