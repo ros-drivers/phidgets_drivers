@@ -48,7 +48,7 @@ class Phidget22Error final : public std::exception
   public:
     explicit Phidget22Error(const std::string &msg, PhidgetReturnCode code);
 
-    const char *what() const noexcept;
+    const char *what() const noexcept override;
 
   private:
     std::string msg_;
