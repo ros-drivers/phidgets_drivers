@@ -34,7 +34,6 @@
 namespace phidgets {
 
 Phidget22Error::Phidget22Error(const std::string &msg, PhidgetReturnCode code)
-    : std::exception()
 {
     const char *error_ptr;
     PhidgetReturnCode ret = Phidget_getErrorDescription(code, &error_ptr);
