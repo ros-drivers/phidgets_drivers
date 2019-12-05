@@ -2,6 +2,9 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.0 (2019-12-05)
 ------------------
 * Port phidgets_drivers to ROS 2.

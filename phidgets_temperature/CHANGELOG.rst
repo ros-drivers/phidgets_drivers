@@ -2,6 +2,11 @@
 Changelog for package phidgets_temperature
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Switch the buildtoo_depend to ament_cmake_ros. (`#65 <https://github.com/ros-drivers/phidgets_drivers/issues/65>`_)
+* Contributors: Chris Lalancette
+
 2.0.0 (2019-12-05)
 ------------------
 * Switch from NULL to nullptr.
