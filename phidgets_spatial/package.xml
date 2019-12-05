@@ -15,7 +15,7 @@
 
   <author email="ccnyroboticslab@gmail.com">Ivan Dryanovski</author>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>phidgets_api</depend>
   <depend>rclcpp</depend>
