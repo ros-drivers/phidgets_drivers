@@ -2,8 +2,8 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Port libphidget22 vendor package to ament.
 * Ignore all packages for ROS 2 port.
 * Update maintainers in package.xml

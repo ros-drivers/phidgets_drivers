@@ -2,8 +2,8 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Make sure exceptions get caught by reference.
 * Switch from NULL to nullptr.
 * Make sure to initialize class member variables.

@@ -2,8 +2,8 @@
 Changelog for package phidgets_ik
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Update READMEs to use "Published Topics" and "Subscribed Topics". (`#59 <https://github.com/ros-drivers/phidgets_drivers/issues/59>`_)
 * Add in parameters to the IK launch file.
 * Change launch output to "both" so it logs as well.

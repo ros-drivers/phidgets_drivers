@@ -2,8 +2,8 @@
 Changelog for package phidgets_temperature
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Switch from NULL to nullptr.
 * Make sure to initialize class member variables.
 * Update READMEs to use "Published Topics" and "Subscribed Topics". (`#59 <https://github.com/ros-drivers/phidgets_drivers/issues/59>`_)

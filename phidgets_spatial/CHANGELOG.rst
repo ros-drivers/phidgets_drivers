@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Include file cleanup.
 * Make sure exceptions get caught by reference.
 * Switch from NULL to nullptr.

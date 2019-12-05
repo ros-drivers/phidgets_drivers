@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-12-05)
+------------------
 * Remove unnecessary base-class initialization.
 * Get rid of C-style casts.
 * Make sure what() method is marked as override.
