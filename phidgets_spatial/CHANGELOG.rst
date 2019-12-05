@@ -2,6 +2,36 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Include file cleanup.
+* Make sure exceptions get caught by reference.
+* Switch from NULL to nullptr.
+* Make sure to initialize class member variables.
+* Update READMEs to use "Published Topics" and "Subscribed Topics". (`#59 <https://github.com/ros-drivers/phidgets_drivers/issues/59>`_)
+* Change launch output to "both" so it logs as well.
+* Make publish_rate a double.
+* Print out the serial number when connecting.
+* Update documentation to mention device dependent fields.
+* Update FIXME comments for sleep.
+* Port spatial to ROS 2.
+* Ignore all packages for ROS 2 port.
+* Fix wrong defaults for standard deviations (`#48 <https://github.com/ros-drivers/phidgets_drivers/issues/48>`_)
+* Improve the IMU calibration service (`#47 <https://github.com/ros-drivers/phidgets_drivers/issues/47>`_)
+* Update maintainers in package.xml
+* Merge pull request `#39 <https://github.com/ros-drivers/phidgets_drivers/issues/39>`_ from clalancette/add-libphidget22
+* Resynchronize the times at periodic intervals.
+* Add launch files for all drivers.
+* Add in try/catch blocks for connecting.
+* Fixes from review.
+* Documentation updates to README.md
+* Set the publish_rate to 0 by default.
+* Add in the license files and add to the headers.
+* Remove nodes in favor of nodelets.
+* Finish removing launch file from phidgets_spatial.
+* Rewrite IMU using libphidget22.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

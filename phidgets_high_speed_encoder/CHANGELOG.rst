@@ -2,6 +2,41 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Switch from NULL to nullptr.
+* Update READMEs to use "Published Topics" and "Subscribed Topics". (`#59 <https://github.com/ros-drivers/phidgets_drivers/issues/59>`_)
+* Change launch output to "both" so it logs as well.
+* Make publish_rate a double.
+* Print out the serial number when connecting.
+* Port high speed encoder to ROS 2.
+* Ignore all packages for ROS 2 port.
+* Update maintainers in package.xml
+* Merge pull request `#39 <https://github.com/ros-drivers/phidgets_drivers/issues/39>`_ from clalancette/add-libphidget22
+* Add launch files for all drivers.
+* Add in try/catch blocks for connecting.
+* Fixes from review.
+* Documentation updates to README.md
+* Set the publish_rate to 0 by default.
+* Add in the license files and add to the headers.
+* Remove nodes in favor of nodelets.
+* Fix a small typo.
+* Rewrite High Speed Encoder to use libphidget22.
+* Rename Phidget class to Phidget21 class.
+* Switch to C++14.
+* Remove unused std_msgs dependency from Phidgets High Speed Encoder.
+* Merge pull request `#36 <https://github.com/ros-drivers/phidgets_drivers/issues/36>`_ from clalancette/phidget-cleanup2
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Split custom messages into their own package.
+* Rewrite the high speed encoder node.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Style cleanup.
+* Switch to package format 2.
+* Cleanup spacing in all of the CMakeLists.txt
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

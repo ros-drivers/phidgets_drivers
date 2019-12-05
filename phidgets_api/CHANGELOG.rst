@@ -2,6 +2,58 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove unnecessary base-class initialization.
+* Get rid of C-style casts.
+* Make sure what() method is marked as override.
+* Rename method parameter name to match implementation.
+* Make sure to include cstddef for libphidget22.h include.
+* Make sure to initialize class member variables.
+* Reformat using clang
+* Make sure to set the VoltageRange to AUTO at the beginning.
+* Only publish motor_back_emf if supported by DC Motor device (`#53 <https://github.com/ros-drivers/phidgets_drivers/issues/53>`_)
+* Print out the serial number when connecting.
+* Port phidgets_api to ament.
+* Ignore all packages for ROS 2 port.
+* Update maintainers in package.xml
+* Merge pull request `#39 <https://github.com/ros-drivers/phidgets_drivers/issues/39>`_ from clalancette/add-libphidget22
+* Add in try/catch blocks for connecting.
+* Fixes from review.
+* Implement data interval setting for analog inputs.
+* Add in the license files and add to the headers.
+* Completely remove libphidget21.
+* Rewrite Motor Phidget to use libphidget22.
+* Rewrite High Speed Encoder to use libphidget22.
+* Rewrite IR to use libphidget22.
+* Rewrite IMU using libphidget22.
+* Add support for Phidgets Magnetometer sensors.
+* Add support for Phidgets Gyroscope sensors.
+* Add support for Phidgets Accelerometer sensors.
+* Add in support for Phidgets Temperature sensors.
+* Rewrite phidgets_ik on top of libphidget22 classes.
+* Add in support for Phidgets Analog inputs.
+* Add in support for Phidgets Digital Inputs.
+* Add in support for Phidgets Digital Outputs.
+* Add in libphidget22 helper functions.
+* Rename Phidget class to Phidget21 class.
+* Switch to C++14.
+* Merge pull request `#36 <https://github.com/ros-drivers/phidgets_drivers/issues/36>`_ from clalancette/phidget-cleanup2
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Remove unused indexHandler from Encoder class.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Push libphidgets API calls down to phidgets_api.
+* Quiet down the to-be-overridden callbacks.
+* Consistently use nullptr instead of 0.
+* Make the phidget_api destructors virtual.
+* Style cleanup.
+* Move libusb dependency into the libphidget21 package.xml.
+* Switch to package format 2.
+* Cleanup spacing in all of the CMakeLists.txt
+* Contributors: Chris Lalancette, Martin Günther, Peter Polidoro
+
 0.7.9 (2019-06-28)
 ------------------
 * Add missing OnInputChange handler (`#33 <https://github.com/ros-drivers/phidgets_drivers/issues/33>`_)

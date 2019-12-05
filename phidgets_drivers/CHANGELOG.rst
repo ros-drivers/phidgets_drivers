@@ -2,6 +2,29 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Port phidgets_drivers to ROS 2.
+* Ignore all packages for ROS 2 port.
+* Update maintainers in package.xml
+* Merge pull request `#39 <https://github.com/ros-drivers/phidgets_drivers/issues/39>`_ from clalancette/add-libphidget22
+* Completely remove libphidget21.
+* Rewrite Motor Phidget to use libphidget22.
+* Rewrite IMU using libphidget22.
+* Add support for Phidgets Magnetometer sensors.
+* Add support for Phidgets Gyroscope sensors.
+* Add support for Phidgets Accelerometer sensors.
+* Add in support for Phidgets Temperature sensors.
+* Add in support for Phidgets Analog inputs.
+* Add in support for Phidgets Digital Inputs.
+* Add in support for Phidgets Digital Outputs.
+* Add in libphidget22 package.
+* Merge pull request `#36 <https://github.com/ros-drivers/phidgets_drivers/issues/36>`_ from clalancette/phidget-cleanup2
+* Split custom messages into their own package.
+* Add in phidgets_ik to the phidgets_drivers metapackage.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

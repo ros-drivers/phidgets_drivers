@@ -1,18 +1,21 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package phidgets_ik
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package phidgets_motors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forthcoming
 -----------
+* Include file cleanup.
+* Switch from NULL to nullptr.
 * Update READMEs to use "Published Topics" and "Subscribed Topics". (`#59 <https://github.com/ros-drivers/phidgets_drivers/issues/59>`_)
-* Add in parameters to the IK launch file.
 * Change launch output to "both" so it logs as well.
-* Port IK to ROS 2.
+* Make publish_rate a double.
+* Only publish motor_back_emf if supported by DC Motor device (`#53 <https://github.com/ros-drivers/phidgets_drivers/issues/53>`_)
+* Print out the serial number when connecting.
+* Update documentation to mention device dependent fields.
+* Port motors to ROS 2.
 * Ignore all packages for ROS 2 port.
 * Update maintainers in package.xml
 * Merge pull request `#39 <https://github.com/ros-drivers/phidgets_drivers/issues/39>`_ from clalancette/add-libphidget22
-* Fix phidgets_ik dependencies.
-* Rewrite IK as just a launch file.
 * Add launch files for all drivers.
 * Add in try/catch blocks for connecting.
 * Fixes from review.
@@ -20,23 +23,8 @@ Forthcoming
 * Set the publish_rate to 0 by default.
 * Add in the license files and add to the headers.
 * Remove nodes in favor of nodelets.
-* Rewrite phidgets_ik on top of libphidget22 classes.
-* Rename Phidget class to Phidget21 class.
-* Switch to C++14.
-* Merge pull request `#36 <https://github.com/ros-drivers/phidgets_drivers/issues/36>`_ from clalancette/phidget-cleanup2
-* Run clang-format on the whole codebase.
-* Switch to C++14 everywhere.
-* Split custom messages into their own package.
-* Add in a nodelet version of the interfaceKit.
-* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
-* Small cleanups throughout the code.
-* Push libphidgets API calls down to phidgets_api.
-* Completely remove boost from the project.
-* Style cleanup.
-* Remove unused dependencies from phidgets_ik.
-* Switch to package format 2.
-* Cleanup spacing in all of the CMakeLists.txt
-* Contributors: Chris Lalancette, Martin Günther
+* Rewrite Motor Phidget to use libphidget22.
+* Contributors: Chris Lalancette, Martin Günther, Peter Polidoro
 
 0.7.9 (2019-06-28)
 ------------------
@@ -52,8 +40,6 @@ Forthcoming
 
 0.7.5 (2018-01-31)
 ------------------
-* Initial release of the phidgets_ik package for the Phidgets Interface Kit
-* Contributors: Russel Howe, James Sarrett, Dorian Goepp, Martin Günther
 
 0.7.4 (2017-10-04)
 ------------------
