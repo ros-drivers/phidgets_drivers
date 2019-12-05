@@ -12,7 +12,7 @@
   <author email="geoffrey.viola@asirobots.com">Geoff Viola</author>
   <author email="jlblanco@ual.es">José-Luis Blanco Claraco</author>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>phidgets_api</depend>
   <depend>phidgets_msgs</depend>
