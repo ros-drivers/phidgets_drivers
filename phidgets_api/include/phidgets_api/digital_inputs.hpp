@@ -48,7 +48,7 @@ class DigitalInputs
                            bool is_hub_port_device,
                            std::function<void(int, int)> input_handler);
 
-    ~DigitalInputs();
+    ~DigitalInputs() = default;
 
     int32_t getSerialNumber() const noexcept;
 

@@ -48,7 +48,7 @@ class Encoders final
         int32_t serial_number, int hub_port, bool is_hub_port_device,
         std::function<void(int, int, double, int)> position_change_handler);
 
-    ~Encoders();
+    ~Encoders() = default;
 
     int32_t getSerialNumber() const noexcept;
 

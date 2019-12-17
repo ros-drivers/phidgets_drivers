@@ -81,10 +81,6 @@ AnalogInputs::AnalogInputs(int32_t serial_number, int hub_port,
     }
 }
 
-AnalogInputs::~AnalogInputs()
-{
-}
-
 int32_t AnalogInputs::getSerialNumber() const noexcept
 {
     return ais_.at(0)->getSerialNumber();

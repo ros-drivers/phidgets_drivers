@@ -49,7 +49,7 @@ class Motors final
                     std::function<void(int, double)> duty_cycle_change_handler,
                     std::function<void(int, double)> back_emf_change_handler);
 
-    ~Motors();
+    ~Motors() = default;
 
     int32_t getSerialNumber() const noexcept;
 

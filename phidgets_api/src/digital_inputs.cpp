@@ -79,10 +79,6 @@ DigitalInputs::DigitalInputs(int32_t serial_number, int hub_port,
     }
 }
 
-DigitalInputs::~DigitalInputs()
-{
-}
-
 int32_t DigitalInputs::getSerialNumber() const noexcept
 {
     return dis_.at(0)->getSerialNumber();

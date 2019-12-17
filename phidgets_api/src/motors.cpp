@@ -78,10 +78,6 @@ Motors::Motors(int32_t serial_number, int hub_port, bool is_hub_port_device,
     }
 }
 
-Motors::~Motors()
-{
-}
-
 int32_t Motors::getSerialNumber() const noexcept
 {
     return motors_.at(0)->getSerialNumber();

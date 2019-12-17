@@ -48,7 +48,7 @@ class AnalogInputs final
                           bool is_hub_port_device,
                           std::function<void(int, double)> input_handler);
 
-    ~AnalogInputs();
+    ~AnalogInputs() = default;
 
     int32_t getSerialNumber() const noexcept;
 
