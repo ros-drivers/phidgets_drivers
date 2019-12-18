@@ -46,7 +46,7 @@ class DigitalOutputs final
     explicit DigitalOutputs(int32_t serial_number, int hub_port,
                             bool is_hub_port_device);
 
-    ~DigitalOutputs();
+    ~DigitalOutputs() = default;
 
     int32_t getSerialNumber() const noexcept;
 

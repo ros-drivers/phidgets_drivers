@@ -78,10 +78,6 @@ DigitalOutputs::DigitalOutputs(int32_t serial_number, int hub_port,
     }
 }
 
-DigitalOutputs::~DigitalOutputs()
-{
-}
-
 int32_t DigitalOutputs::getSerialNumber() const noexcept
 {
     return dos_.at(0)->getSerialNumber();

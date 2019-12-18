@@ -78,10 +78,6 @@ Encoders::Encoders(
     }
 }
 
-Encoders::~Encoders()
-{
-}
-
 int32_t Encoders::getSerialNumber() const noexcept
 {
     return encs_.at(0)->getSerialNumber();
