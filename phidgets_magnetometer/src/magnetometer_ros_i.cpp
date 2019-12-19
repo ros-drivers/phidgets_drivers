@@ -104,19 +104,19 @@ MagnetometerRosI::MagnetometerRosI(const rclcpp::NodeOptions& options)
     this->declare_parameter("cc_t5");
 
     bool has_compass_params = false;
-    double cc_mag_field;
-    double cc_offset0;
-    double cc_offset1;
-    double cc_offset2;
-    double cc_gain0;
-    double cc_gain1;
-    double cc_gain2;
-    double cc_T0;
-    double cc_T1;
-    double cc_T2;
-    double cc_T3;
-    double cc_T4;
-    double cc_T5;
+    double cc_mag_field = 0.0;
+    double cc_offset0 = 0.0;
+    double cc_offset1 = 0.0;
+    double cc_offset2 = 0.0;
+    double cc_gain0 = 0.0;
+    double cc_gain1 = 0.0;
+    double cc_gain2 = 0.0;
+    double cc_T0 = 0.0;
+    double cc_T1 = 0.0;
+    double cc_T2 = 0.0;
+    double cc_T3 = 0.0;
+    double cc_T4 = 0.0;
+    double cc_T5 = 0.0;
 
     try
     {

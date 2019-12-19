@@ -74,13 +74,13 @@ DigitalOutputsRosI::DigitalOutputsRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    int n_out = dos_->getOutputCount();
-    RCLCPP_INFO(get_logger(), "Connected to serial %d, %d outputs",
+    uint32_t n_out = dos_->getOutputCount();
+    RCLCPP_INFO(get_logger(), "Connected to serial %d, %u outputs",
                 dos_->getSerialNumber(), n_out);
     out_subs_.resize(n_out);
-    for (int i = 0; i < n_out; i++)
+    for (uint32_t i = 0; i < n_out; i++)
     {
-        char topicname[] = "digital_output00";
+        char topicname[100];
         snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
         out_subs_[i] = std::make_unique<DigitalOutputSetter>(dos_.get(), i,
                                                              this, topicname);

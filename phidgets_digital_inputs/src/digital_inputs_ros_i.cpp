@@ -75,7 +75,7 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
     // finished setting up.
     std::lock_guard<std::mutex> lock(di_mutex_);
 
-    int n_in;
+    uint32_t n_in;
     try
     {
         dis_ = std::make_unique<DigitalInputs>(
@@ -84,12 +84,12 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
                       std::placeholders::_1, std::placeholders::_2));
 
         n_in = dis_->getInputCount();
-        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d inputs",
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %u inputs",
                     dis_->getSerialNumber(), n_in);
         val_to_pubs_.resize(n_in);
-        for (int i = 0; i < n_in; i++)
+        for (uint32_t i = 0; i < n_in; i++)
         {
-            char topicname[] = "digital_input00";
+            char topicname[100];
             snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
             val_to_pubs_[i].pub =
                 this->create_publisher<std_msgs::msg::Bool>(topicname, 1);
@@ -113,7 +113,7 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
         // will only publish when something changes (where "changes" is defined
         // by the libphidget22 library).  In that case, make sure to publish
         // once at the beginning to make sure there is *some* data.
-        for (int i = 0; i < n_in; ++i)
+        for (uint32_t i = 0; i < n_in; ++i)
         {
             publishLatest(i);
         }

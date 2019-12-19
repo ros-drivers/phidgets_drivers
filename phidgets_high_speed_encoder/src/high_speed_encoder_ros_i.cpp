@@ -79,7 +79,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
     // finished setting up.
     std::lock_guard<std::mutex> lock(encoder_mutex_);
 
-    int n_encs;
+    uint32_t n_encs;
     try
     {
         encs_ = std::make_unique<Encoders>(
@@ -89,10 +89,10 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
                       std::placeholders::_3, std::placeholders::_4));
 
         n_encs = encs_->getEncoderCount();
-        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d encoders",
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %u encoders",
                     encs_->getSerialNumber(), n_encs);
         enc_data_to_pub_.resize(n_encs);
-        for (int i = 0; i < n_encs; i++)
+        for (uint32_t i = 0; i < n_encs; i++)
         {
             char str[100];
             sprintf(str, "joint%u_name", i);
@@ -136,7 +136,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
         // will only publish when something changes (where "changes" is defined
         // by the libphidget22 library).  In that case, make sure to publish
         // once at the beginning to make sure there is *some* data.
-        for (int i = 0; i < n_encs; ++i)
+        for (uint32_t i = 0; i < n_encs; ++i)
         {
             publishLatest(i);
         }
