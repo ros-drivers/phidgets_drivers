@@ -98,10 +98,9 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
             snprintf(str, sizeof(str), "offset%02d", i);
             val_to_pubs_[i].offset = this->declare_parameter(str, 0.0);
 
-            char topicname[] = "analog_input00";
-            snprintf(topicname, sizeof(topicname), "analog_input%02d", i);
+            snprintf(str, sizeof(str), "analog_input%02d", i);
             val_to_pubs_[i].pub =
-                this->create_publisher<std_msgs::msg::Float64>(topicname, 1);
+                this->create_publisher<std_msgs::msg::Float64>(str, 1);
 
             ais_->setDataInterval(i, data_interval_ms);
         }

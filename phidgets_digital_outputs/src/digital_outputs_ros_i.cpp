@@ -80,7 +80,7 @@ DigitalOutputsRosI::DigitalOutputsRosI(const rclcpp::NodeOptions& options)
     out_subs_.resize(n_out);
     for (uint32_t i = 0; i < n_out; i++)
     {
-        char topicname[] = "digital_output00";
+        char topicname[100];
         snprintf(topicname, sizeof(topicname), "digital_output%02d", i);
         out_subs_[i] = std::make_unique<DigitalOutputSetter>(dos_.get(), i,
                                                              this, topicname);

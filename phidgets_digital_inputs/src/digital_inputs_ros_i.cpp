@@ -89,7 +89,7 @@ DigitalInputsRosI::DigitalInputsRosI(const rclcpp::NodeOptions& options)
         val_to_pubs_.resize(n_in);
         for (uint32_t i = 0; i < n_in; i++)
         {
-            char topicname[] = "digital_input00";
+            char topicname[100];
             snprintf(topicname, sizeof(topicname), "digital_input%02d", i);
             val_to_pubs_[i].pub =
                 this->create_publisher<std_msgs::msg::Bool>(topicname, 1);

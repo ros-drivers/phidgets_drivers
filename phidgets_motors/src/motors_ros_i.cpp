@@ -91,31 +91,27 @@ MotorsRosI::MotorsRosI(const rclcpp::NodeOptions& options)
         motor_vals_.resize(n_motors);
         for (uint32_t i = 0; i < n_motors; i++)
         {
-            char topicname[] = "set_motor_duty_cycle00";
+            char topicname[100];
             snprintf(topicname, sizeof(topicname), "set_motor_duty_cycle%02d",
                      i);
             motor_vals_[i].duty_cycle_sub = std::make_unique<DutyCycleSetter>(
                 motors_.get(), i, this, topicname);
 
-            char pubtopic[] = "motor_duty_cycle00";
-            snprintf(pubtopic, sizeof(pubtopic), "motor_duty_cycle%02d", i);
+            snprintf(topicname, sizeof(topicname), "motor_duty_cycle%02d", i);
             motor_vals_[i].duty_cycle_pub =
-                this->create_publisher<std_msgs::msg::Float64>(pubtopic, 1);
+                this->create_publisher<std_msgs::msg::Float64>(topicname, 1);
             motor_vals_[i].last_duty_cycle_val = motors_->getDutyCycle(i);
 
-            char backemftopic[] = "motor_back_emf00";
-            snprintf(backemftopic, sizeof(backemftopic), "motor_back_emf%02d",
-                     i);
+            snprintf(topicname, sizeof(topicname), "motor_back_emf%02d", i);
             motor_vals_[i].back_emf_pub =
-                this->create_publisher<std_msgs::msg::Float64>(backemftopic, 1);
+                this->create_publisher<std_msgs::msg::Float64>(topicname, 1);
             if (motors_->backEMFSensingSupported(i))
             {
                 motor_vals_[i].last_back_emf_val = motors_->getBackEMF(i);
             } else
             {
                 RCLCPP_INFO(get_logger(),
-                            "Back EMF sensing not supported for %s",
-                            backemftopic);
+                            "Back EMF sensing not supported for %s", topicname);
             }
 
             motors_->setDataInterval(i, data_interval_ms);
