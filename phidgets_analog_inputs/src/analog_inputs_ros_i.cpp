@@ -77,7 +77,7 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
     // finished setting up.
     std::lock_guard<std::mutex> lock(ai_mutex_);
 
-    int n_in;
+    uint32_t n_in;
     try
     {
         ais_ = std::make_unique<AnalogInputs>(
@@ -86,10 +86,10 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
                       std::placeholders::_1, std::placeholders::_2));
 
         n_in = ais_->getInputCount();
-        RCLCPP_INFO(get_logger(), "Connected to serial %d, %d inputs",
+        RCLCPP_INFO(get_logger(), "Connected to serial %d, %u inputs",
                     ais_->getSerialNumber(), n_in);
         val_to_pubs_.resize(n_in);
-        for (int i = 0; i < n_in; i++)
+        for (uint32_t i = 0; i < n_in; i++)
         {
             char str[100];
             snprintf(str, sizeof(str), "gain%02d", i);
@@ -123,7 +123,7 @@ AnalogInputsRosI::AnalogInputsRosI(const rclcpp::NodeOptions& options)
         // will only publish when something changes (where "changes" is defined
         // by the libphidget22 library).  In that case, make sure to publish
         // once at the beginning to make sure there is *some* data.
-        for (int i = 0; i < n_in; ++i)
+        for (uint32_t i = 0; i < n_in; ++i)
         {
             publishLatest(i);
         }
