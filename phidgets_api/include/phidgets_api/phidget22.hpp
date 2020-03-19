@@ -32,6 +32,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <functional>
 
 #include <libphidget22/phidget22.h>
 
@@ -52,6 +53,34 @@ class Phidget22Error final : public std::exception
 
   private:
     std::string msg_;
+};
+
+struct ChannelInfo
+{
+  int32_t serial_number{ PHIDGET_SERIALNUMBER_ANY };
+  int hub_port{ PHIDGET_HUBPORT_ANY };
+  bool is_hub_port_device{ false };
+  int channel{ PHIDGET_CHANNEL_ANY };
+};
+
+class PhidgetComponent
+{
+public:
+  PhidgetComponent(std::string name);
+  virtual bool hasHandle() const override;
+  virtual void setOnAttachHandler(std::function<void(PhidgetHandle, void *)> on_attach_handler) override;
+private:
+  std::string name_;
+  void on_attach_handler();
+};
+
+class Phidget : public PhidgetComponent
+{
+};
+
+class PhidgetComposite: public PhidgetComponent
+{
+
 };
 
 namespace helpers {
