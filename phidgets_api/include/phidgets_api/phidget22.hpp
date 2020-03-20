@@ -55,7 +55,7 @@ class Phidget22Error final : public std::exception
     std::string msg_;
 };
 
-struct ChannelInfo
+struct PhidgetInfo
 {
   int32_t serial_number{ PHIDGET_SERIALNUMBER_ANY };
   int hub_port{ PHIDGET_HUBPORT_ANY };
@@ -65,13 +65,6 @@ struct ChannelInfo
 
 class PhidgetComponent
 {
-public:
-  PhidgetComponent(std::string name);
-  virtual bool hasHandle() const override;
-  virtual void setOnAttachHandler(std::function<void(PhidgetHandle, void *)> on_attach_handler) override;
-private:
-  std::string name_;
-  void on_attach_handler();
 };
 
 class Phidget : public PhidgetComponent
