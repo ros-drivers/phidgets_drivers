@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2020-06-01)
+------------------
 * Use '=default' for default destructors. (`#66 <https://github.com/ros-drivers/phidgets_drivers/issues/66>`_)
 * Contributors: Chris Lalancette
 

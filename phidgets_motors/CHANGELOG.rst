@@ -2,8 +2,8 @@
 Changelog for package phidgets_motors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2020-06-01)
+------------------
 * Release build fixes (`#67 <https://github.com/ros-drivers/phidgets_drivers/issues/67>`_)
 * Contributors: Chris Lalancette
 
