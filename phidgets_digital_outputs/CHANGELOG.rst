@@ -2,6 +2,11 @@
 Changelog for package phidgets_digital_outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Release build fixes (`#67 <https://github.com/ros-drivers/phidgets_drivers/issues/67>`_)
+* Contributors: Chris Lalancette
+
 2.0.1 (2019-12-05)
 ------------------
 * Switch the buildtoo_depend to ament_cmake_ros. (`#65 <https://github.com/ros-drivers/phidgets_drivers/issues/65>`_)
