@@ -8,7 +8,7 @@ COPY . /ws/src/phidgets_drivers
 WORKDIR /ws
 
 # Use rosdep to install all dependencies (including ROS itself)
-RUN rosdep install --from-paths src -i -y --rosdistro dashing
+RUN rosdep init && rosdep update && rosdep install --from-paths src -i -y --rosdistro dashing
 
 RUN /bin/bash -c "source /opt/ros/dashing/setup.bash && \
     python3 src/phidgets_drivers/clang-check-style.py && \
