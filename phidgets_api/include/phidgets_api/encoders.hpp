@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_ENCODERS_H
-#define PHIDGETS_API_ENCODERS_H
+#ifndef PHIDGETS_API_ENCODERS_HPP
+#define PHIDGETS_API_ENCODERS_HPP
 
 #include <functional>
 #include <memory>
@@ -91,4 +91,4 @@ class Encoders final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_ENCODERS_H
+#endif  // PHIDGETS_API_ENCODERS_HPP

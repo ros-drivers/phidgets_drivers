@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_GYROSCOPE_H
-#define PHIDGETS_API_GYROSCOPE_H
+#ifndef PHIDGETS_API_GYROSCOPE_HPP
+#define PHIDGETS_API_GYROSCOPE_HPP
 
 #include <functional>
 
@@ -71,4 +71,4 @@ class Gyroscope final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_GYROSCOPE_H
+#endif  // PHIDGETS_API_GYROSCOPE_HPP

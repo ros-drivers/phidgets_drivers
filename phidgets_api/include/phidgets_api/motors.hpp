@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_MOTORS_H
-#define PHIDGETS_API_MOTORS_H
+#ifndef PHIDGETS_API_MOTORS_HPP
+#define PHIDGETS_API_MOTORS_HPP
 
 #include <functional>
 #include <memory>
@@ -72,4 +72,4 @@ class Motors final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_MOTORS_H
+#endif  // PHIDGETS_API_MOTORS_HPP

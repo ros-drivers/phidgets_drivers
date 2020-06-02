@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_H
-#define PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_H
+#ifndef PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_HPP
+#define PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_HPP
 
 #include <memory>
 #include <mutex>
@@ -89,4 +89,4 @@ class GyroscopeRosI final : public rclcpp::Node
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_H
+#endif  // PHIDGETS_GYROSCOPE_GYROSCOPE_ROS_I_HPP
