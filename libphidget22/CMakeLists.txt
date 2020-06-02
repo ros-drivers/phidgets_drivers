@@ -7,15 +7,16 @@ set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declar
 
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
-    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.4.20190605.tar.gz
-    URL_MD5 96e5d64263866d34e1d9a5f4ba78ba65
+    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.6.20200417.tar.gz
+    URL_MD5 f8c85f8348ddc0fb46146c0d9d8f884e
 
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-fix-uninitialized-memory-access.patch
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-1.6.20200417-fix-warnings.patch
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
     CONFIGURE_COMMAND
       <SOURCE_DIR>/configure
       CFLAGS=${extra_c_flags}
       --prefix=${CMAKE_CURRENT_BINARY_DIR}/libphidget22_install
+      --disable-ldconfig
     BUILD_COMMAND $(MAKE)
     INSTALL_COMMAND $(MAKE) install
 )
