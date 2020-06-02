@@ -22,15 +22,15 @@ from launch_ros.descriptions import ComposableNode
 def generate_launch_description():
     """Generate launch description with multiple components."""
     container = ComposableNodeContainer(
-            node_name='phidget_container',
-            node_namespace='',
+            name='phidget_container',
+            namespace='',
             package='rclcpp_components',
-            node_executable='component_container',
+            executable='component_container',
             composable_node_descriptions=[
                 ComposableNode(
                     package='phidgets_motors',
-                    node_plugin='phidgets::MotorsRosI',
-                    node_name='phidgets_motors'),
+                    plugin='phidgets::MotorsRosI',
+                    name='phidgets_motors'),
             ],
             output='both',
     )
