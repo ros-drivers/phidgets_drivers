@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_INPUTS_H
-#define PHIDGETS_API_DIGITAL_INPUTS_H
+#ifndef PHIDGETS_API_DIGITAL_INPUTS_HPP
+#define PHIDGETS_API_DIGITAL_INPUTS_HPP
 
 #include <functional>
 #include <memory>
@@ -63,4 +63,4 @@ class DigitalInputs
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_INPUTS_H
+#endif  // PHIDGETS_API_DIGITAL_INPUTS_HPP

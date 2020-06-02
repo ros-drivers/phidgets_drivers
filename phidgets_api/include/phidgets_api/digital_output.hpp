@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_OUTPUT_H
-#define PHIDGETS_API_DIGITAL_OUTPUT_H
+#ifndef PHIDGETS_API_DIGITAL_OUTPUT_HPP
+#define PHIDGETS_API_DIGITAL_OUTPUT_HPP
 
 #include <libphidget22/phidget22.h>
 
@@ -57,4 +57,4 @@ class DigitalOutput final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_OUTPUT_H
+#endif  // PHIDGETS_API_DIGITAL_OUTPUT_HPP

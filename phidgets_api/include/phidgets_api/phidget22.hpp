@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_PHIDGET22_H
-#define PHIDGETS_API_PHIDGET22_H
+#ifndef PHIDGETS_API_PHIDGET22_HPP
+#define PHIDGETS_API_PHIDGET22_HPP
 
 #include <stdexcept>
 #include <string>
@@ -64,4 +64,4 @@ void closeAndDelete(PhidgetHandle *handle) noexcept;
 }  // namespace helpers
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_PHIDGET22_H
+#endif  // PHIDGETS_API_PHIDGET22_HPP

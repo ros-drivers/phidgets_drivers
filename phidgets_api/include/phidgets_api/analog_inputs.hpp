@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_ANALOG_INPUTS_H
-#define PHIDGETS_API_ANALOG_INPUTS_H
+#ifndef PHIDGETS_API_ANALOG_INPUTS_HPP
+#define PHIDGETS_API_ANALOG_INPUTS_HPP
 
 #include <functional>
 #include <memory>
@@ -65,4 +65,4 @@ class AnalogInputs final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_ANALOG_INPUTS_H
+#endif  // PHIDGETS_API_ANALOG_INPUTS_HPP

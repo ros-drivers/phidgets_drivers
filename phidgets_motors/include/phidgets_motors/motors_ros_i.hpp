@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_MOTORS_MOTORS_ROS_I_H
-#define PHIDGETS_MOTORS_MOTORS_ROS_I_H
+#ifndef PHIDGETS_MOTORS_MOTORS_ROS_I_HPP
+#define PHIDGETS_MOTORS_MOTORS_ROS_I_HPP
 
 #include <memory>
 #include <mutex>
@@ -87,4 +87,4 @@ class MotorsRosI final : public rclcpp::Node
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_MOTORS_MOTORS_ROS_I_H
+#endif  // PHIDGETS_MOTORS_MOTORS_ROS_I_HPP

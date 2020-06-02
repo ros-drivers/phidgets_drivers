@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_DIGITAL_OUTPUTS_H
-#define PHIDGETS_API_DIGITAL_OUTPUTS_H
+#ifndef PHIDGETS_API_DIGITAL_OUTPUTS_HPP
+#define PHIDGETS_API_DIGITAL_OUTPUTS_HPP
 
 #include <memory>
 #include <vector>
@@ -61,4 +61,4 @@ class DigitalOutputs final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_DIGITAL_OUTPUTS_H
+#endif  // PHIDGETS_API_DIGITAL_OUTPUTS_HPP
