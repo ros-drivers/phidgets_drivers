@@ -1,18 +1,20 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(libphidget22)
 
-find_package(catkin REQUIRED COMPONENTS)
+find_package(catkin REQUIRED)
 
 catkin_destinations() # set-up destination variables
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
+set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation")
+
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
-    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.4.20190605.tar.gz
-    URL_MD5 96e5d64263866d34e1d9a5f4ba78ba65
+    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.6.20200417.tar.gz
+    URL_MD5 f8c85f8348ddc0fb46146c0d9d8f884e
 
     CONFIGURE_COMMAND "./configure"
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-fix-uninitialized-memory-access.patch
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-1.6.20200417-fix-warnings.patch
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
     BUILD_IN_SOURCE 1
     BUILD_COMMAND make "CFLAGS=-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation"
