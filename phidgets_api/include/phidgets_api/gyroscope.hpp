@@ -30,7 +30,6 @@
 #ifndef PHIDGETS_API_GYROSCOPE_H
 #define PHIDGETS_API_GYROSCOPE_H
 
-#include <cstddef>
 #include <functional>
 
 #include <libphidget22/phidget22.h>

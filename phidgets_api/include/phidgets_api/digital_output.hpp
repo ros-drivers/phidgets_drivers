@@ -30,8 +30,6 @@
 #ifndef PHIDGETS_API_DIGITAL_OUTPUT_H
 #define PHIDGETS_API_DIGITAL_OUTPUT_H
 
-#include <cstddef>
-
 #include <libphidget22/phidget22.h>
 
 #include "phidgets_api/phidget22.hpp"
