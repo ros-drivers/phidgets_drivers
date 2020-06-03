@@ -2,6 +2,40 @@
 Changelog for package phidgets_ik
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Switch to libphidget22
+* Fix phidgets_ik dependencies.
+* Rewrite IK as just a launch file.
+* Add launch files for all drivers.
+* Add in try/catch blocks for connecting.
+  If an error occurs, we catch it, print it, then re-throw it.
+  This allows us to show a better error when using nodelets.
+* Fixes from review.
+* Documentation updates to README.md
+* Set the publish_rate to 0 by default.
+  This means we will only publish on changes.
+* Add in the license files and add to the headers.
+* Remove nodes in favor of nodelets.
+* Rewrite phidgets_ik on top of libphidget22 classes.
+* Rename Phidget class to Phidget21 class.
+  Also rename the files, etc.
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Split custom messages into their own package.
+* Add in a nodelet version of the interfaceKit.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+  None of the current users need it to be split, and this will make
+  it easier to port to libphidgets22.
+* Small cleanups throughout the code.
+* Push libphidgets API calls down to phidgets_api.
+* Completely remove boost from the project.
+* Style cleanup.
+* Remove unused dependencies from phidgets_ik.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

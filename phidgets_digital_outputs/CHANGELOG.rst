@@ -1,0 +1,18 @@
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package phidgets_digital_outputs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Switch to libphidget22
+* Add launch files for all drivers.
+* Add in try/catch blocks for connecting.
+  If an error occurs, we catch it, print it, then re-throw it.
+  This allows us to show a better error when using nodelets.
+* Fixes from review.
+* Documentation updates to README.md
+* Add in the license files and add to the headers.
+* Remove nodes in favor of nodelets.
+* Add in support for Phidgets Digital Outputs.
+* Contributors: Chris Lalancette, Martin Günther

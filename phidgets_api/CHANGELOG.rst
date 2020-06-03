@@ -2,6 +2,48 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Switch to libphidget22
+* Add in try/catch blocks for connecting.
+  If an error occurs, we catch it, print it, then re-throw it.
+  This allows us to show a better error when using nodelets.
+* Fixes from review.
+* Implement data interval setting for analog inputs.
+* Add in the license files and add to the headers.
+* Completely remove libphidget21.
+  Nothing else depends on it.
+* Rewrite Motor Phidget to use libphidget22.
+  Also implement a new motor node.
+* Rewrite High Speed Encoder to use libphidget22.
+* Rewrite IR to use libphidget22.
+* Rewrite IMU using libphidget22.
+* Add support for Phidgets Magnetometer sensors.
+* Add support for Phidgets Gyroscope sensors.
+* Add support for Phidgets Accelerometer sensors.
+* Add in support for Phidgets Temperature sensors.
+* Rewrite phidgets_ik on top of libphidget22 classes.
+  This should be equivalent functionality, but allows the use
+  of VINT devices now.
+* Add in support for Phidgets Analog inputs.
+* Add in support for Phidgets Digital Inputs.
+* Add in support for Phidgets Digital Outputs.
+* Add in libphidget22 helper functions.
+* Rename Phidget class to Phidget21 class.
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Remove unused indexHandler from Encoder class.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Push libphidgets API calls down to phidgets_api.
+* Quiet down the to-be-overridden callbacks.
+* Consistently use nullptr instead of 0.
+* Make the phidget_api destructors virtual.
+* Style cleanup.
+* Move libusb dependency into the libphidget21 package.xml.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 * Add missing OnInputChange handler (`#33 <https://github.com/ros-drivers/phidgets_drivers/issues/33>`_)
