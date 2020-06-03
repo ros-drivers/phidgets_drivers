@@ -2,8 +2,8 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.10 (2020-06-03)
+-------------------
 * Split custom messages into their own package.
 * Contributors: Chris Lalancette, Martin Günther
 

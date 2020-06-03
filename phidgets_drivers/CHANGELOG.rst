@@ -2,8 +2,8 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.10 (2020-06-03)
+-------------------
 * Update maintainers in package.xml
 * Split custom messages into their own package.
 * Add in phidgets_ik to the phidgets_drivers metapackage.

@@ -2,8 +2,8 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.10 (2020-06-03)
+-------------------
 * Update maintainers in package.xml
 * Move libusb dependency into the libphidget21 package.xml.
 * Contributors: Chris Lalancette, Martin Günther

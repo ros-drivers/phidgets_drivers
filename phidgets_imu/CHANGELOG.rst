@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.10 (2020-06-03)
+-------------------
 * Update maintainers in package.xml
 * Fix wrong defaults for standard deviations (`#46 <https://github.com/ros-drivers/phidgets_drivers/issues/46>`_)
   The old parameter defaults were wrong:

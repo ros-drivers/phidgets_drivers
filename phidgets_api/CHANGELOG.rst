@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.10 (2020-06-03)
+-------------------
 * Update maintainers in package.xml
 * Run clang-format on the whole codebase.
 * Switch to C++14 everywhere.
