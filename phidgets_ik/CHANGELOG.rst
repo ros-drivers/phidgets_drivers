@@ -2,6 +2,21 @@
 Changelog for package phidgets_ik
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Split custom messages into their own package.
+* Add in a nodelet version of the interfaceKit.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Push libphidgets API calls down to phidgets_api.
+* Completely remove boost from the project.
+* Remove unused dependencies from phidgets_ik.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

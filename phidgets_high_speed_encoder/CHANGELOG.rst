@@ -2,6 +2,19 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Split custom messages into their own package.
+* Rewrite the high speed encoder node.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Style cleanup.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 

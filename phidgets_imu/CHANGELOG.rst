@@ -2,6 +2,31 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Fix wrong defaults for standard deviations (`#46 <https://github.com/ros-drivers/phidgets_drivers/issues/46>`_)
+  The old parameter defaults were wrong:
+  | parameter                 | old default                       | new default                        |
+  |                           |                                   |                                    |
+  | angular_velocity_stdev    | 0.000349056 rad/s (= 0.02 deg/s)  | 0.001658 rad/s    (= 0.095deg/s)   |
+  | linear_acceleration_stdev | 0.002943 m/s^2 (= 0.0003 g)       | 0.002745862 m/s^2 (= 0.00028 g)    |
+  | magnetic_field_stdev      | 0.001658 rad/s (= 0.095deg/s)     | 1.1e-7 T         (= 1.1 mG)        |
+  Notes: T = Tesla, mG = milligauss
+  Specifications come from the PhidgetSpatial Precision 3/3/3 1044_0 data sheet: https://www.phidgets.com/?&prodid=32
+* Improve the IMU calibration service (`#41 <https://github.com/ros-drivers/phidgets_drivers/issues/41>`_)
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Push libphidgets API calls down to phidgets_api.
+* IMU: small fixes found by turning on compiler warnings.
+* Completely remove boost from the project.
+* Remove unused tf dependency from phidgets_imu.
+* Switch to package format 2.
+* Cleanup spacing in all of the CMakeLists.txt
+* Contributors: Chris Lalancette, Martin Günther, Michael Grupp
+
 0.7.9 (2019-06-28)
 ------------------
 

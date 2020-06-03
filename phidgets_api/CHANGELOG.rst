@@ -2,6 +2,22 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Run clang-format on the whole codebase.
+* Switch to C++14 everywhere.
+* Remove unused indexHandler from Encoder class.
+* Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+* Small cleanups throughout the code.
+* Push libphidgets API calls down to phidgets_api.
+* Quiet down the to-be-overridden callbacks.
+* Consistently use nullptr instead of 0.
+* Make the phidget_api destructors virtual.
+* Move libusb dependency into the libphidget21 package.xml.
+* Switch to package format 2.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 * Add missing OnInputChange handler (`#33 <https://github.com/ros-drivers/phidgets_drivers/issues/33>`_)

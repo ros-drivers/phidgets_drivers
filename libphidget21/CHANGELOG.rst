@@ -2,6 +2,12 @@
 Changelog for package libphidget21
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers in package.xml
+* Move libusb dependency into the libphidget21 package.xml.
+* Contributors: Chris Lalancette, Martin Günther
+
 0.7.9 (2019-06-28)
 ------------------
 * Update libphidget to version 2.1.9.20190409 (`#34 <https://github.com/ros-drivers/phidgets_drivers/issues/34>`_)
