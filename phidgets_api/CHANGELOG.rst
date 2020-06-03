@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2020-06-03)
+------------------
 * Update maintainers in package.xml
 * Switch to libphidget22
 * Add in try/catch blocks for connecting.

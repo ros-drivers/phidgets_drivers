@@ -2,8 +2,8 @@
 Changelog for package phidgets_digital_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2020-06-03)
+------------------
 * Update maintainers in package.xml
 * Switch to libphidget22
 * Add launch files for all drivers.

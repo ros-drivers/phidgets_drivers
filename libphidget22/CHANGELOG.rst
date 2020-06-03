@@ -2,8 +2,8 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2020-06-03)
+------------------
 * Update to libphidget22 from 2020.
 * Update maintainers in package.xml
 * Patch warnings in libphidget22.

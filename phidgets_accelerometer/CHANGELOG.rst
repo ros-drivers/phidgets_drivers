@@ -2,8 +2,8 @@
 Changelog for package phidgets_accelerometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2020-06-03)
+------------------
 * Fix wrong defaults for standard deviations (`#48 <https://github.com/ros-drivers/phidgets_drivers/issues/48>`_)
   The old parameter defaults were wrong:
   | parameter                 | old default                       | new default                        |
