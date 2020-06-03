@@ -10,3 +10,4 @@ BraceWrapping:
   AfterFunction: true
   SplitEmptyFunction: true
 IndentWidth: 4
+SortIncludes: false
