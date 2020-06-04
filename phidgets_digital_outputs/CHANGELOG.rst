@@ -2,8 +2,8 @@
 Changelog for package phidgets_digital_outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2020-06-04)
+------------------
 * Set cmake_policy CMP0048 to fix warning
 * Contributors: Martin Günther
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>phidgets_spatial</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>Driver for the Phidgets Spatial 3/3/3 devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
