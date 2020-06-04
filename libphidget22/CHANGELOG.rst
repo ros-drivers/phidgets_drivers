@@ -2,6 +2,13 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Re-run bloom to fix the line endings in the patch file
+  (`#77 <https://github.com/ros-drivers/phidgets_drivers/issues/77>`_)
+* Set cmake_policy CMP0048 to fix warning
+* Contributors: Martin Günther
+
 1.0.0 (2020-06-03)
 ------------------
 * Update to libphidget22 from 2020.

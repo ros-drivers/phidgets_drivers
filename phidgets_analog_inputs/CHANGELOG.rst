@@ -2,6 +2,11 @@
 Changelog for package phidgets_analog_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Set cmake_policy CMP0048 to fix warning
+* Contributors: Martin Günther
+
 1.0.0 (2020-06-03)
 ------------------
 * Update maintainers in package.xml
