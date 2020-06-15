@@ -5,7 +5,7 @@ services:
 
 env:
   matrix:
-    - CI_ROS_DISTRO="dashing"
+    - CI_ROS_DISTRO="foxy"
 
 install:
   - docker build -t phidgets_drivers_$CI_ROS_DISTRO -f Dockerfile-$CI_ROS_DISTRO .
