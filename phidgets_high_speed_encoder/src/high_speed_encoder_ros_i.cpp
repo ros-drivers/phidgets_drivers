@@ -24,7 +24,8 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
         sprintf(str, "joint%u_tick2rad", i);
         nh_private_.getParam(str, joint_tick2rad_[i]);
 
-        ROS_INFO("Channel %u Name: '%s', Tick2rad: '%f'", i, joint_names_[i].c_str(), joint_tick2rad_[i]);
+        ROS_INFO("Channel %u Name: '%s', Tick2rad: '%f'", i,
+                 joint_names_[i].c_str(), joint_tick2rad_[i]);
     }
 
     int serial_number = -1;
