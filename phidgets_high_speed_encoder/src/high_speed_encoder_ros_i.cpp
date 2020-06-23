@@ -19,18 +19,19 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
     {
         char str[100];
         sprintf(str, "joint%u_name", i);
-        nh_.getParam(str, joint_names_[i]);
+        nh_private_.getParam(str, joint_names_[i]);
 
         sprintf(str, "joint%u_tick2rad", i);
-        nh_.getParam(str, joint_tick2rad_[i]);
+        nh_private_.getParam(str, joint_tick2rad_[i]);
 
-        ROS_INFO("Channel %u: '%s'='%s'", i, str, joint_names_[i].c_str());
+        ROS_INFO("Channel %u Name: '%s', Tick2rad: '%f'", i,
+                 joint_names_[i].c_str(), joint_tick2rad_[i]);
     }
 
     int serial_number = -1;
     if (serial_number == -1)
     {
-        nh_.getParam("serial_number", serial_number);
+        nh_private_.getParam("serial_number", serial_number);
     }
 
     nh_private_.getParam("frame_id", frame_id_);
