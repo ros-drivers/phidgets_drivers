@@ -1,4 +1,4 @@
-Source: ros-melodic-phidgets-drivers
+Source: ros-melodic-phidgets-high-speed-encoder
 Section: misc
 Priority: optional
 Maintainer: Steven Leonis <stevenl@greenzie.com>
@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin, ros-melodic-roscpp
 Homepage: 
 Standards-Version: 3.9.2
 
-Package: ros-melodic-phidgets-drivers
+Package: ros-melodic-phidgets-high-speed-encoder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-roscpp 
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-roscpp, ros-melodic-phidgets-drivers 
 Description: ROS interfaces for Phidgets devices
