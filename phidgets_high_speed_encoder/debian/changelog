@@ -1,3 +1,9 @@
+ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic3) bionic; urgency=medium
+
+  * try removing build deps from everything 
+
+ -- Steven Leonis <stevenl@greenzie.com>  Wed, 24 Jun 2020 17:46:18 -0400
+
 ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic2) bionic; urgency=medium
 
   * remove build deps from the exec dependencies list 

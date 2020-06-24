@@ -2,8 +2,7 @@ Source: ros-melodic-phidgets-high-speed-encoder
 Section: misc
 Priority: optional
 Maintainer: Steven Leonis <stevenl@greenzie.com>
-Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin, ros-melodic-roscpp, libboost-system1.65.1, libc6,
-  libconsole-bridge0.4, libgcc1, libstdc++6, ros-melodic-nodelet, ros-melodic-phidgets-api,
+Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin, ros-melodic-roscpp, ros-melodic-nodelet, ros-melodic-phidgets-api,
   ros-melodic-phidgets-msgs, ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs
 Homepage: 
 Standards-Version: 3.9.2
