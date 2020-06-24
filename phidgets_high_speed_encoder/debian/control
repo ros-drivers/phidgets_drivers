@@ -12,5 +12,5 @@ Package: ros-melodic-phidgets-high-speed-encoder
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-roscpp, libboost-system1.65.1, libc6,
   libconsole-bridge0.4, libgcc1, libstdc++6, ros-melodic-nodelet, ros-melodic-phidgets-api,
-  ros-melodic-phidgets-msgs, ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs 
+  ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs
 Description: ROS interfaces for Phidgets devices
