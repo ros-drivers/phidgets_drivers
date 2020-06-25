@@ -9,6 +9,6 @@ Standards-Version: 3.9.2
 
 Package: ros-melodic-phidgets-high-speed-encoder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-roscpp, ros-melodic-nodelet, ros-melodic-phidgets-api,
+Depends: ${misc:Depends}, ros-melodic-roscpp, ros-melodic-nodelet, ros-melodic-phidgets-api,
   ros-melodic-phidgets-msgs, ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs
 Description: ROS interfaces for Phidgets devices
