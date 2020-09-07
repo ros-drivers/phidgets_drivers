@@ -5,15 +5,12 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
 # workaround for https://github.com/catkin/catkin_tools/issues/594:
-# apt-get install python3-catkin-tools doesn't work because python3-trollius doesn't exist on Ubuntu Focal
-
-ENV PATH="/root/.local/bin:${PATH}"
+# apt-get install python3-catkin-tools doesn't work because running catkin throws the following error:
+# pkg_resources.DistributionNotFound: The 'osrf-pycommon>0.1.1' distribution was not found and is required by catkin-tools
 
 RUN apt-get update \
-    && apt-get install -y git python3-pip \
+    && apt-get install -y python3-osrf-pycommon python3-catkin-tools \
     && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
-
-RUN pip3 install --user git+https://github.com/catkin/catkin_tools.git
 
 # end workaround
 
