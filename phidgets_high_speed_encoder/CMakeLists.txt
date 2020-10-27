@@ -47,6 +47,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
     FILES_MATCHING PATTERN "*.h"
 )
 
-#install(FILES phidgets_high_speed_encoder_nodelet.xml
-#    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-#)
+install(FILES phidgets_high_speed_encoder_nodelet.xml
+   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
