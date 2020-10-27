@@ -1,8 +1,8 @@
-ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic5) UNRELEASED; urgency=medium
+ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic5) bionic; urgency=medium
 
   * Added phidgets nodelet xml to be installed
 
- -- David Jensen <david@greenzie.com>  Tue, 27 Oct 2020 15:08:44 -0400
+ -- David Jensen <david@greenzie.com>  Tue, 27 Oct 2020 15:56:20 -0400
 
 ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic4) bionic; urgency=medium
 
