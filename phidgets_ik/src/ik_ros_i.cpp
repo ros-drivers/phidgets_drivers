@@ -93,7 +93,7 @@ bool IKRosI::set_srv_callback(phidgets_msgs::SetDigitalOutput::Request& req,
                               phidgets_msgs::SetDigitalOutput::Response& res)
 {
     ROS_INFO("Setting output %d to %d", req.index, req.state);
-    res.success = !setOutputState(req.index, req.state);
+    res.success = setOutputState(req.index, req.state);
     return true;
 }
 
