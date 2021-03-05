@@ -257,7 +257,7 @@ void AccelerometerRosI::accelerometerChangeCallback(
             can_publish_ = true;
         } else
         {
-            ROS_WARN(
+            ROS_DEBUG(
                 "Data not within acceptable window for synchronization: "
                 "expected between %ld and %ld, saw %ld",
                 data_interval_ns_ - cb_delta_epsilon_ns_,
