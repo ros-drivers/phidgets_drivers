@@ -293,7 +293,7 @@ void GyroscopeRosI::gyroscopeChangeCallback(const double angular_rate[3],
             can_publish_ = true;
         } else
         {
-            RCLCPP_WARN(
+            RCLCPP_DEBUG(
                 get_logger(),
                 "Data not within acceptable window for synchronization: "
                 "expected between %ld and %ld, saw %ld",
