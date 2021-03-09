@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.2 (2021-03-09)
+------------------
 * Don't publish messages that jumped back in time. (`#85 <https://github.com/ros-drivers/phidgets_drivers/issues/85>`_)
 * Log synchronization window details at DEBUG level. (`#82 <https://github.com/ros-drivers/phidgets_drivers/issues/82>`_)
 * Contributors: Michael Grupp
