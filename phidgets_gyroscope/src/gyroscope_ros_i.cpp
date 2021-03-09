@@ -193,8 +193,10 @@ void GyroscopeRosI::publishLatest()
 
     if (time_in_ns < last_ros_stamp_ns_)
     {
-        RCLCPP_WARN(get_logger(), "Time went backwards (%lu < %lu)!",
+        RCLCPP_WARN(get_logger(),
+                    "Time went backwards (%lu < %lu)! Not publishing message.",
                     time_in_ns, last_ros_stamp_ns_);
+        return;
     }
 
     last_ros_stamp_ns_ = time_in_ns;
