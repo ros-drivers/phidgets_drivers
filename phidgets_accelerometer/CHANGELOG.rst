@@ -2,6 +2,12 @@
 Changelog for package phidgets_accelerometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Don't publish messages that jumped back in time. (`#85 <https://github.com/ros-drivers/phidgets_drivers/issues/85>`_)
+* Log synchronization window details at DEBUG level. (`#82 <https://github.com/ros-drivers/phidgets_drivers/issues/82>`_)
+* Contributors: Michael Grupp
+
 1.0.1 (2020-06-04)
 ------------------
 * Set cmake_policy CMP0048 to fix warning

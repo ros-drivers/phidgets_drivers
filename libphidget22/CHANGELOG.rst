@@ -2,6 +2,9 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.1 (2020-06-04)
 ------------------
 * Re-run bloom to fix the line endings in the patch file
