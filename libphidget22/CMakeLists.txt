@@ -3,7 +3,7 @@ project(libphidget22)
 
 find_package(ament_cmake REQUIRED)
 
-set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation")
+set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation -fPIC")
 
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
