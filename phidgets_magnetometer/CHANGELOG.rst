@@ -2,8 +2,8 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2021-03-29)
+------------------
 * Don't publish messages that jumped back in time. (`#86 <https://github.com/ros-drivers/phidgets_drivers/issues/86>`_)
 * Log synchronization window details at DEBUG level (`#84 <https://github.com/ros-drivers/phidgets_drivers/issues/84>`_)
 * Get rid of deprecation warnings in Foxy. (`#75 <https://github.com/ros-drivers/phidgets_drivers/issues/75>`_)

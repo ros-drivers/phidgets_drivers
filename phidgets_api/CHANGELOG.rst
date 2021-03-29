@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2021-03-29)
+------------------
 * Switch header guards to _HPP SUFFIX.
 * Remove unnecessary cstddef.
 * Contributors: Chris Lalancette
