@@ -2,6 +2,12 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Compile libphidget22 with -fPIC (`#88 <https://github.com/ros-drivers/phidgets_drivers/issues/88>`_)
+* Update to libphidget22 from 2020.
+* Contributors: Chris Lalancette, Scott K Logan
+
 2.0.2 (2020-06-01)
 ------------------
 

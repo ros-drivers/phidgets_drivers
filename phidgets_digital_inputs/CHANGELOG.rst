@@ -2,6 +2,12 @@
 Changelog for package phidgets_digital_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Get rid of deprecation warnings in Foxy. (`#75 <https://github.com/ros-drivers/phidgets_drivers/issues/75>`_)
+* Switch header guards to _HPP SUFFIX.
+* Contributors: Chris Lalancette
+
 2.0.2 (2020-06-01)
 ------------------
 * Release build fixes (`#67 <https://github.com/ros-drivers/phidgets_drivers/issues/67>`_)

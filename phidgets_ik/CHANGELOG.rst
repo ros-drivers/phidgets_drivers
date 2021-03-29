@@ -2,6 +2,13 @@
 Changelog for package phidgets_ik
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Get rid of deprecation warnings in Foxy. (`#75 <https://github.com/ros-drivers/phidgets_drivers/issues/75>`_)
+  Foxy deprecated some of the names we use in the launch files.
+  Switch to the new supported names here.
+* Contributors: Chris Lalancette
+
 2.0.2 (2020-06-01)
 ------------------
 
