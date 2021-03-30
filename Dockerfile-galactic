@@ -1,4 +1,4 @@
-FROM ros:foxy-ros-core
+FROM ros:rolling-ros-core
 
 RUN apt-get update && apt-get install -y \
     build-essential file clang-format python3-colcon-common-extensions python3-rosdep
@@ -8,9 +8,9 @@ COPY . /ws/src/phidgets_drivers
 WORKDIR /ws
 
 # Use rosdep to install all dependencies (including ROS itself)
-RUN rosdep init && rosdep update && rosdep install --from-paths src -i -y --rosdistro foxy
+RUN rosdep init && rosdep update && rosdep install --from-paths src -i -y --rosdistro rolling
 
-RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && \
+RUN /bin/bash -c "source /opt/ros/rolling/setup.bash && \
     python3 src/phidgets_drivers/clang-check-style.py && \
     colcon build --parallel-workers 1 && \
     colcon test --parallel-workers 1"
