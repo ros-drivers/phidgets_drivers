@@ -2,8 +2,8 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.11 (2021-04-09)
+-------------------
 * high_speed_encoder: Use private node handle for params (`#79 <https://github.com/ros-drivers/phidgets_drivers/issues/79>`_)
   Co-authored-by: Martin Günther <martin.guenther@dfki.de>
 * Contributors: Evan Davies
