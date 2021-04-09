@@ -2,6 +2,9 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.10 (2020-06-03)
 -------------------
 * Update maintainers in package.xml

@@ -2,6 +2,12 @@
 Changelog for package phidgets_ik
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix success flag of phidgets_ik set_digital_output service
+  Fixes `#81 <https://github.com/ros-drivers/phidgets_drivers/issues/81>`_
+* Contributors: Martin Günther
+
 0.7.10 (2020-06-03)
 -------------------
 * Update maintainers in package.xml
