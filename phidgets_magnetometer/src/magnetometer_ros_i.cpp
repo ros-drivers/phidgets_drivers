@@ -89,19 +89,19 @@ MagnetometerRosI::MagnetometerRosI(const rclcpp::NodeOptions& options)
 
     // compass correction params (see
     // http://www.phidgets.com/docs/1044_User_Guide)
-    this->declare_parameter("cc_mag_field");
-    this->declare_parameter("cc_offset0");
-    this->declare_parameter("cc_offset1");
-    this->declare_parameter("cc_offset2");
-    this->declare_parameter("cc_gain0");
-    this->declare_parameter("cc_gain1");
-    this->declare_parameter("cc_gain2");
-    this->declare_parameter("cc_t0");
-    this->declare_parameter("cc_t1");
-    this->declare_parameter("cc_t2");
-    this->declare_parameter("cc_t3");
-    this->declare_parameter("cc_t4");
-    this->declare_parameter("cc_t5");
+    this->declare_parameter<double>("cc_mag_field");
+    this->declare_parameter<double>("cc_offset0");
+    this->declare_parameter<double>("cc_offset1");
+    this->declare_parameter<double>("cc_offset2");
+    this->declare_parameter<double>("cc_gain0");
+    this->declare_parameter<double>("cc_gain1");
+    this->declare_parameter<double>("cc_gain2");
+    this->declare_parameter<double>("cc_t0");
+    this->declare_parameter<double>("cc_t1");
+    this->declare_parameter<double>("cc_t2");
+    this->declare_parameter<double>("cc_t3");
+    this->declare_parameter<double>("cc_t4");
+    this->declare_parameter<double>("cc_t5");
 
     bool has_compass_params = false;
     double cc_mag_field = 0.0;
