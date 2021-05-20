@@ -2,6 +2,9 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.1.0 (2021-03-29)
 ------------------
 * Compile libphidget22 with -fPIC (`#88 <https://github.com/ros-drivers/phidgets_drivers/issues/88>`_)

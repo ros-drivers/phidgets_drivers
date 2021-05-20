@@ -2,6 +2,11 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Make sure to declare the type while declaring the parameter. (`#89 <https://github.com/ros-drivers/phidgets_drivers/issues/89>`_)
+* Contributors: Chris Lalancette
+
 2.1.0 (2021-03-29)
 ------------------
 * Don't publish messages that jumped back in time. (`#86 <https://github.com/ros-drivers/phidgets_drivers/issues/86>`_)
