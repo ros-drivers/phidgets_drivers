@@ -1,0 +1,77 @@
+diff -urp libphidget22-1.6.20210312.orig/configure libphidget22-1.6.20210312/configure
+--- libphidget22-1.6.20210312.orig/configure	2021-03-12 17:23:02.000000000 +0000
++++ libphidget22-1.6.20210312/configure	2021-03-22 13:55:52.553323821 +0000
+@@ -5681,7 +5681,7 @@ esac
+ fi
+ 
+ : ${AR=ar}
+-: ${AR_FLAGS=cru}
++: ${AR_FLAGS=cr}
+ 
+ 
+ 
+diff -urp libphidget22-1.6.20210312.orig/src/class/dataadapter.c libphidget22-1.6.20210312/src/class/dataadapter.c
+--- libphidget22-1.6.20210312.orig/src/class/dataadapter.c	2021-03-12 17:22:46.000000000 +0000
++++ libphidget22-1.6.20210312/src/class/dataadapter.c	2021-03-22 13:52:16.752083410 +0000
+@@ -90,7 +90,7 @@ PhidgetDataAdapter_bridgeInput(PhidgetCh
+ 	uint32_t dataLen;
+ 	Phidget_DeviceID deviceID;
+ 	Phidget_DeviceClass deviceClass;
+-	PhidgetDataAdapter_PacketErrorCode err;
++	uint32_t err;
+ 
+ 	ch = (PhidgetDataAdapterHandle)phid;
+ 
+diff -urp libphidget22-1.6.20210312.orig/src/util/dataadaptersupport.c libphidget22-1.6.20210312/src/util/dataadaptersupport.c
+--- libphidget22-1.6.20210312.orig/src/util/dataadaptersupport.c	2021-03-12 17:22:45.000000000 +0000
++++ libphidget22-1.6.20210312/src/util/dataadaptersupport.c	2021-03-22 13:53:10.348894764 +0000
+@@ -859,49 +859,6 @@ PhidgetReturnCode sendI2CData(PhidgetCha
+ 	return sendDataBuffer(ch, totalCount, (const uint8_t *)buffer, bp, waitResposne);
+ }
+ 
+-static PhidgetReturnCode
+-waitForNAKClear(mosiop_t iop, PhidgetChannelHandle ch, uint32_t milliseconds) {
+-	PhidgetDataAdapterSupportHandle dataAdapterSupport;
+-	mostime_t duration;
+-	mostime_t start;
+-
+-	assert(ch);
+-	TESTATTACHED(ch);
+-
+-	dataAdapterSupport = DATAADAPTER_SUPPORT(ch);
+-	assert(dataAdapterSupport);
+-
+-	start = 0; // make compiler happy
+-
+-	if (milliseconds)
+-		start = mos_gettime_usec();
+-
+-	PhidgetLock(ch);
+-	for (;;) {
+-		if (dataAdapterSupport->nakFlag == 0) {
+-			PhidgetUnlock(ch);
+-			return (EPHIDGET_OK);
+-		}
+-
+-		if (!_ISOPEN(ch)) {
+-			PhidgetUnlock(ch);
+-			return (MOS_ERROR(iop, EPHIDGET_CLOSED, "Channel was closed while waiting for clear to send."));
+-		}
+-
+-		if (milliseconds) {
+-			duration = (mos_gettime_usec() - start) / 1000;
+-			if (duration >= milliseconds) {
+-
+-				PhidgetUnlock(ch);
+-				return (EPHIDGET_TIMEOUT);
+-			}
+-			PhidgetTimedWait(ch, milliseconds - (uint32_t)duration);
+-		} else {
+-			PhidgetWait(ch);
+-		}
+-	}
+-}
+-
+ static PhidgetReturnCode sendTXDataVINT(mosiop_t iop, PhidgetChannelHandle ch, uint8_t *buf, size_t packetLen, PhidgetTransaction *trans){
+ 	PhidgetReturnCode ret;
+ 	SetNAK(ch);
