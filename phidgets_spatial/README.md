@@ -1,20 +1,30 @@
 Phidgets spatial ROS 2 driver
 =============================
 
-This is the ROS 2 driver for Phidgets spatial.  The various topics, services, and parameters that the node operates with are listed below.
+This is the ROS 2 driver for Phidgets spatial.
+
+Usage
+-----
+
+To run this driver standalone, do the following:
+
+    ros2 launch phidgets_spatial spatial-launch.py
 
 Published Topics
 ----------------
+
 * `/imu/data_raw` (`sensor_msgs/Imu`) - The raw accelerometer and gyroscope data.
 * `imu/is_calibrated` (`std_msgs/Bool`) - Whether the gyroscope has been calibrated; this will be done automatically at startup time, but can also be re-done at any time by calling the `imu/calibrate` service.
 * `/imu/mag` (`sensor_msgs/MagneticField`) - The raw magnetometer data.
 
 Services
 --------
+
 * `imu/calibrate` (`std_srvs/Empty`) - Run calibration on the gyroscope.
 
 Parameters
 ----------
+
 * `serial` (int) - The serial number of the phidgets spatial to connect to.  If -1 (the default), connects to any spatial phidget that can be found.
 * `hub_port` (int) - The phidgets VINT hub port to connect to.  Only used if the spatial phidget is connected to a VINT hub.  Defaults to 0.
 * `frame_id` (string) - The header frame ID to use when publishing the message.  Defaults to [REP-0145](http://www.ros.org/reps/rep-0145.html) compliant `imu_link`.
