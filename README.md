@@ -6,10 +6,15 @@ Overview
 
 Drivers for various [Phidgets](https://www.phidgets.com) devices. This package includes:
 
-* `phidgets_api`: a package which downloads and builds the Phidgets C API from
-   phidgets.com (as an external project). It also implements a C++ wrapper
-   for the C API, providing some base Phidget helper functions and various classes
-   for different phidget devices.
+* `libphidget22`: a package which downloads and builds the Phidgets C API from
+   phidgets.com as an external project.
+
+* `phidgets_api`: a package that implements a C++ wrapper for the libphidgets22
+   C API, providing some base Phidget helper functions and various classes for
+   different phidget devices.
+
+* `phidgets_msgs`: a package that contains custom messages and services for
+   interacting with the nodes.
 
 * ROS 2 nodes exposing the functionality of specific phidgets devices:
 
@@ -81,9 +86,17 @@ must be set to "true".
 Installing
 ----------
 
+### From packages ###
+
+Make sure you have ROS 2 Dashing or newer installed: https://docs.ros.org
+
+Then run:
+
+    sudo apt-get install ros-<ros_distro>-phidgets-drivers
+
 ### From source ###
 
-Make sure you have ROS 2 Dashing installed: https://index.ros.org/doc/ros2/Installation/Dashing/
+Make sure you have ROS 2 Dashing or newer installed: https://docs.ros.org
 
 Also make sure you have git installed:
 
@@ -95,7 +108,7 @@ a `src/` folder within it, then execute:
 
     cd ~/colcon_ws/src
 
-Download the metapackage from the github repository (<ros_distro> may be `dashing`, ...)
+Clone the repository (<ros_distro> may be `dashing`, ...)
 
     git clone -b <ros_distro> https://github.com/ros-drivers/phidgets_drivers.git
 
@@ -125,6 +138,22 @@ To set up the udev rules for the Phidgets USB devices, run the following command
     sudo udevadm control --reload-rules
 
 Afterwards, disconnect the USB cable and plug it in again (or run `sudo udevadm trigger`).
+
+Running
+-------
+
+You may notice that there are no executables installed by the various phidgets packages.
+Instead, all functionality is available via [ROS 2 components](https://docs.ros.org/en/rolling/Concepts/About-Composition.html).
+The reason for this is that when using phidget VINT hubs, only one process at a time can access the hub.
+Since the hub may have multiple devices connected to it, we need to load multiple different phidgets drivers into the same process.
+We do that through loading multiple components into a single ROS 2 component container.
+
+Luckily, to make things easier in the single device case, we have default launch files for running a single phidgets driver in a single process.
+For instance, you can run the phidgets_spatial node by running:
+
+    ros2 launch phidgets_spatial spatial-launch.py
+
+See the README files in the individual packages above for exact usage of each launch file.
 
 Developing
 ----------

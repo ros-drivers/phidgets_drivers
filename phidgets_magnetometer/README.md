@@ -1,14 +1,23 @@
 Phidgets magnetometer ROS 2 driver
 ==================================
 
-This is the ROS 2 driver for Phidgets magnetometer.  The various topics, services, and parameters that the node operates with are listed below.
+This is the ROS 2 driver for Phidgets magnetometer.
+
+Usage
+-----
+
+To run this driver standalone, do the following:
+
+    ros2 launch phidgets_magnetometer magnetometer-launch.py
 
 Published Topics
 ----------------
+
 * `/imu/mag` (`sensor_msgs/MagneticField`) - The raw magnetometer data.
 
 Parameters
 ----------
+
 * `serial` (int) - The serial number of the phidgets magnetometer to connect to.  If -1 (the default), connects to any magnetometer phidget that can be found.
 * `hub_port` (int) - The phidgets VINT hub port to connect to.  Only used if the magnetometer phidget is connected to a VINT hub.  Defaults to 0.
 * `frame_id` (string) - The header frame ID to use when publishing the message.  Defaults to [REP-0145](http://www.ros.org/reps/rep-0145.html) compliant `imu_link`.
