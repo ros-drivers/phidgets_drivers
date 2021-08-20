@@ -39,5 +39,8 @@ install(
 )
 
 ament_environment_hooks(env_hook/libphidget22_library_path.sh)
+set(ENV_VAR_NAME "LD_LIBRARY_PATH")
+set(ENV_VAR_VALUE "opt/libphidget22/lib")
+ament_environment_hooks(env_hook/libphidget22_library_path.dsv.in)
 
 ament_package(CONFIG_EXTRAS "cmake/libphidget22-extras.cmake.in")
