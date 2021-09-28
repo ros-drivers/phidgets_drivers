@@ -27,10 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <functional>
 #include <memory>
-#include <stdexcept>
-#include <string>
 
 #include <libphidget22/phidget22.h>
 

@@ -9,7 +9,7 @@ Topics
 
 Services
 --------
-* `/set_analogl_output` (`phidgets_msgs/SetAnalogOutput`) - A service to set the analog output `index` to the specified `voltage`.
+* `/set_analog_output` (`phidgets_msgs/SetAnalogOutput`) - A service to set the analog output `index` to the specified `voltage`.
 
 Parameters
 ----------
