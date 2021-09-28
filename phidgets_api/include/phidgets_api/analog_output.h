@@ -44,7 +44,7 @@ class AnalogOutput final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogOutput)
 
     explicit AnalogOutput(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device, int channel);
+                          bool is_hub_port_device, int channel);
 
     ~AnalogOutput();
 

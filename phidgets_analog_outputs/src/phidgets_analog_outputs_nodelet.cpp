@@ -19,5 +19,5 @@ void PhidgetsAnalogOutputsNodelet::onInit()
     ros::NodeHandle nh = getMTNodeHandle();
     ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-    dos_ = std::make_unique<AnalogOutputsRosI>(nh, nh_private);
+    aos_ = std::make_unique<AnalogOutputsRosI>(nh, nh_private);
 }

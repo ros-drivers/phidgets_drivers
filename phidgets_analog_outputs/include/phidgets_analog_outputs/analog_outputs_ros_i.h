@@ -35,7 +35,7 @@
 #include <vector>
 
 #include <ros/ros.h>
-#include <std_msgs/Float32.h>
+#include <std_msgs/Float64.h>
 
 #include "phidgets_api/analog_outputs.h"
 #include "phidgets_msgs/SetAnalogOutput.h"
@@ -46,11 +46,11 @@ class AnalogOutputSetter final
 {
   public:
     explicit AnalogOutputSetter(AnalogOutputs* aos, int index,
-                                 ros::NodeHandle nh,
-                                 const std::string& topicname);
+                                ros::NodeHandle nh,
+                                const std::string& topicname);
 
   private:
-    void setMsgCallback(const std_msgs::Float32::ConstPtr& msg);
+    void setMsgCallback(const std_msgs::Float64::ConstPtr& msg);
     ros::Subscriber subscription_;
     AnalogOutputs* aos_;
     int index_;

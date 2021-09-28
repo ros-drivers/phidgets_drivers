@@ -44,7 +44,7 @@ class PhidgetsAnalogOutputsNodelet : public nodelet::Nodelet
     virtual void onInit();
 
   private:
-    std::unique_ptr<AnalogOutputsRosI> dos_;
+    std::unique_ptr<AnalogOutputsRosI> aos_;
 };
 
 }  // namespace phidgets

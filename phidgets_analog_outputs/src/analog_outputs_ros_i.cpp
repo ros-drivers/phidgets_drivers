@@ -1,7 +1,7 @@
 #include <memory>
 
 #include <ros/ros.h>
-#include <std_msgs/Bool.h>
+#include <std_msgs/Float64.h>
 
 #include "phidgets_api/analog_outputs.h"
 #include "phidgets_analog_outputs/analog_outputs_ros_i.h"
@@ -10,7 +10,7 @@
 namespace phidgets {
 
 AnalogOutputsRosI::AnalogOutputsRosI(ros::NodeHandle nh,
-                                       ros::NodeHandle nh_private)
+                                     ros::NodeHandle nh_private)
     : nh_(nh), nh_private_(nh_private)
 {
     ROS_INFO("Starting Phidgets Analog Outputs");
@@ -38,7 +38,7 @@ AnalogOutputsRosI::AnalogOutputsRosI(ros::NodeHandle nh,
     try
     {
         aos_ = std::make_unique<AnalogOutputs>(serial_num, hub_port,
-                                                is_hub_port_device);
+                                               is_hub_port_device);
 
     } catch (const Phidget22Error& err)
     {
@@ -70,15 +70,15 @@ bool AnalogOutputsRosI::setSrvCallback(
 }
 
 AnalogOutputSetter::AnalogOutputSetter(AnalogOutputs* aos, int index,
-                                         ros::NodeHandle nh,
-                                         const std::string& topicname)
+                                       ros::NodeHandle nh,
+                                       const std::string& topicname)
     : aos_(aos), index_(index)
 {
     subscription_ =
         nh.subscribe(topicname, 1, &AnalogOutputSetter::setMsgCallback, this);
 }
 
-void AnalogOutputSetter::setMsgCallback(const std_msgs::Float32::ConstPtr& msg)
+void AnalogOutputSetter::setMsgCallback(const std_msgs::Float64::ConstPtr& msg)
 {
     aos_->setOutputVoltage(index_, msg->data);
 }

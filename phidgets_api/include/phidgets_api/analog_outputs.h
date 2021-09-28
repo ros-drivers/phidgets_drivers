@@ -30,7 +30,6 @@
 #ifndef PHIDGETS_API_ANALOG_OUTPUTS_H
 #define PHIDGETS_API_ANALOG_OUTPUTS_H
 
-//#include <functional>
 #include <memory>
 #include <vector>
 
@@ -45,7 +44,7 @@ class AnalogOutputs final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(AnalogOutputs)
 
     explicit AnalogOutputs(int32_t serial_number, int hub_port,
-                          bool is_hub_port_device);
+                           bool is_hub_port_device);
 
     ~AnalogOutputs();
 

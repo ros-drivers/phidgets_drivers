@@ -41,7 +41,7 @@
 namespace phidgets {
 
 AnalogOutputs::AnalogOutputs(int32_t serial_number, int hub_port,
-                           bool is_hub_port_device)
+                             bool is_hub_port_device)
 {
     PhidgetReturnCode ret;
 
@@ -75,8 +75,8 @@ AnalogOutputs::AnalogOutputs(int32_t serial_number, int hub_port,
     aos_.resize(output_count_);
     for (uint32_t i = 0; i < output_count_; ++i)
     {
-        aos_[i] = std::make_unique<AnalogOutput>(
-            serial_number, hub_port, is_hub_port_device, i);
+        aos_[i] = std::make_unique<AnalogOutput>(serial_number, hub_port,
+                                                 is_hub_port_device, i);
     }
 }
 
@@ -91,7 +91,7 @@ uint32_t AnalogOutputs::getOutputCount() const noexcept
 
 void AnalogOutputs::setOutputVoltage(int index, double voltage) const
 {
-  aos_.at(index)->setOutputVoltage(voltage);
+    aos_.at(index)->setOutputVoltage(voltage);
 }
 
 }  // namespace phidgets

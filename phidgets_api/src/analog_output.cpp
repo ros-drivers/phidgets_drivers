@@ -27,8 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-//#include <functional>
-//#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -40,12 +38,12 @@
 namespace phidgets {
 
 AnalogOutput::AnalogOutput(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device, int channel)
+                           bool is_hub_port_device, int channel)
     : channel_(channel)
 {
     PhidgetReturnCode ret;
     ret = PhidgetVoltageOutput_create(&ao_handle_);
-    
+
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error(
@@ -57,7 +55,6 @@ AnalogOutput::AnalogOutput(int32_t serial_number, int hub_port,
     helpers::openWaitForAttachment(reinterpret_cast<PhidgetHandle>(ao_handle_),
                                    serial_number, hub_port, is_hub_port_device,
                                    channel);
-
 }
 
 AnalogOutput::~AnalogOutput()
@@ -68,7 +65,8 @@ AnalogOutput::~AnalogOutput()
 
 void AnalogOutput::setOutputVoltage(double voltage) const
 {
-    PhidgetReturnCode ret = PhidgetVoltageOutput_setVoltage(ao_handle_, voltage);
+    PhidgetReturnCode ret =
+        PhidgetVoltageOutput_setVoltage(ao_handle_, voltage);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get analog sensor value", ret);
