@@ -2,7 +2,7 @@
 Changelog for package phidgets_analog_outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2021-09-29)
+------------------
 * Add Analog Outputs (`#103 <https://github.com/ros-drivers/phidgets_drivers/issues/103>`_)
 * Contributors: Carsten Plasberg

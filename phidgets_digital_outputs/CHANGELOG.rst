@@ -2,8 +2,8 @@
 Changelog for package phidgets_digital_outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2021-09-29)
+------------------
 * Add missing license headers
 * Contributors: Martin Günther
 
