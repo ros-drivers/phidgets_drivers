@@ -39,7 +39,6 @@ namespace phidgets {
 
 AnalogOutput::AnalogOutput(int32_t serial_number, int hub_port,
                            bool is_hub_port_device, int channel)
-    : channel_(channel)
 {
     PhidgetReturnCode ret;
     ret = PhidgetVoltageOutput_create(&ao_handle_);
@@ -69,7 +68,7 @@ void AnalogOutput::setOutputVoltage(double voltage) const
         PhidgetVoltageOutput_setVoltage(ao_handle_, voltage);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to get analog sensor value", ret);
+        throw Phidget22Error("Failed to set analog output voltage", ret);
     }
 }
 

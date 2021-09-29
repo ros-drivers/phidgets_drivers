@@ -27,8 +27,8 @@ add_message_files(
 add_service_files(
     DIRECTORY srv
     FILES
-    SetDigitalOutput.srv
     SetAnalogOutput.srv
+    SetDigitalOutput.srv
 )
 
 generate_messages(
