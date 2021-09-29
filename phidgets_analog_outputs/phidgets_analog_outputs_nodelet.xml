@@ -1,0 +1,9 @@
+<!-- Phidgets Analog Outputs nodelet publisher -->
+<library path="lib/libphidgets_analog_outputs_nodelet">
+  <class name="phidgets_analog_outputs/PhidgetsAnalogOutputsNodelet" type="PhidgetsAnalogOutputsNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Analog Outputs nodelet publisher.
+    </description>
+  </class>
+</library>

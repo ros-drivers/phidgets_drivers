@@ -29,6 +29,8 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_library(phidgets_api src/accelerometer.cpp
                          src/analog_input.cpp
                          src/analog_inputs.cpp
+                         src/analog_output.cpp
+                         src/analog_outputs.cpp
                          src/digital_input.cpp
                          src/digital_inputs.cpp
                          src/digital_output.cpp
