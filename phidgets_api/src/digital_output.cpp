@@ -67,7 +67,7 @@ void DigitalOutput::setOutputState(bool state) const
     PhidgetReturnCode ret = PhidgetDigitalOutput_setState(do_handle_, state);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to set start for DigitalOutput", ret);
+        throw Phidget22Error("Failed to set state for DigitalOutput", ret);
     }
 }
 
