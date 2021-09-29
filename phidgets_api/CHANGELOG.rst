@@ -2,6 +2,12 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix typo in error message
+* Add Analog Outputs (`#103 <https://github.com/ros-drivers/phidgets_drivers/issues/103>`_)
+* Contributors: Carsten Plasberg, Martin Günther
+
 1.0.2 (2021-03-09)
 ------------------
 

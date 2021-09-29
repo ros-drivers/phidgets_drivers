@@ -2,6 +2,9 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.2 (2021-03-09)
 ------------------
 * Don't publish messages that jumped back in time. (`#85 <https://github.com/ros-drivers/phidgets_drivers/issues/85>`_)
