@@ -1,0 +1,101 @@
+diff -urp libphidget22-1.7.20210816.orig/configure libphidget22-1.7.20210816/configure
+--- libphidget22-1.7.20210816.orig/configure	2021-08-16 21:13:21.000000000 +0200
++++ libphidget22-1.7.20210816/configure	2021-10-21 10:23:55.744971455 +0200
+@@ -5681,7 +5681,7 @@ esac
+ fi
+ 
+ : ${AR=ar}
+-: ${AR_FLAGS=cru}
++: ${AR_FLAGS=cr}
+ 
+ 
+ 
+diff -urp libphidget22-1.7.20210816.orig/src/class/dataadapter.c libphidget22-1.7.20210816/src/class/dataadapter.c
+--- libphidget22-1.7.20210816.orig/src/class/dataadapter.c	2021-08-16 21:13:00.000000000 +0200
++++ libphidget22-1.7.20210816/src/class/dataadapter.c	2021-10-21 10:14:16.640200252 +0200
+@@ -125,9 +125,9 @@ PhidgetDataAdapter_bridgeInput(PhidgetCh
+ 
+ 		ch->newDataAvailable = 1;
+ 		err = getBridgePacketUInt32(bp, 1);
+-		if (err == RX_ERROR_OK) {
++		if (err == PACKET_ERROR_OK ) {
+ 			if(getBridgePacketUInt32(bp, 2))
+-				err = RX_ERROR_CORRUPT;
++				err = PACKET_ERROR_CORRUPT;
+ 		}
+ 
+ 		ch->eventDataError = getBridgePacketUInt32(bp, 1);
+diff -urp libphidget22-1.7.20210816.orig/src/util/dataadaptersupport.c libphidget22-1.7.20210816/src/util/dataadaptersupport.c
+--- libphidget22-1.7.20210816.orig/src/util/dataadaptersupport.c	2021-08-16 21:12:57.000000000 +0200
++++ libphidget22-1.7.20210816/src/util/dataadaptersupport.c	2021-10-21 10:10:46.818221653 +0200
+@@ -859,49 +859,6 @@ PhidgetReturnCode sendI2CData(PhidgetCha
+ 	return sendDataBuffer(ch, totalCount, (const uint8_t *)buffer, bp, waitResposne);
+ }
+ 
+-static PhidgetReturnCode
+-waitForNAKClear(mosiop_t iop, PhidgetChannelHandle ch, uint32_t milliseconds) {
+-	PhidgetDataAdapterSupportHandle dataAdapterSupport;
+-	mostime_t duration;
+-	mostime_t start;
+-
+-	assert(ch);
+-	TESTATTACHED(ch);
+-
+-	dataAdapterSupport = DATAADAPTER_SUPPORT(ch);
+-	assert(dataAdapterSupport);
+-
+-	start = 0; // make compiler happy
+-
+-	if (milliseconds)
+-		start = mos_gettime_usec();
+-
+-	PhidgetLock(ch);
+-	for (;;) {
+-		if (dataAdapterSupport->nakFlag == 0) {
+-			PhidgetUnlock(ch);
+-			return (EPHIDGET_OK);
+-		}
+-
+-		if (!_ISOPEN(ch)) {
+-			PhidgetUnlock(ch);
+-			return (MOS_ERROR(iop, EPHIDGET_CLOSED, "Channel was closed while waiting for clear to send."));
+-		}
+-
+-		if (milliseconds) {
+-			duration = (mos_gettime_usec() - start) / 1000;
+-			if (duration >= milliseconds) {
+-
+-				PhidgetUnlock(ch);
+-				return (EPHIDGET_TIMEOUT);
+-			}
+-			PhidgetTimedWait(ch, milliseconds - (uint32_t)duration);
+-		} else {
+-			PhidgetWait(ch);
+-		}
+-	}
+-}
+-
+ static PhidgetReturnCode sendTXDataVINT(mosiop_t iop, PhidgetChannelHandle ch, uint8_t *buf, size_t packetLen, PhidgetTransaction *trans){
+ 	PhidgetReturnCode ret;
+ 	SetNAK(ch);
+diff -urp libphidget22-1.7.20210816.orig/src/vint.c libphidget22-1.7.20210816/src/vint.c
+--- libphidget22-1.7.20210816.orig/src/vint.c	2021-08-16 21:13:01.000000000 +0200
++++ libphidget22-1.7.20210816/src/vint.c	2021-10-21 18:24:28.307855533 +0200
+@@ -222,7 +222,7 @@ again:
+  */
+ PhidgetReturnCode
+ scanVintDevices(PhidgetDeviceHandle device) {
+-	PhidgetUSBConnectionHandle usbConn;
++	PhidgetUSBConnectionHandle usbConn = NULL;
+ 	char vintPortString[256];
+ 	PhidgetDeviceHandle child;
+ 	PhidgetHubDeviceHandle hub;
+@@ -341,7 +341,7 @@ scanVintDevices(PhidgetDeviceHandle devi
+ 
+ 		case PHIDUID_HUB0001:
+ 			bufLen = sizeof(vintPortDesc);
+-			if (PhidgetUSBGetDeviceDescriptor(usbConn, USB_DESC_TYPE_VINT_PORT_DESC, i, (uint8_t *)&vintPortDesc, &bufLen) != EPHIDGET_OK) {
++			if (!usbConn ||  PhidgetUSBGetDeviceDescriptor(usbConn, USB_DESC_TYPE_VINT_PORT_DESC, i, (uint8_t *)&vintPortDesc, &bufLen) != EPHIDGET_OK) {
+ 				logwarn("Couldn't read VINT Port descriptor from a Hub.");
+ 				break;
+ 			}
