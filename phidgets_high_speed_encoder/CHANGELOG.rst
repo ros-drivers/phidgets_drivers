@@ -2,6 +2,9 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.3 (2021-09-29)
 ------------------
 
