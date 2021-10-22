@@ -2,8 +2,8 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2021-10-22)
+------------------
 * Update to libphidget22-1.7.20210816 (`#106 <https://github.com/ros-drivers/phidgets_drivers/issues/106>`_)
   This is required to support new devices such as the MOT0109.
   Fixes `#99 <https://github.com/ros-drivers/phidgets_drivers/issues/99>`_, fixes `#105 <https://github.com/ros-drivers/phidgets_drivers/issues/105>`_.
