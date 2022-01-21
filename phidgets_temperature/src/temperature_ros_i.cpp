@@ -67,6 +67,16 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     {
         publish_rate_ = 0;
     }
+    
+    if (nh_private.getParam("server_name", server_name_) 
+        && nh_private.getParam("server_ip", server_ip_)){
+
+        PhidgetNet_addServer(server_name_.c_str(), server_ip_.c_str(), 5661, "", 0);
+
+        ROS_INFO(
+            "Using phidget server %s at IP %s",
+            server_name_.c_str(), server_ip_.c_str());
+    }
 
     ROS_INFO(
         "Connecting to Phidgets Temperature serial %d, hub port %d, "
