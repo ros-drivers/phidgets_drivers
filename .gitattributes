@@ -1,0 +1,3 @@
+# patch files shouldn't be merged, nor have eol normalized, but be diff-able.
+# This avoids problems like #77 and #113.
+*.patch -merge -text
