@@ -28,9 +28,7 @@
  */
 
 #include <functional>
-#include <memory>
-#include <stdexcept>
-#include <string>
+#include <utility>
 
 #include <libphidget22/phidget22.h>
 
@@ -43,7 +41,7 @@ Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
                  std::function<void(const double[3], const double[3],
                                     const double[3], double)>
                      data_handler)
-    : data_handler_(data_handler)
+    : data_handler_(std::move(data_handler))
 {
     PhidgetReturnCode ret = PhidgetSpatial_create(&spatial_handle_);
     if (ret != EPHIDGET_OK)
@@ -65,7 +63,7 @@ Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
 
 Spatial::~Spatial()
 {
-    PhidgetHandle handle = reinterpret_cast<PhidgetHandle>(spatial_handle_);
+    auto handle = reinterpret_cast<PhidgetHandle>(spatial_handle_);
     helpers::closeAndDelete(&handle);
 }
 

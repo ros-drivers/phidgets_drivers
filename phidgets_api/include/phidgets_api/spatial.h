@@ -70,7 +70,7 @@ class Spatial final
     std::function<void(const double[3], const double[3], const double[3],
                        double)>
         data_handler_;
-    PhidgetSpatialHandle spatial_handle_;
+    PhidgetSpatialHandle spatial_handle_{nullptr};
 
     static void DataHandler(PhidgetSpatialHandle input_handle, void *ctx,
                             const double acceleration[3],
