@@ -400,11 +400,27 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
         last_gyro_y_ = angular_rate[1] * (M_PI / 180.0);
         last_gyro_z_ = angular_rate[2] * (M_PI / 180.0);
 
-        // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-        last_mag_x_ = magnetic_field[0] * 1e-4;
-        last_mag_y_ = magnetic_field[1] * 1e-4;
-        last_mag_z_ = magnetic_field[2] * 1e-4;
+        if (magnetic_field[0] != PUNK_DBL)
+        {
+            // device reports data in Gauss, multiply by 1e-4 to convert to
+            // Tesla
+            last_mag_x_ = magnetic_field[0] * 1e-4;
+            last_mag_y_ = magnetic_field[1] * 1e-4;
+            last_mag_z_ = magnetic_field[2] * 1e-4;
+        } else
+        {
+            // data is PUNK_DBL ("unknown double"), which means the magnetometer
+            // did not return valid readings. When publishing at 250 Hz, this
+            // will happen in every second message, because the magnetometer can
+            // only sample at 125 Hz. It is still important to publish these
+            // messages, because a downstream node sometimes uses a
+            // TimeSynchronizer to get Imu and Magnetometer nodes.
+            double nan = std::numeric_limits<double>::quiet_NaN();
 
+            last_mag_x_ = nan;
+            last_mag_y_ = nan;
+            last_mag_z_ = nan;
+        }
         last_data_timestamp_ns_ = this_ts_ns;
 
         // Publish if we aren't publishing on a timer
