@@ -172,7 +172,9 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             serial_num, hub_port, false,
             std::bind(&SpatialRosI::spatialDataCallback, this,
                       std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4));
+                      std::placeholders::_3, std::placeholders::_4),
+            std::bind(&SpatialRosI::attachCallback, this),
+            std::bind(&SpatialRosI::detachCallback, this));
 
         ROS_INFO("Connected");
 
@@ -440,6 +442,16 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
     }
 
     last_cb_time_ = now;
+}
+
+void SpatialRosI::attachCallback()
+{
+    ROS_INFO("Phidget Spatial attached.");
+}
+
+void SpatialRosI::detachCallback()
+{
+    ROS_INFO("Phidget Spatial detached.");
 }
 
 void SpatialRosI::timerCallback(const ros::TimerEvent & /* event */)

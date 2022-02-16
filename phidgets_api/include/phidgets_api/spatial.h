@@ -47,7 +47,9 @@ class Spatial final
                      bool is_hub_port_device,
                      std::function<void(const double[3], const double[3],
                                         const double[3], double)>
-                         data_handler);
+                         data_handler,
+                     std::function<void()> attach_handler = nullptr,
+                     std::function<void()> detach_handler = nullptr);
 
     ~Spatial();
 
@@ -65,17 +67,24 @@ class Spatial final
 
     void dataHandler(const double acceleration[3], const double angular_rate[3],
                      const double magnetic_field[3], double timestamp) const;
+    virtual void attachHandler();
+    virtual void detachHandler();
 
   private:
     std::function<void(const double[3], const double[3], const double[3],
                        double)>
         data_handler_;
+    std::function<void()> attach_handler_;
+    std::function<void()> detach_handler_;
+
     PhidgetSpatialHandle spatial_handle_{nullptr};
 
     static void DataHandler(PhidgetSpatialHandle input_handle, void *ctx,
                             const double acceleration[3],
                             const double angular_rate[3],
                             const double magnetic_field[3], double timestamp);
+    static void AttachHandler(PhidgetHandle input_handle, void *ctx);
+    static void DetachHandler(PhidgetHandle input_handle, void *ctx);
 };
 
 }  // namespace phidgets

@@ -40,8 +40,12 @@ namespace phidgets {
 Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
                  std::function<void(const double[3], const double[3],
                                     const double[3], double)>
-                     data_handler)
-    : data_handler_(std::move(data_handler))
+                     data_handler,
+                 std::function<void()> attach_handler,
+                 std::function<void()> detach_handler)
+    : data_handler_(std::move(data_handler)),
+      attach_handler_(std::move(attach_handler)),
+      detach_handler_(std::move(detach_handler))
 {
     PhidgetReturnCode ret = PhidgetSpatial_create(&spatial_handle_);
     if (ret != EPHIDGET_OK)
@@ -58,6 +62,30 @@ Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set change handler for Spatial", ret);
+    }
+
+    if (attach_handler_ != nullptr)
+    {
+        ret = Phidget_setOnAttachHandler(
+            reinterpret_cast<PhidgetHandle>(spatial_handle_), AttachHandler,
+            this);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to set attach handler for Spatial",
+                                 ret);
+        }
+    }
+
+    if (detach_handler_ != nullptr)
+    {
+        ret = Phidget_setOnDetachHandler(
+            reinterpret_cast<PhidgetHandle>(spatial_handle_), DetachHandler,
+            this);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to set detach handler for Spatial",
+                                 ret);
+        }
     }
 }
 
@@ -110,6 +138,16 @@ void Spatial::dataHandler(const double acceleration[3],
     data_handler_(acceleration, angular_rate, magnetic_field, timestamp);
 }
 
+void Spatial::attachHandler()
+{
+    attach_handler_();
+}
+
+void Spatial::detachHandler()
+{
+    detach_handler_();
+}
+
 void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void *ctx,
                           const double acceleration[3],
                           const double angular_rate[3],
@@ -117,6 +155,16 @@ void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void *ctx,
 {
     ((Spatial *)ctx)
         ->dataHandler(acceleration, angular_rate, magnetic_field, timestamp);
+}
+
+void Spatial::AttachHandler(PhidgetHandle /* input_handle */, void *ctx)
+{
+    ((Spatial *)ctx)->attachHandler();
+}
+
+void Spatial::DetachHandler(PhidgetHandle /* input_handle */, void *ctx)
+{
+    ((Spatial *)ctx)->detachHandler();
 }
 
 }  // namespace phidgets
