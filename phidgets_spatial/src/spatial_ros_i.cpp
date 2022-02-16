@@ -447,6 +447,16 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
 void SpatialRosI::attachCallback()
 {
     ROS_INFO("Phidget Spatial attached.");
+
+    // Set data interval. This is in attachCallback() because it has to be
+    // repeated on reattachment.
+    spatial_->setDataInterval(data_interval_ns_ / 1000 / 1000);
+
+    // Force resynchronization, because the device time is reset to 0 after
+    // reattachment.
+    synchronize_timestamps_ = true;
+    can_publish_ = false;
+    last_cb_time_ = ros::Time(0);
 }
 
 void SpatialRosI::detachCallback()
