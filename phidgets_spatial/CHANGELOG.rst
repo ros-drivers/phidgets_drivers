@@ -2,8 +2,8 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2022-02-17)
+------------------
 * spatial: Fix behavior after USB reattachment
   The Phidged Spatial never recovered after detaching and reattaching to
   the USB port. This commit fixes that.

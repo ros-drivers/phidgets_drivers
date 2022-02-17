@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2022-02-17)
+------------------
 * spatial: Add attach + detach handlers
 * Fix some clang-tidy warnings
 * Contributors: Martin Günther
