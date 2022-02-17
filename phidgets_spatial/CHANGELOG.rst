@@ -2,6 +2,27 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* spatial: Fix behavior after USB reattachment
+  The Phidged Spatial never recovered after detaching and reattaching to
+  the USB port. This commit fixes that.
+  The cause of the failure was the following:
+  * After reattachment, the device time stamp restarts from 0. This caused
+  our driver to throw the following error messages:
+  [ WARN]: Time went backwards [...]! Not publishing message.
+  * However, the data interval is also reset to the default of 256 ms. If
+  the parameter data_interval_ms is set to something else, this caused the
+  arriving data to always be outside the acceptable window for
+  synchronization. Therefore, synchronization never happened, and the
+  driver never resumed publishing messages.
+  This commit fixes the bug by setting the appropriate data interval after
+  each reattachment and forcing a resynchronization immediately.
+* spatial: Add attach + detach handlers
+* spatial: Fix publishing of invalid mag readings
+* spatial.launch: Remove use_magnetic_field_msg
+* Contributors: Martin Günther
+
 1.0.4 (2021-10-22)
 ------------------
 

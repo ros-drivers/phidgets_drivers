@@ -2,6 +2,9 @@
 Changelog for package phidgets_accelerometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.4 (2021-10-22)
 ------------------
 
