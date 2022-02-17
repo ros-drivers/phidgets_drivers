@@ -2,8 +2,8 @@
 Changelog for package phidgets_spatial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2022-02-17)
+------------------
 * Fix behavior after USB reattachment (`#119 <https://github.com/ros-drivers/phidgets_drivers/issues/119>`_)
   The Phidged Spatial never recovered after detaching and reattaching to
   the USB port. This commit fixes that.
