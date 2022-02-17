@@ -1,6 +1,15 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package phidgets_imu
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package phidgets_spatial
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Fix behavior after USB reattachment (`#119 <https://github.com/ros-drivers/phidgets_drivers/issues/119>`_)
+  The Phidged Spatial never recovered after detaching and reattaching to
+  the USB port. This commit fixes that.
+* Add attach + detach handlers
+* Fix publishing of invalid mag readings (`#116 <https://github.com/ros-drivers/phidgets_drivers/issues/116>`_)
+* Contributors: Martin Günther
 
 2.1.0 (2021-03-29)
 ------------------
