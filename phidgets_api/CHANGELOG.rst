@@ -2,6 +2,13 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* spatial: Add attach + detach handlers
+* Fix some clang-tidy warnings
+* Fix typo in error message (`#104 <https://github.com/ros-drivers/phidgets_drivers/issues/104>`_)
+* Contributors: Martin Günther
+
 2.2.1 (2021-08-03)
 ------------------
 

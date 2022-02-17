@@ -2,6 +2,18 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove outdated patch file (`#112 <https://github.com/ros-drivers/phidgets_drivers/issues/112>`_)
+* Update to libphidget22-1.7.20210816 (`#108 <https://github.com/ros-drivers/phidgets_drivers/issues/108>`_)
+  This is required to support new devices such as the MOT0109.
+  Fixes `#99 <https://github.com/ros-drivers/phidgets_drivers/issues/99>`_, fixes `#105 <https://github.com/ros-drivers/phidgets_drivers/issues/105>`_.
+  This is a forward-port of `#106 <https://github.com/ros-drivers/phidgets_drivers/issues/106>`_ to ROS2.
+* Make sure libphidget22 library can be found. (`#97 <https://github.com/ros-drivers/phidgets_drivers/issues/97>`_) (`#100 <https://github.com/ros-drivers/phidgets_drivers/issues/100>`_)
+  In Foxy and later, we need to provide the .dsv hook so that
+  the library can be found.
+* Contributors: Chris Lalancette, Martin Günther
+
 2.2.1 (2021-08-03)
 ------------------
 * Update to the latest libphidgets 1.6 library. (`#91 <https://github.com/ros-drivers/phidgets_drivers/issues/91>`_)

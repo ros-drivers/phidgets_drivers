@@ -2,6 +2,9 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.1 (2021-08-03)
 ------------------
 * Make the magnetometer corrections optional again. (`#95 <https://github.com/ros-drivers/phidgets_drivers/issues/95>`_)
