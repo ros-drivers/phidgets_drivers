@@ -17,7 +17,7 @@
   <author>Ivan Dryanovski</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-
-  <depend>libphidget21</depend>
+<!--Commenting this line because this library is being built as part of this fork-->
+<!--  <depend>libphidget21</depend>-->
 
 </package>
