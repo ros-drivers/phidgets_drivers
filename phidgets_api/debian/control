@@ -1,0 +1,12 @@
+Source: ros-noetic-phidgets-api
+Section: misc
+Priority: optional
+Maintainer: Martin Günther <martin.guenther@dfki.de>
+Build-Depends: debhelper (>= 9.0.0), ros-noetic-catkin
+Homepage: http://ros.org/wiki/phidgets_api
+Standards-Version: 3.9.2
+
+Package: ros-noetic-phidgets-api
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Description: A C++ Wrapper for the Phidgets C API

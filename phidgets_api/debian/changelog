@@ -1,0 +1,133 @@
+ros-noetic-phidgets-api (0.7.10-0-greenzie-focal1) focal; urgency=medium
+
+  * Porting Melodic Version to Noetic
+
+ -- Kristian Kabbabe <kristian@greenzie.com>  Mon, 28 Feb 2022 11:29:35 -0500
+
+ros-noetic-phidgets-api (0.7.10-0focal) focal; urgency=high
+
+  * Update maintainers in package.xml
+  * Run clang-format on the whole codebase.
+  * Switch to C++14 everywhere.
+  * Remove unused indexHandler from Encoder class.
+  * Change API from separate open/waitForAttachment to openAndWaitForAttachment.
+  * Small cleanups throughout the code.
+  * Push libphidgets API calls down to phidgets_api.
+  * Quiet down the to-be-overridden callbacks.
+  * Consistently use nullptr instead of 0.
+  * Make the phidget_api destructors virtual.
+  * Move libusb dependency into the libphidget21 package.xml.
+  * Switch to package format 2.
+  * Contributors: Chris Lalancette, Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Wed, 03 Jun 2020 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.9-0focal) focal; urgency=high
+
+  * Add missing OnInputChange handler (#33 <https://github.com/ros-drivers/phidgets_drivers/issues/33>)
+  * Contributors: Kai Hermann
+
+ -- Martin Günther <martin.guenther@dfki.de>  Fri, 28 Jun 2019 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.8-0focal) focal; urgency=high
+
+  * Install udev rules on binary package installation
+  * Contributors: Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Mon, 06 May 2019 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.7-0focal) focal; urgency=high
+
+
+
+ -- Martin Günther <martin.guenther@dfki.de>  Tue, 18 Sep 2018 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.6-0focal) focal; urgency=high
+
+
+
+ -- Martin Günther <martin.guenther@dfki.de>  Thu, 09 Aug 2018 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.5-0focal) focal; urgency=high
+
+  * Add support for the phidgets_ik (Phidgets Interface Kit)
+  * Contributors: Russel Howe, James Sarrett, Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Wed, 31 Jan 2018 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.4-0focal) focal; urgency=high
+
+  * Fix typo and doxygen docs
+  * Contributors: Jose Luis Blanco Claraco, Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Wed, 04 Oct 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.3-0focal) focal; urgency=high
+
+
+
+ -- Martin Günther <martin.guenther@dfki.de>  Fri, 30 Jun 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.2-0focal) focal; urgency=high
+
+
+
+ -- Martin Günther <martin.guenther@dfki.de>  Fri, 02 Jun 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.1-0focal) focal; urgency=high
+
+  * Set event handlers for motor + encoder APIs
+  * Added basic motor api
+  * Added basic encoder board api
+  * Contributors: Zach Anderson, Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Mon, 22 May 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.7.0-0focal) focal; urgency=high
+
+  * Use our own libphidget21 instead of external libphidgets
+  * Contributors: Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Fri, 17 Feb 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.2.3-0focal) focal; urgency=high
+
+  * Add IMU diagnostics (#24 <https://github.com/ccny-ros-pkg/phidgets_drivers/pull/24>)
+  * Contributors: Mani Monajjemi, Keshav Iyengar, Martin Günther
+
+ -- Martin Günther <martin.guenther@dfki.de>  Fri, 17 Feb 2017 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.2.2-0focal) focal; urgency=high
+
+  * phidgets_api: updated build/installation rules to use 3rd party libphdigets ROS package
+  * phidgets_api: updated package details
+  * phidgets_api: added copy of udev rule to package and updated path in script
+  * phidgets_api: updated path to libphidgets header file
+  * phidgets_api: removed license and header file of phidgets library
+  * Contributors: Murilo FM
+
+ -- Martin Günther <martin.guenther@dfki.de>  Mon, 23 Mar 2015 00:00:00 -0000
+
+ros-noetic-phidgets-api (0.2.1-0focal) focal; urgency=high
+
+  * phidgets_api: add libusb dependency
+    This caused Jenkins CI tests to fail.
+  * phidgets_api: fix case in CMakeLists
+  * phidgets_api: added GNU LGPLv3 copy (phidget21.h)
+  * phidgets_api: updated license and author information
+  * phidgets_api: added script to setup udev rules for Phidgets devices
+  * phidgets_api: added libphidget21 dependency as cmake external project
+  * phidgets_api: updated path to libphidget header file
+  * phidgets_api: added libphidget header file to package
+  * phidgets_api: removed phidgets_c_api dependency
+  * Deleted comments within files of all packages
+  * Catkinised packages
+  * added missing cmakelists
+  * added api, imu and ir
+  * removed deps directory
+  * initial commit
+  * Contributors: Ivan Dryanovski, Martin Günther, Murilo FM
+
+ -- Martin Günther <martin.guenther@dfki.de>  Thu, 15 Jan 2015 00:00:00 -0000
+
+
