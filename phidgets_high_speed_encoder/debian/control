@@ -1,14 +1,27 @@
-Source: ros-melodic-phidgets-high-speed-encoder
+Source: ros-noetic-phidgets-high-speed-encoder
 Section: misc
 Priority: optional
 Maintainer: Steven Leonis <stevenl@greenzie.com>
-Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin, ros-melodic-roscpp, ros-melodic-nodelet, ros-melodic-phidgets-api,
-  ros-melodic-phidgets-msgs, ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs
+Build-Depends: debhelper (>= 9.0.0),
+    ros-noetic-catkin,
+    ros-noetic-roscpp,
+    ros-noetic-nodelet,
+    ros-noetic-phidgets-api,
+    ros-noetic-phidgets-msgs,
+    ros-noetic-pluginlib,
+    ros-noetic-sensor-msgs,
+    ros-noetic-std-msgs
 Homepage: 
 Standards-Version: 3.9.2
 
-Package: ros-melodic-phidgets-high-speed-encoder
+Package: ros-noetic-phidgets-high-speed-encoder
 Architecture: any
-Depends: ${misc:Depends}, ros-melodic-roscpp, ros-melodic-nodelet, ros-melodic-phidgets-api,
-  ros-melodic-phidgets-msgs, ros-melodic-pluginlib, ros-melodic-sensor-msgs, ros-melodic-std-msgs
+Depends: ${misc:Depends},
+    ros-noetic-roscpp,
+    ros-noetic-nodelet,
+    ros-noetic-phidgets-api,
+    ros-noetic-phidgets-msgs,
+    ros-noetic-pluginlib,
+    ros-noetic-sensor-msgs,
+    ros-noetic-std-msgs
 Description: ROS interfaces for Phidgets devices
