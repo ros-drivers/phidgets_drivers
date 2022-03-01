@@ -1,3 +1,15 @@
+ros-noetic-phidgets-high-speed-encoder (1.0.4-0-greenzie-focal1) focal; urgency=medium
+
+  * Porting Melodic to Noetic - DELETE ME!
+
+ -- Kristian Kabbabe <kristian@greenzie.com>  Tue, 01 Mar 2022 14:03:04 -0500
+
+ros-noetic-phidgets-high-speed-encoder (0.7.10-0-greenzie-focal1) focal; urgency=medium
+
+  * Porting Melodic to Noetic
+
+ -- Kristian Kabbabe <kristian@greenzie.com>  Tue, 01 Mar 2022 14:03:04 -0500
+
 ros-melodic-phidgets-high-speed-encoder (1.0.0-bionic5) bionic; urgency=medium
 
   * Added phidgets nodelet xml to be installed
