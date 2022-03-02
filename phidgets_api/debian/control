@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Martin Günther <martin.guenther@dfki.de>
 Build-Depends: debhelper (>= 9.0.0),
     ros-noetic-catkin,
-    ros-noetic-libphidget21 (=0.7.10-0-greenzie-focal1)
+    ros-noetic-libphidget21 (=100.7.10-0-greenzie-focal1)
 Homepage: http://ros.org/wiki/phidgets_api
 Standards-Version: 3.9.2
 
@@ -12,5 +12,5 @@ Package: ros-noetic-phidgets-api
 Architecture: any
 Depends: ${shlibs:Depends},
     ${misc:Depends},
-    ros-noetic-libphidget21 (=0.7.10-0-greenzie-focal1)
+    ros-noetic-libphidget21 (=100.7.10-0-greenzie-focal1)
 Description: A C++ Wrapper for the Phidgets C API

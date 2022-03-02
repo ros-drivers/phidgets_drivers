@@ -1,4 +1,4 @@
-ros-noetic-libphidget21 (0.7.10-0-greenzie-focal1) focal; urgency=medium
+ros-noetic-libphidget21 (100.7.10-0-greenzie-focal1) focal; urgency=medium
 
   * Porting Melodic to Noetic
 
