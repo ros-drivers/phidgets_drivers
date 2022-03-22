@@ -62,6 +62,7 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
   private:
     std::unique_ptr<Encoders> encs_;
     std::mutex encoder_mutex_;
+    /// Size of this vector = number of found encoders.
     std::vector<EncoderDataToPub> enc_data_to_pub_;
     std::string frame_id_;
     // (Default=10) Number of samples for the sliding window average filter of
@@ -76,7 +77,8 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     rclcpp::TimerBase::SharedPtr timer_;
     double publish_rate_;
 
-    void publishLatest(int channel);
+    /// Publish the latest state for all encoder channels:
+    void publishLatest();
 
     void positionChangeHandler(int channel, int position_change, double time,
                                int index_triggered);
