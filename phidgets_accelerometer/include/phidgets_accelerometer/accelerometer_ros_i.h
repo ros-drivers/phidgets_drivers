@@ -62,6 +62,8 @@ class AccelerometerRosI final
     void timerCallback(const ros::TimerEvent& event);
     ros::Timer timer_;
     int publish_rate_;
+    std::string server_name_;
+    std::string server_ip_;
 
     ros::Time ros_time_zero_;
     bool synchronize_timestamps_{true};
