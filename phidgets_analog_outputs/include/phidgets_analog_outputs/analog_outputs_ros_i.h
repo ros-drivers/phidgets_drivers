@@ -68,6 +68,8 @@ class AnalogOutputsRosI final
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
     ros::ServiceServer out_srv_;
+    std::string server_name_;
+    std::string server_ip_;
 
     bool setSrvCallback(phidgets_msgs::SetAnalogOutput::Request& req,
                         phidgets_msgs::SetAnalogOutput::Response& res);
