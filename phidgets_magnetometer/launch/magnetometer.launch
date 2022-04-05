@@ -33,6 +33,12 @@
     # optional param publish_rate, defaults to 0
     <!-- <param name="publish_rate" value="0" /> -->
 
+    # optional param server_name, required to locate remote network servers
+    <!-- <param name="server_name" value="myPhidgetServer" /> -->
+
+    # optional param server_ip, required to locate remote network servers
+    <!-- <param name="server_ip" value="0.0.0.0" /> -->
+
     # compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
     <!-- <param name="cc_mag_field" value="0.52859"/>
          <param name="cc_offset0" value="0.03921"/>
