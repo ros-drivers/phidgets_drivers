@@ -60,6 +60,8 @@ class AnalogInputsRosI final
     void timerCallback(const ros::TimerEvent& event);
     ros::Timer timer_;
     int publish_rate_;
+    std::string server_name_;
+    std::string server_ip_;
 
     void publishLatest(int index);
 
