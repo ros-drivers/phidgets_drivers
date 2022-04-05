@@ -148,71 +148,72 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
         // will only publish when something changes (where "changes" is defined
         // by the libphidget22 library).  In that case, make sure to publish
         // once at the beginning to make sure there is *some* data.
-        for (int i = 0; i < n_encs; ++i)
-        {
-            publishLatest(i);
-        }
+        publishLatest();
     }
 }
 
-void HighSpeedEncoderRosI::publishLatest(int channel)
+void HighSpeedEncoderRosI::publishLatest()
 {
-    int64_t absolute_position = encs_->getPosition(channel);
-
     sensor_msgs::JointState js_msg;
     js_msg.header.stamp = ros::Time::now();
     js_msg.header.frame_id = frame_id_;
 
-    js_msg.name.resize(enc_data_to_pub_.size());
-    for (size_t i = 0; i < enc_data_to_pub_.size(); ++i)
+    const auto numEncoders = enc_data_to_pub_.size();
+
+    js_msg.name.resize(numEncoders);
+    for (size_t i = 0; i < numEncoders; ++i)
     {
         js_msg.name[i] = enc_data_to_pub_[i].joint_name;
     }
 
-    js_msg.position.resize(enc_data_to_pub_.size());
-    js_msg.velocity.resize(enc_data_to_pub_.size());
+    js_msg.position.resize(numEncoders);
+    js_msg.velocity.resize(numEncoders);
     js_msg.effort.clear();
 
-    for (size_t i = 0; i < enc_data_to_pub_.size(); ++i)
+    for (size_t encIdx = 0; encIdx < numEncoders; ++encIdx)
     {
-        js_msg.position[i] =
-            absolute_position * enc_data_to_pub_[i].joint_tick2rad;
-        js_msg.velocity[i] = enc_data_to_pub_[i].instantaneous_speed *
-                             enc_data_to_pub_[i].joint_tick2rad;
-        enc_data_to_pub_[i].instantaneous_speed = 0.0;  // Reset speed
+        int64_t absolute_position = encs_->getPosition(encIdx);
+
+        js_msg.position[encIdx] =
+            absolute_position * enc_data_to_pub_[encIdx].joint_tick2rad;
+        js_msg.velocity[encIdx] = enc_data_to_pub_[encIdx].instantaneous_speed *
+                                  enc_data_to_pub_[encIdx].joint_tick2rad;
+        enc_data_to_pub_[encIdx].instantaneous_speed = 0.0;  // Reset speed
 
         if (speed_filter_samples_len_ > 0)
         {
-            if (!enc_data_to_pub_[i].speed_buffer_updated)
+            if (!enc_data_to_pub_[encIdx].speed_buffer_updated)
             {
-                if (++enc_data_to_pub_[i].loops_without_update_speed_buffer >=
+                if (++enc_data_to_pub_[encIdx]
+                          .loops_without_update_speed_buffer >=
                     speed_filter_idle_iter_loops_before_reset_)
                 {
                     phidgets_msgs::EncoderDecimatedSpeed e;
                     e.header.stamp = ros::Time::now();
                     e.header.frame_id = frame_id_;
                     e.avr_speed = .0;
-                    enc_data_to_pub_[i].encoder_decimspeed_pub.publish(e);
+                    enc_data_to_pub_[encIdx].encoder_decimspeed_pub.publish(e);
                 }
             } else
             {
-                enc_data_to_pub_[i].loops_without_update_speed_buffer = 0;
+                enc_data_to_pub_[encIdx].loops_without_update_speed_buffer = 0;
 
-                if (enc_data_to_pub_[i].speeds_buffer.size() >=
+                if (enc_data_to_pub_[encIdx].speeds_buffer.size() >=
                     static_cast<size_t>(speed_filter_samples_len_))
                 {
                     const double avrg =
                         std::accumulate(
-                            enc_data_to_pub_[i].speeds_buffer.begin(),
-                            enc_data_to_pub_[i].speeds_buffer.end(), 0.0) /
-                        enc_data_to_pub_[i].speeds_buffer.size();
-                    enc_data_to_pub_[i].speeds_buffer.clear();
+                            enc_data_to_pub_[encIdx].speeds_buffer.begin(),
+                            enc_data_to_pub_[encIdx].speeds_buffer.end(), 0.0) /
+                        enc_data_to_pub_[encIdx].speeds_buffer.size();
+                    enc_data_to_pub_[encIdx].speeds_buffer.clear();
 
                     phidgets_msgs::EncoderDecimatedSpeed e;
                     e.header.stamp = ros::Time::now();
                     e.header.frame_id = frame_id_;
-                    e.avr_speed = avrg * enc_data_to_pub_[i].joint_tick2rad;
-                    enc_data_to_pub_[i].encoder_decimspeed_pub.publish(e);
+                    e.avr_speed =
+                        avrg * enc_data_to_pub_[encIdx].joint_tick2rad;
+                    enc_data_to_pub_[encIdx].encoder_decimspeed_pub.publish(e);
                 }
             }
         }
@@ -224,10 +225,7 @@ void HighSpeedEncoderRosI::publishLatest(int channel)
 void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent& /* event */)
 {
     std::lock_guard<std::mutex> lock(encoder_mutex_);
-    for (int i = 0; i < static_cast<int>(enc_data_to_pub_.size()); ++i)
-    {
-        publishLatest(i);
-    }
+    publishLatest();
 }
 
 void HighSpeedEncoderRosI::positionChangeHandler(int channel,
@@ -244,12 +242,9 @@ void HighSpeedEncoderRosI::positionChangeHandler(int channel,
         enc_data_to_pub_[channel].speeds_buffer.push_back(instantaneous_speed);
         enc_data_to_pub_[channel].speed_buffer_updated = true;
         enc_data_to_pub_[channel].loops_without_update_speed_buffer = 0;
-
-        if (publish_rate_ <= 0)
-        {
-            publishLatest(channel);
-        }
     }
+
+    if (publish_rate_ <= 0) publishLatest();
 }
 
 }  // namespace phidgets

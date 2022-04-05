@@ -105,6 +105,8 @@ class SpatialRosI final
     void spatialDataCallback(const double acceleration[3],
                              const double angular_rate[3],
                              const double magnetic_field[3], double timestamp);
+    void attachCallback();
+    void detachCallback();
 };
 
 }  // namespace phidgets
