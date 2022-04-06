@@ -1,18 +1,8 @@
 FROM ros:noetic-ros-core
 
 RUN apt-get update \
-    && apt-get install -y build-essential file clang-format python3-rosdep \
+    && apt-get install -y build-essential file clang-format python3-rosdep python3-catkin-tools \
     && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
-
-# workaround for https://github.com/catkin/catkin_tools/issues/594:
-# apt-get install python3-catkin-tools doesn't work because running catkin throws the following error:
-# pkg_resources.DistributionNotFound: The 'osrf-pycommon>0.1.1' distribution was not found and is required by catkin-tools
-
-RUN apt-get update \
-    && apt-get install -y python3-osrf-pycommon python3-catkin-tools \
-    && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
-
-# end workaround
 
 # Create ROS workspace
 COPY . /ws/src/phidgets_drivers
