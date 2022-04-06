@@ -11,6 +11,5 @@ WORKDIR /ws
 RUN rosdep init && rosdep update && rosdep install --from-paths src -i -y --rosdistro rolling
 
 RUN /bin/bash -c "source /opt/ros/rolling/setup.bash && \
-    python3 src/phidgets_drivers/clang-check-style.py && \
     colcon build --parallel-workers 1 && \
     colcon test --parallel-workers 1"
