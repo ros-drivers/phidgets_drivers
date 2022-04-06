@@ -1,8 +1,20 @@
 FROM ros:noetic-ros-core
 
 RUN apt-get update \
-    && apt-get install -y build-essential file clang-format python3-rosdep python3-catkin-tools \
+    && apt-get install -y build-essential file python3-rosdep python3-catkin-tools \
     && rm -rf /var/lib/apt/lists/*
+
+# Install pre-commit hooks to /root/.cache/pre-commit/
+RUN apt-get update -qq \
+    && apt-get install -y -qq --no-install-recommends git python3-pip clang-format-10 python3-catkin-lint \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip3 install pre-commit
+RUN mkdir -p /tmp/pre-commit
+COPY .pre-commit-config.yaml /tmp/pre-commit/
+RUN cd /tmp/pre-commit \
+    && git init \
+    && pre-commit install-hooks \
+    && rm -rf /tmp/pre-commit
 
 # Create ROS workspace
 COPY . /ws/src/phidgets_drivers
@@ -13,8 +25,8 @@ RUN rosdep init && rosdep update && apt-get update -qq && rosdep install --from-
     && rm -rf /var/lib/apt/lists/*
 
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && \
-    python3 src/phidgets_drivers/clang-check-style.py && \
     catkin init && \
     catkin config --install -j 1 -p 1 && \
     catkin build --limit-status-rate 0.1 --no-notify && \
-    catkin build --limit-status-rate 0.1 --no-notify --make-args tests"
+    catkin build --limit-status-rate 0.1 --no-notify --make-args tests && \
+    cd src/phidgets_drivers && pre-commit run -a"
