@@ -23,6 +23,12 @@
 
     # optional param is_hub_port_device, used if connected to a VINT hub
     <!-- <param name="is_hub_port_device" value="false"/> -->
+
+    # optional param server_name, required to locate remote network servers
+    <!-- <param name="server_name" value="myPhidgetServer" /> -->
+
+    # optional param server_ip, required to locate remote network servers
+    <!-- <param name="server_ip" value="0.0.0.0" /> -->
   </node>
 
 </launch>

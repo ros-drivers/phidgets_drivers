@@ -127,6 +127,17 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         publish_rate_ = 0;
     }
 
+    if (nh_private.getParam("server_name", server_name_) 
+        && nh_private.getParam("server_ip", server_ip_)){
+
+        PhidgetNet_addServer(server_name_.c_str(), server_ip_.c_str(), 5661, "", 0);
+
+        ROS_INFO(
+            "Using phidget server %s at IP %s",
+            server_name_.c_str(), server_ip_.c_str());
+    }
+
+
     // compass correction params (see
     // http://www.phidgets.com/docs/1044_User_Guide)
     double cc_mag_field;
@@ -172,7 +183,9 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             serial_num, hub_port, false,
             std::bind(&SpatialRosI::spatialDataCallback, this,
                       std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4));
+                      std::placeholders::_3, std::placeholders::_4),
+            std::bind(&SpatialRosI::attachCallback, this),
+            std::bind(&SpatialRosI::detachCallback, this));
 
         ROS_INFO("Connected");
 
@@ -400,11 +413,27 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
         last_gyro_y_ = angular_rate[1] * (M_PI / 180.0);
         last_gyro_z_ = angular_rate[2] * (M_PI / 180.0);
 
-        // device reports data in Gauss, multiply by 1e-4 to convert to Tesla
-        last_mag_x_ = magnetic_field[0] * 1e-4;
-        last_mag_y_ = magnetic_field[1] * 1e-4;
-        last_mag_z_ = magnetic_field[2] * 1e-4;
+        if (magnetic_field[0] != PUNK_DBL)
+        {
+            // device reports data in Gauss, multiply by 1e-4 to convert to
+            // Tesla
+            last_mag_x_ = magnetic_field[0] * 1e-4;
+            last_mag_y_ = magnetic_field[1] * 1e-4;
+            last_mag_z_ = magnetic_field[2] * 1e-4;
+        } else
+        {
+            // data is PUNK_DBL ("unknown double"), which means the magnetometer
+            // did not return valid readings. When publishing at 250 Hz, this
+            // will happen in every second message, because the magnetometer can
+            // only sample at 125 Hz. It is still important to publish these
+            // messages, because a downstream node sometimes uses a
+            // TimeSynchronizer to get Imu and Magnetometer nodes.
+            double nan = std::numeric_limits<double>::quiet_NaN();
 
+            last_mag_x_ = nan;
+            last_mag_y_ = nan;
+            last_mag_z_ = nan;
+        }
         last_data_timestamp_ns_ = this_ts_ns;
 
         // Publish if we aren't publishing on a timer
@@ -424,6 +453,26 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
     }
 
     last_cb_time_ = now;
+}
+
+void SpatialRosI::attachCallback()
+{
+    ROS_INFO("Phidget Spatial attached.");
+
+    // Set data interval. This is in attachCallback() because it has to be
+    // repeated on reattachment.
+    spatial_->setDataInterval(data_interval_ns_ / 1000 / 1000);
+
+    // Force resynchronization, because the device time is reset to 0 after
+    // reattachment.
+    synchronize_timestamps_ = true;
+    can_publish_ = false;
+    last_cb_time_ = ros::Time(0);
+}
+
+void SpatialRosI::detachCallback()
+{
+    ROS_INFO("Phidget Spatial detached.");
 }
 
 void SpatialRosI::timerCallback(const ros::TimerEvent & /* event */)

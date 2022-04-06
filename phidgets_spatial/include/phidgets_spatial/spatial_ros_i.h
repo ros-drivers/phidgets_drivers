@@ -57,6 +57,8 @@ class SpatialRosI final
     void timerCallback(const ros::TimerEvent &event);
     ros::Timer timer_;
     int publish_rate_;
+    std::string server_name_;
+    std::string server_ip_;
     ros::Publisher cal_publisher_;
     ros::ServiceServer cal_srv_;
     ros::Publisher imu_pub_;
@@ -103,6 +105,8 @@ class SpatialRosI final
     void spatialDataCallback(const double acceleration[3],
                              const double angular_rate[3],
                              const double magnetic_field[3], double timestamp);
+    void attachCallback();
+    void detachCallback();
 };
 
 }  // namespace phidgets

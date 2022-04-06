@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>phidgets_high_speed_encoder</name>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <description>Driver for the Phidgets high speed encoder devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>

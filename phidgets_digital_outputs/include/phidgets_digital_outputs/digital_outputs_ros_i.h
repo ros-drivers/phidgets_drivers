@@ -68,6 +68,8 @@ class DigitalOutputsRosI final
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
     ros::ServiceServer out_srv_;
+    std::string server_name_;
+    std::string server_ip_;
 
     bool setSrvCallback(phidgets_msgs::SetDigitalOutput::Request& req,
                         phidgets_msgs::SetDigitalOutput::Response& res);
