@@ -51,7 +51,7 @@ class Temperature final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Temperature)
 
     explicit Temperature(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device,
+                         bool is_hub_port_device, int channel,
                          std::function<void(double)> temperature_handler);
 
     ~Temperature();

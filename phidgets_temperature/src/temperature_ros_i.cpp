@@ -33,6 +33,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <sensor_msgs/Temperature.h>
 
 #include "phidgets_temperature/temperature_ros_i.h"
 
@@ -53,6 +54,11 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     {
         hub_port = 0;  // only used if the device is on a VINT hub_port
     }
+    int channel;
+    if (!nh_private.getParam("channel", channel))
+    {
+        channel = 0;  // for multi-input temperature devices
+    }
     int thermocouple_type;
     if (!nh_private.getParam("thermocouple_type", thermocouple_type))
     {
@@ -61,7 +67,7 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
-        data_interval_ms = 500;
+        data_interval_ms = 250;
     }
     if (!nh_private.getParam("publish_rate", publish_rate_))
     {
@@ -78,21 +84,10 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
             server_name_.c_str(), server_ip_.c_str());
     }
 
-    if (nh_private.getParam("server_name", server_name_)
-        && nh_private.getParam("server_ip", server_ip_)){
-
-        PhidgetNet_addServer(server_name_.c_str(), server_ip_.c_str(), 5661, "", 0);
-
         ROS_INFO(
-            "Using phidget server %s at IP %s",
-            server_name_.c_str(), server_ip_.c_str());
-    }
-
-    ROS_INFO(
-        "Connecting to Phidgets Temperature serial %d, hub port %d, "
-        "thermocouple "
-        "type %d ...",
-        serial_num, hub_port, thermocouple_type);
+        "Connecting to Phidgets Temperature serial %d, hub port %d, channel %d, "
+        "thermocouple type %d ...",
+        serial_num, hub_port, channel, thermocouple_type);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -102,13 +97,14 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     try
     {
         temperature_ = std::make_unique<Temperature>(
-            serial_num, hub_port, false,
+            serial_num, hub_port, false, channel,
             std::bind(&TemperatureRosI::temperatureChangeCallback, this,
                       std::placeholders::_1));
 
         ROS_INFO("Connected");
 
-        temperature_->setDataInterval(data_interval_ms);
+        try {temperature_->setDataInterval(data_interval_ms);}
+        catch (...){ROS_WARN("Temperature data interval on channel %d not set",channel);}
 
         if (thermocouple_type != 0)
         {
@@ -122,6 +118,8 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     }
 
     temperature_pub_ = nh_.advertise<std_msgs::Float64>("temperature", 1);
+    temperature_sensor_pub_ = nh_.advertise<sensor_msgs::Temperature>(
+        "temperature_"+std::to_string(channel), 1);
 
     got_first_data_ = false;
 
@@ -138,11 +136,19 @@ TemperatureRosI::TemperatureRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     }
 }
 
-void TemperatureRosI::publishLatest()
+void TemperatureRosI::publishLatest() // Preserved for legacy
 {
     std_msgs::Float64 msg;
     msg.data = last_temperature_reading_;
     temperature_pub_.publish(msg);
+}
+
+void TemperatureRosI::publishLatestTemperature()
+{
+    sensor_msgs::Temperature msg;
+    msg.header.stamp = ros::Time::now();
+    msg.temperature = last_temperature_reading_;
+    temperature_sensor_pub_.publish(msg);
 }
 
 void TemperatureRosI::timerCallback(const ros::TimerEvent& /* event */)
@@ -150,6 +156,7 @@ void TemperatureRosI::timerCallback(const ros::TimerEvent& /* event */)
     std::lock_guard<std::mutex> lock(temperature_mutex_);
     if (got_first_data_)
     {
+        publishLatestTemperature();
         publishLatest();
     }
 }
@@ -166,6 +173,7 @@ void TemperatureRosI::temperatureChangeCallback(double temperature)
 
     if (publish_rate_ <= 0)
     {
+        publishLatestTemperature();
         publishLatest();
     }
 }
