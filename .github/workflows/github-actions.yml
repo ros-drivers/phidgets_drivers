@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo rosdep init
         rosdep update
-        rosdep install --from-paths src -i -y --rosdistro noetic
+        rosdep install --from-paths src -i -y --rosdistro ${{ matrix.rosdistro }}
     - name: Build
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh
