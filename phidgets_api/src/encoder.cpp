@@ -139,6 +139,58 @@ void Encoder::setEnabled(bool enabled) const
     }
 }
 
+Phidget_EncoderIOMode Encoder::getIOMode() const
+{
+    Phidget_EncoderIOMode io_mode;
+    PhidgetReturnCode ret = PhidgetEncoder_getIOMode(encoder_handle_, &io_mode);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to get IO Mode for Encoder channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
+    return io_mode;
+}
+
+void Encoder::setIOMode(Phidget_EncoderIOMode io_mode) const
+{
+    PhidgetReturnCode ret = PhidgetEncoder_setIOMode(encoder_handle_, io_mode);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set IO Mode for Encoder channel " +
+                                 std::to_string(channel_),
+                             ret);
+    }
+}
+
+uint32_t Encoder::getDataInterval() const
+{
+    uint32_t interval;
+    PhidgetReturnCode ret =
+        PhidgetEncoder_getDataInterval(encoder_handle_, &interval);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to get data interval for Encoder channel " +
+                std::to_string(channel_),
+            ret);
+    }
+    return interval;
+}
+
+void Encoder::setDataInterval(uint32_t interval) const
+{
+    PhidgetReturnCode ret =
+        PhidgetEncoder_setDataInterval(encoder_handle_, interval);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error(
+            "Failed to set data interval for Encoder channel " +
+                std::to_string(channel_),
+            ret);
+    }
+}
+
 void Encoder::positionChangeHandler(int position_change, double time,
                                     int index_triggered)
 {

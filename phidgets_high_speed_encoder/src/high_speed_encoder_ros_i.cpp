@@ -74,6 +74,45 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
     {
         publish_rate_ = 0;
     }
+    if (!nh_private.getParam("data_interval", data_interval_))
+    {
+        data_interval_ = 0;
+    }
+    std::string io_mode;
+    if (nh_private.getParam("io_mode", io_mode))
+    {
+        std::transform(io_mode.begin(), io_mode.end(), io_mode.begin(),
+                       toupper);
+        if (io_mode == "ENCODER_IO_MODE_PUSH_PULL" || io_mode == "PUSH_PULL")
+        {
+            io_mode_ = Phidget_EncoderIOMode::ENCODER_IO_MODE_PUSH_PULL;
+        } else if (io_mode == "ENCODER_IO_MODE_LINE_DRIVER_2K2" ||
+                   io_mode == "LINE_DRIVER_2K2")
+        {
+            io_mode_ = Phidget_EncoderIOMode::ENCODER_IO_MODE_LINE_DRIVER_2K2;
+        } else if (io_mode == "ENCODER_IO_MODE_LINE_DRIVER_10K" ||
+                   io_mode == "LINE_DRIVER_10K")
+        {
+            io_mode_ = Phidget_EncoderIOMode::ENCODER_IO_MODE_LINE_DRIVER_10K;
+        } else if (io_mode == "ENCODER_IO_MODE_OPEN_COLLECTOR_2K2" ||
+                   io_mode == "OPEN_COLLECTOR_2K2")
+        {
+            io_mode_ =
+                Phidget_EncoderIOMode::ENCODER_IO_MODE_OPEN_COLLECTOR_2K2;
+        } else if (io_mode == "ENCODER_IO_MODE_OPEN_COLLECTOR_10K" ||
+                   io_mode == "OPEN_COLLECTOR_10K")
+        {
+            io_mode_ =
+                Phidget_EncoderIOMode::ENCODER_IO_MODE_OPEN_COLLECTOR_10K;
+        } else
+        {
+            throw std::runtime_error("Unrecognized io_mode parameter: " +
+                                     io_mode);
+        }
+    } else
+    {
+        io_mode_ = (Phidget_EncoderIOMode)0;
+    }
     if (nh_private.getParam("server_name", server_name_) &&
         nh_private.getParam("server_ip", server_ip_))
     {
@@ -128,6 +167,10 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
                      buf);
             enc_data_to_pub_[i].encoder_decimspeed_pub =
                 nh_.advertise<phidgets_msgs::EncoderDecimatedSpeed>(buf, 10);
+
+            if (io_mode_) encs_->setIOMode(i, io_mode_);
+            if (data_interval_) encs_->setDataInterval(i, data_interval_);
+
             encs_->setEnabled(i, true);
         }
     } catch (const Phidget22Error& err)

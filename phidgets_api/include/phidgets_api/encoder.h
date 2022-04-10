@@ -76,6 +76,12 @@ class Encoder final
      * @param enabled The new powered state of the encoder*/
     void setEnabled(bool enabled) const;
 
+    Phidget_EncoderIOMode getIOMode() const;
+    void setIOMode(Phidget_EncoderIOMode io_mode) const;
+
+    uint32_t getDataInterval() const;
+    void setDataInterval(uint32_t interval) const;
+
     void positionChangeHandler(int position_change, double time,
                                int index_triggered);
 

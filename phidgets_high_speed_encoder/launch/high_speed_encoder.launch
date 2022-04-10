@@ -33,6 +33,12 @@
     # optional param publish_rate, defaults to 0
     <!-- <param name="publish_rate" value="0" /> -->
 
+    # optional param data_interval, defaults to device default
+    <!-- <param name="data_interval" value="250" /> -->
+
+    # optional param io_mode, defaults to device default
+    <!-- <param name="io_mode" value="PUSH_PULL" /> -->
+
     # optional param server_name, required to locate remote network servers
     <!-- <param name="server_name" value="myPhidgetServer" /> -->
 
