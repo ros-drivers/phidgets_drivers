@@ -1,0 +1,375 @@
+--- a/configure	2022-04-11 12:50:48.972995991 +0000
++++ b/configure	2022-04-11 12:51:03.292929826 +0000
+@@ -5681,7 +5681,7 @@
+ fi
+ 
+ : ${AR=ar}
+-: ${AR_FLAGS=cru}
++: ${AR_FLAGS=cr}
+ 
+ 
+ 
+--- a/src/ext/mos/sha2.c	2022-04-11 12:45:37.030437312 +0000
++++ b/src/ext/mos/sha2.c	2022-04-11 12:49:05.934472077 +0000
+@@ -518,7 +518,7 @@
+ 	usedspace = freespace = 0;
+ }
+ 
+-void mos_SHA256_Final(sha2_byte digest[], SHA256_CTX* context) {
++void mos_SHA256_Final(uint8_t digest[SHA256_DIGEST_LENGTH], SHA256_CTX* context) {
+ 	sha2_word32	*d = (sha2_word32*)(void *)digest;
+ 	unsigned int	usedspace;
+ 	void *v;
+@@ -584,7 +584,7 @@
+ 	usedspace = 0;
+ }
+ 
+-char *mos_SHA256_End(SHA256_CTX* context, char buffer[]) {
++char *mos_SHA256_End(SHA256_CTX* context, char buffer[SHA256_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA256_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+@@ -892,7 +892,7 @@
+ 	mos_SHA512_Transform(context, (sha2_word64*)(void *)context->buffer);
+ }
+ 
+-void mos_SHA512_Final(sha2_byte digest[], SHA512_CTX* context) {
++void mos_SHA512_Final(uint8_t digest[SHA512_DIGEST_LENGTH], SHA512_CTX* context) {
+ 	sha2_word64	*d = (sha2_word64*)(void *)digest;
+ 
+ 	/* Sanity check: */
+@@ -921,7 +921,7 @@
+ 	mos_bzero(context, sizeof(*context));
+ }
+ 
+-char *mos_SHA512_End(SHA512_CTX* context, char buffer[]) {
++char *mos_SHA512_End(SHA512_CTX* context, char buffer[SHA512_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA512_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+@@ -969,7 +969,7 @@
+ 	mos_SHA512_Update((SHA512_CTX*)context, data, len);
+ }
+ 
+-void mos_SHA384_Final(sha2_byte digest[], SHA384_CTX* context) {
++void mos_SHA384_Final(uint8_t digest[SHA384_DIGEST_LENGTH], SHA384_CTX* context) {
+ 	sha2_word64	*d = (sha2_word64*)(void *)digest;
+ 
+ 	/* Sanity check: */
+@@ -998,7 +998,7 @@
+ 	mos_bzero(context, sizeof(*context));
+ }
+ 
+-char *mos_SHA384_End(SHA384_CTX* context, char buffer[]) {
++char *mos_SHA384_End(SHA384_CTX* context, char buffer[SHA384_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA384_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+--- a/src/vintpackets.c	2022-04-11 12:36:25.140989372 +0000
++++ b/src/vintpackets.c	2022-04-11 12:44:55.814627748 +0000
+@@ -379,7 +379,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -431,7 +431,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -1634,7 +1634,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -1725,7 +1725,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -1779,7 +1779,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -1934,7 +1934,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2024,7 +2024,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2516,7 +2516,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2646,7 +2646,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2713,7 +2713,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2729,7 +2729,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		case BP_SETFREQUENCY:
+ 			pack32(buf, (uint32_t)(getBridgePacketDouble(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_DIGITALOUTPUT_SETFREQUENCY, buf, 4));
+@@ -2797,7 +2797,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -2813,7 +2813,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		case BP_SETFREQUENCY:
+ 			pack32(buf, (uint32_t)(getBridgePacketDouble(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_DIGITALOUTPUT_SETFREQUENCY, buf, 4));
+@@ -2913,7 +2913,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -3071,7 +3071,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5173,7 +5173,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5239,7 +5239,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5594,7 +5594,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5647,7 +5647,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5729,7 +5729,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5779,7 +5779,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5861,7 +5861,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -5911,7 +5911,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -6617,7 +6617,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -6699,7 +6699,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -6899,7 +6899,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -6982,7 +6982,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -7047,7 +7047,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -7637,7 +7637,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -7653,7 +7653,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		case BP_SETFREQUENCY:
+ 			pack32(buf, (uint32_t)(getBridgePacketDouble(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_DIGITALOUTPUT_SETFREQUENCY, buf, 4));
+@@ -7781,7 +7781,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -7866,7 +7866,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -7951,7 +7951,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
+@@ -8397,7 +8397,7 @@
+ 			pack16(buf, (uint16_t)(getBridgePacketUInt32(bp, 0)));
+ 			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_TIME, buf, 2));
+ 		case BP_FAILSAFERESET:
+-			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, buf, 0));
++			return (sendVINTDataPacket(bp->iop, ch, VINT_PACKET_TYPE_FAILSAFE_RESET, NULL, 0));
+ 		default:
+ 			MOS_PANIC("Unexpected packet type");
+ 		}
