@@ -136,3 +136,27 @@ To check formatting after modifying source code:
 To reformat source code:
 
     find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-6.0 -i -style=file $1
+
+
+pre-commit Formatting Checks
+----------------------------
+
+This repo has a [pre-commit](https://pre-commit.com/) check that runs in CI.
+You can use this locally and set it up to run automatically before you commit
+something. To install, use pip:
+
+```bash
+pip3 install --user pre-commit
+```
+
+To run over all the files in the repo manually:
+
+```bash
+pre-commit run -a
+```
+
+To run pre-commit automatically before committing in the local repo, install the git hooks:
+
+```bash
+pre-commit install
+```
