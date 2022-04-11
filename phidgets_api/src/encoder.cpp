@@ -165,9 +165,9 @@ void Encoder::setIOMode(Phidget_EncoderIOMode io_mode) const
 
 uint32_t Encoder::getDataInterval() const
 {
-    uint32_t interval;
+    uint32_t data_interval_ms;
     PhidgetReturnCode ret =
-        PhidgetEncoder_getDataInterval(encoder_handle_, &interval);
+        PhidgetEncoder_getDataInterval(encoder_handle_, &data_interval_ms);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error(
@@ -175,13 +175,13 @@ uint32_t Encoder::getDataInterval() const
                 std::to_string(channel_),
             ret);
     }
-    return interval;
+    return data_interval_ms;
 }
 
-void Encoder::setDataInterval(uint32_t interval) const
+void Encoder::setDataInterval(uint32_t data_interval_ms) const
 {
     PhidgetReturnCode ret =
-        PhidgetEncoder_setDataInterval(encoder_handle_, interval);
+        PhidgetEncoder_setDataInterval(encoder_handle_, data_interval_ms);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error(

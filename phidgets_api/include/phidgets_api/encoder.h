@@ -80,7 +80,7 @@ class Encoder final
     void setIOMode(Phidget_EncoderIOMode io_mode) const;
 
     uint32_t getDataInterval() const;
-    void setDataInterval(uint32_t interval) const;
+    void setDataInterval(uint32_t data_interval_ms) const;
 
     void positionChangeHandler(int position_change, double time,
                                int index_triggered);

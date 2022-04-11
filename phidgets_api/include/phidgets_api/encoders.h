@@ -86,7 +86,7 @@ class Encoders final
     void setIOMode(int index, Phidget_EncoderIOMode io_mode) const;
 
     uint32_t getDataInterval(int index) const;
-    void setDataInterval(int index, uint32_t interval) const;
+    void setDataInterval(int index, uint32_t data_interval_ms) const;
 
   private:
     uint32_t encoder_count_;

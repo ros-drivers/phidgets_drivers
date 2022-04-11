@@ -69,8 +69,6 @@ class HighSpeedEncoderRosI final
     // (Default=1) Number of "ITERATE" loops without any new encoder tick before
     // resetting the filtered average velocities.
     int speed_filter_idle_iter_loops_before_reset_;
-    Phidget_EncoderIOMode io_mode_;
-    int data_interval_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
