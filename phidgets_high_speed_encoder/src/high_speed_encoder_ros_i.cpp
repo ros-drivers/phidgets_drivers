@@ -164,8 +164,9 @@ void HighSpeedEncoderRosI::publishLatest()
 
         js_msg->position[encIdx] =
             absolute_position * enc_data_to_pub_[encIdx].joint_tick2rad;
-        js_msg->velocity[encIdx] = enc_data_to_pub_[encIdx].instantaneous_speed *
-                                  enc_data_to_pub_[encIdx].joint_tick2rad;
+        js_msg->velocity[encIdx] =
+            enc_data_to_pub_[encIdx].instantaneous_speed *
+            enc_data_to_pub_[encIdx].joint_tick2rad;
         enc_data_to_pub_[encIdx].instantaneous_speed = 0.0;  // Reset speed
 
         if (speed_filter_samples_len_ > 0)
@@ -202,7 +203,8 @@ void HighSpeedEncoderRosI::publishLatest()
                         phidgets_msgs::msg::EncoderDecimatedSpeed>();
                     e->header.stamp = this->now();
                     e->header.frame_id = frame_id_;
-                    e->avr_speed = avrg * enc_data_to_pub_[encIdx].joint_tick2rad;
+                    e->avr_speed =
+                        avrg * enc_data_to_pub_[encIdx].joint_tick2rad;
                     enc_data_to_pub_[encIdx].encoder_decimspeed_pub->publish(
                         std::move(e));
                 }
