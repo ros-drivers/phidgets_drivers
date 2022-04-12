@@ -106,7 +106,8 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(ros::NodeHandle nh,
         {
             std::string error =
                 "Unrecognized io_mode parameter: " + io_mode_str;
-            // throwing an error doesn't seem to print its message to the console
+            // throwing an error doesn't seem to print its message to the
+            // console
             ROS_ERROR_STREAM(error);
             throw std::runtime_error(error);
         }
