@@ -112,4 +112,24 @@ void Encoders::setEnabled(int index, bool enabled) const
     return encs_.at(index)->setEnabled(enabled);
 }
 
+Phidget_EncoderIOMode Encoders::getIOMode(int index) const
+{
+    return encs_.at(index)->getIOMode();
+}
+
+void Encoders::setIOMode(int index, Phidget_EncoderIOMode IOMode) const
+{
+    return encs_.at(index)->setIOMode(IOMode);
+}
+
+uint32_t Encoders::getDataInterval(int index) const
+{
+    return encs_.at(index)->getDataInterval();
+}
+
+void Encoders::setDataInterval(int index, uint32_t data_interval_ms) const
+{
+    return encs_.at(index)->setDataInterval(data_interval_ms);
+}
+
 }  // namespace phidgets
