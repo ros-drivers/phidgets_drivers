@@ -37,7 +37,7 @@
     <!-- <param name="data_interval_ms" value="250" /> -->
 
     # optional param io_mode, defaults to device default
-    <!-- <param name="io_mode" value="PUSH_PULsL" /> -->
+    <!-- <param name="io_mode" value="PUSH_PULL" /> -->
 
     # optional param server_name, required to locate remote network servers
     <!-- <param name="server_name" value="myPhidgetServer" /> -->
