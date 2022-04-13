@@ -2,6 +2,9 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.2 (2022-02-17)
 ------------------
 * spatial: Add attach + detach handlers

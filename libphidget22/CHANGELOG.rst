@@ -2,6 +2,9 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.2 (2022-02-17)
 ------------------
 * Remove outdated patch file (`#112 <https://github.com/ros-drivers/phidgets_drivers/issues/112>`_)

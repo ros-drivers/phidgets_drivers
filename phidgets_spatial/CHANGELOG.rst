@@ -2,6 +2,9 @@
 Changelog for package phidgets_spatial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.2 (2022-02-17)
 ------------------
 * Fix behavior after USB reattachment (`#119 <https://github.com/ros-drivers/phidgets_drivers/issues/119>`_)

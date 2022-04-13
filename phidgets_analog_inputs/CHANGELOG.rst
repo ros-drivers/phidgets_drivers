@@ -2,6 +2,9 @@
 Changelog for package phidgets_analog_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.2 (2022-02-17)
 ------------------
 
