@@ -4,7 +4,7 @@ jobs:
   build:
     strategy:
       matrix:
-        rosdistro: [galactic, rolling]
+        rosdistro: [galactic]
       fail-fast: false
     runs-on: ubuntu-latest
     container:
