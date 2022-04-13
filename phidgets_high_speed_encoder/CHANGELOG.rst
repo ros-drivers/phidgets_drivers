@@ -2,6 +2,14 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#132 <https://github.com/ros-drivers/phidgets_drivers/issues/132>`_ from mintar/feat-pre-commit-ros2
+  [galactic] Add pre-commit, move from travis to GitHub actions, fix style
+* Fix clang-format
+* BUGFIX: duplicated values for all encoders (`#126 <https://github.com/ros-drivers/phidgets_drivers/issues/126>`_)
+* Contributors: Martin Günther
+
 2.2.2 (2022-02-17)
 ------------------
 

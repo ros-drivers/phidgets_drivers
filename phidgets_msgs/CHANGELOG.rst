@@ -2,6 +2,13 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#132 <https://github.com/ros-drivers/phidgets_drivers/issues/132>`_ from mintar/feat-pre-commit-ros2
+  [galactic] Add pre-commit, move from travis to GitHub actions, fix style
+* Fix trailing whitespace
+* Contributors: Martin Günther
+
 2.2.2 (2022-02-17)
 ------------------
 
