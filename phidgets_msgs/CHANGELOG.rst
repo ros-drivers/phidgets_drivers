@@ -2,8 +2,8 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.2 (2022-04-13)
+------------------
 * Merge pull request `#131 <https://github.com/ros-drivers/phidgets_drivers/issues/131>`_ from mintar/feat-pre-commit-foxy
   [foxy] Add pre-commit, move from travis to GitHub actions, fix style
 * Fix trailing whitespace
