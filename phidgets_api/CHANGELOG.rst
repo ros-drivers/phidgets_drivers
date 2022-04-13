@@ -2,6 +2,9 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.1.1 (2022-02-17)
 ------------------
 * Merge pull request `#119 <https://github.com/ros-drivers/phidgets_drivers/issues/119>`_ from mintar/fix-reattachment-foxy
