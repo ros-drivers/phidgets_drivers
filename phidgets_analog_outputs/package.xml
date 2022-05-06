@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>phidgets_api</name>
+  <name>phidgets_analog_outputs</name>
   <version>2.1.2</version>
-  <description>A C++ Wrapper for the Phidgets C API</description>
+  <description>Driver for the Phidgets Analog Output devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
   <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
@@ -10,16 +10,15 @@
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/phidgets_api</url>
-  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
-  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
-
-  <author>Tully Foote</author>
-  <author>Ivan Dryanovski</author>
+  <author>Carsten Plasberg</author>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
-  <depend>libphidget22</depend>
+  <depend>phidgets_api</depend>
+  <depend>phidgets_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
