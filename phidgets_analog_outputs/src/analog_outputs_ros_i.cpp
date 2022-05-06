@@ -106,3 +106,5 @@ void AnalogOutputSetter::setMsgCallback(const std_msgs::msg::Float64::SharedPtr 
 }
 
 }  // namespace phidgets
+
+RCLCPP_COMPONENTS_REGISTER_NODE(phidgets::AnalogOutputsRosI)
