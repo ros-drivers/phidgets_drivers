@@ -91,4 +91,9 @@ void AnalogOutputs::setOutputVoltage(int index, double voltage) const
     aos_.at(index)->setOutputVoltage(voltage);
 }
 
+void AnalogOutputs::setEnabledOutput(int index, int enabled) const
+{
+    aos_.at(index)->setEnabledOutput(enabled);
+}
+
 }  // namespace phidgets
