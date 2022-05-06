@@ -1,0 +1,34 @@
+<!-- Phidgets Analog Outputs launch file -->
+
+<launch>
+
+  #### Nodelet manager ######################################################
+
+  <node pkg="nodelet" type="nodelet" name="ao_manager"
+    args="manager" output="screen" />
+
+  #### Digital Outputs Driver ###############################################
+
+  <node pkg="nodelet" type="nodelet" name="PhidgetsAnalogOutputsNodelet"
+    args="load phidgets_analog_outputs/PhidgetsAnalogOutputsNodelet ao_manager"
+    output="screen">
+
+    # See README.md for more information on the parameters
+
+    # optional param serial, default is -1
+    <!-- <param name="serial" value="123456"/> -->
+
+    # optional param hub_port, used if connected to a VINT hub
+    <!-- <param name="hub_port" value="0"/> -->
+
+    # optional param is_hub_port_device, used if connected to a VINT hub
+    <!-- <param name="is_hub_port_device" value="false"/> -->
+
+    # optional param server_name, required to locate remote network servers
+    <!-- <param name="server_name" value="myPhidgetServer" /> -->
+
+    # optional param server_ip, required to locate remote network servers
+    <!-- <param name="server_ip" value="0.0.0.0" /> -->
+  </node>
+
+</launch>
