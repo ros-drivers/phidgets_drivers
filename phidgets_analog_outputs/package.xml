@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_analog_outputs</name>
+  <version>2.1.2</version>
+  <description>Driver for the Phidgets Analog Output devices</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author>Carsten Plasberg</author>
+  <author email="robotique@capacites.fr">Alexis Fetet</author>
+
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
+
+  <depend>phidgets_api</depend>
+  <depend>phidgets_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
