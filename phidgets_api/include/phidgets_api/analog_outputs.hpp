@@ -52,6 +52,8 @@ class AnalogOutputs final
 
     void setOutputVoltage(int index, double voltage) const;
 
+    void setEnabledOutput(int index, int enabled) const;
+
   private:
     uint32_t output_count_;
     std::vector<std::unique_ptr<AnalogOutput>> aos_;

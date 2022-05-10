@@ -72,4 +72,14 @@ void AnalogOutput::setOutputVoltage(double voltage) const
     }
 }
 
+void AnalogOutput::setEnabledOutput(int enabled) const
+{
+    PhidgetReturnCode ret =
+        PhidgetVoltageOutput_setEnabled(ao_handle_, enabled);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set analog output enabled", ret);
+    }
+}
+
 }  // namespace phidgets

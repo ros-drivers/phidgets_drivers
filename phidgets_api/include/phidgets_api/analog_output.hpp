@@ -48,6 +48,8 @@ class AnalogOutput final
 
     void setOutputVoltage(double voltage) const;
 
+    void setEnabledOutput(int enabled) const;
+
   private:
     PhidgetVoltageOutputHandle ao_handle_;
 };

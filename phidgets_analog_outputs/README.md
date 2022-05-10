@@ -16,3 +16,4 @@ Parameters
 * `serial` (int) - The serial number of the phidgets analog output to connect to.  If -1 (the default), connects to any analog output phidget that can be found.
 * `hub_port` (int) - The phidgets VINT hub port to connect to.  Only used if the analog output phidget is connected to a VINT hub.  Defaults to 0.
 * `is_hub_port_device` (bool) - Whether this device is directly connected to VINT hub port, or whether it is connected via another widget to the hub port.  Only used if the analog output phidget is connected to a VINT hub.  Defaults to false.
+* `force_enable` (bool) - Force the node to send an enable message on each output created. Defaults to true.

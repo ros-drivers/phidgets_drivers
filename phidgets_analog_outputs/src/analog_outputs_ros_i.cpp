@@ -54,6 +54,9 @@ AnalogOutputsRosI::AnalogOutputsRosI(const rclcpp::NodeOptions& options)
         "is_hub_port_device",
         false);  // only used if the device is on a VINT hub_port
 
+    bool force_enable = this->declare_parameter(
+        "force_enable", true);  // auto enable all outputs
+
     RCLCPP_INFO(
         get_logger(),
         "Connecting to Phidgets AnalogOutputs serial %d, hub port %d ...",
@@ -79,6 +82,11 @@ AnalogOutputsRosI::AnalogOutputsRosI(const rclcpp::NodeOptions& options)
         snprintf(topicname, sizeof(topicname), "analog_output%02d", i);
         out_subs_[i] = std::make_unique<AnalogOutputSetter>(aos_.get(), i, this,
                                                             topicname);
+
+        if (force_enable)
+        {
+            aos_->setEnabledOutput(i, 1);  // auto enable output
+        }
     }
     out_srv_ = this->create_service<phidgets_msgs::srv::SetAnalogOutput>(
         "set_analog_output",
