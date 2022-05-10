@@ -34,7 +34,7 @@
 
 #include "phidgets_api/analog_outputs.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
-#include "phidgets_analog_outputs/analog_outputs_ros_i.h"
+#include "phidgets_analog_outputs/analog_outputs_ros_i.hpp"
 #include "phidgets_msgs/srv/set_analog_output.hpp"
 
 namespace phidgets {
