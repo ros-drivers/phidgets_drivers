@@ -61,7 +61,6 @@ class AnalogOutputSetter final
 class AnalogOutputsRosI final : public rclcpp::Node
 {
   public:
-
     explicit AnalogOutputsRosI(const rclcpp::NodeOptions& options);
 
   private:
@@ -70,8 +69,9 @@ class AnalogOutputsRosI final : public rclcpp::Node
 
     rclcpp::Service<phidgets_msgs::srv::SetAnalogOutput>::SharedPtr out_srv_;
 
-    bool setSrvCallback( const std::shared_ptr<phidgets_msgs::srv::SetAnalogOutput::Request> req,
-                         std::shared_ptr<phidgets_msgs::srv::SetAnalogOutput::Response> res);
+    bool setSrvCallback(
+        const std::shared_ptr<phidgets_msgs::srv::SetAnalogOutput::Request> req,
+        std::shared_ptr<phidgets_msgs::srv::SetAnalogOutput::Response> res);
 };
 
 }  // namespace phidgets
