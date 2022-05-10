@@ -85,7 +85,7 @@ AnalogOutputsRosI::AnalogOutputsRosI(const rclcpp::NodeOptions& options)
 
         if (force_enable)
         {
-            aos_->setEnabledOutput(i, 0);  // auto enable output
+            aos_->setEnabledOutput(i, 1);  // auto enable output
         }
     }
     out_srv_ = this->create_service<phidgets_msgs::srv::SetAnalogOutput>(
