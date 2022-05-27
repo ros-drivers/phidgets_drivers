@@ -143,7 +143,7 @@ Running
 -------
 
 You may notice that there are no executables installed by the various phidgets packages.
-Instead, all functionality is available via [ROS 2 components](https://docs.ros.org/en/rolling/Concepts/About-Composition.html).
+Instead, all functionality is available via [ROS 2 components](https://docs.ros.org/en/humble/Concepts/About-Composition.html).
 The reason for this is that when using phidget VINT hubs, only one process at a time can access the hub.
 Since the hub may have multiple devices connected to it, we need to load multiple different phidgets drivers into the same process.
 We do that through loading multiple components into a single ROS 2 component container.
