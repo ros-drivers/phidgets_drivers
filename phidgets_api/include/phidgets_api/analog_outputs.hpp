@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_API_ANALOG_OUTPUTS_H
-#define PHIDGETS_API_ANALOG_OUTPUTS_H
+#ifndef PHIDGETS_API_ANALOG_OUTPUTS_HPP
+#define PHIDGETS_API_ANALOG_OUTPUTS_HPP
 
 #include <memory>
 #include <vector>
@@ -61,4 +61,4 @@ class AnalogOutputs final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_ANALOG_INPUTS_H
+#endif  // PHIDGETS_API_ANALOG_INPUTS_HPP

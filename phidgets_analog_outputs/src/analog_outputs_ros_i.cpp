@@ -27,7 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <functional>
 #include <memory>
+#include <string>
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/float64.hpp>
