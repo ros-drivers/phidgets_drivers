@@ -19,6 +19,7 @@ set(msg_files
 )
 
 set(srv_files
+  "srv/SetAnalogOutput.srv"
   "srv/SetDigitalOutput.srv"
 )
 

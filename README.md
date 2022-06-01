@@ -22,6 +22,8 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This package i
 
   * [`phidgets_analog_inputs`](phidgets_analog_inputs/README.md)
 
+  * [`phidgets_analog_outputs`](phidgets_analog_outputs/README.md)
+
   * [`phidgets_digital_inputs`](phidgets_digital_inputs/README.md)
 
   * [`phidgets_digital_outputs`](phidgets_digital_outputs/README.md)
