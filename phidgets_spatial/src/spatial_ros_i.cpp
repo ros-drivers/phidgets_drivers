@@ -54,6 +54,12 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Spatial");
 
+    bool use_orientation;
+    if (!nh_private_.getParam("use_orientation", use_orientation))
+    {
+        use_orientation = false;  // default do not use the onboard orientation
+    }
+
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 
@@ -165,13 +171,28 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
     // finished setting up.
     std::lock_guard<std::mutex> lock(spatial_mutex_);
 
+    last_quat_w_ = 0.0;
+    last_quat_x_ = 0.0;
+    last_quat_y_ = 0.0;
+    last_quat_z_ = 0.0;
+
     try
     {
+        std::function<void(const double[4], double)> algorithm_data_handler =
+            nullptr;
+        if (use_orientation)
+        {
+            algorithm_data_handler =
+                std::bind(&SpatialRosI::spatialAlgorithmDataCallback, this,
+                          std::placeholders::_1, std::placeholders::_2);
+        }
+
         spatial_ = std::make_unique<Spatial>(
             serial_num, hub_port, false,
             std::bind(&SpatialRosI::spatialDataCallback, this,
                       std::placeholders::_1, std::placeholders::_2,
                       std::placeholders::_3, std::placeholders::_4),
+            algorithm_data_handler,
             std::bind(&SpatialRosI::attachCallback, this),
             std::bind(&SpatialRosI::detachCallback, this));
 
@@ -302,6 +323,12 @@ void SpatialRosI::publishLatest()
     msg->angular_velocity.x = last_gyro_x_;
     msg->angular_velocity.y = last_gyro_y_;
     msg->angular_velocity.z = last_gyro_z_;
+
+    // set spatial algorithm orientation estimation
+    msg->orientation.w = last_quat_w_;
+    msg->orientation.x = last_quat_x_;
+    msg->orientation.y = last_quat_y_;
+    msg->orientation.z = last_quat_z_;
 
     imu_pub_->publish(std::move(msg));
 
@@ -465,6 +492,15 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
     }
 
     last_cb_time_ = now;
+}
+
+void SpatialRosI::spatialAlgorithmDataCallback(const double quaternion[4],
+                                               double timestamp)
+{
+    last_quat_w_ = quaternion[3];
+    last_quat_x_ = quaternion[0];
+    last_quat_y_ = quaternion[1];
+    last_quat_z_ = quaternion[2];
 }
 
 void SpatialRosI::attachCallback()

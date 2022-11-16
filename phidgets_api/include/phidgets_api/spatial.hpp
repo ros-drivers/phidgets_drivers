@@ -43,13 +43,14 @@ class Spatial final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Spatial)
 
-    explicit Spatial(int32_t serial_number, int hub_port,
-                     bool is_hub_port_device,
-                     std::function<void(const double[3], const double[3],
-                                        const double[3], double)>
-                         data_handler,
-                     std::function<void()> attach_handler = nullptr,
-                     std::function<void()> detach_handler = nullptr);
+    explicit Spatial(
+        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        std::function<void(const double[3], const double[3], const double[3],
+                           double)>
+            data_handler,
+        std::function<void(const double[4], double)> algorithm_data_handler,
+        std::function<void()> attach_handler = nullptr,
+        std::function<void()> detach_handler = nullptr);
 
     ~Spatial();
 
@@ -69,6 +70,10 @@ class Spatial final
 
     void dataHandler(const double acceleration[3], const double angular_rate[3],
                      const double magnetic_field[3], double timestamp) const;
+
+    void algorithmDataHandler(const double quaternion[4],
+                              double timestamp) const;
+
     virtual void attachHandler();
     virtual void detachHandler();
 
@@ -77,6 +82,10 @@ class Spatial final
     std::function<void(const double[3], const double[3], const double[3],
                        double)>
         data_handler_;
+
+    std::function<void(const double quaternion[4], double)>
+        algorithm_data_handler_;
+
     std::function<void()> attach_handler_;
     std::function<void()> detach_handler_;
 
@@ -86,6 +95,9 @@ class Spatial final
                             const double acceleration[3],
                             const double angular_rate[3],
                             const double magnetic_field[3], double timestamp);
+    static void AlgorithmDataHandler(PhidgetSpatialHandle input_handle,
+                                     void *ctx, const double quaternion[4],
+                                     double timestamp);
     static void AttachHandler(PhidgetHandle input_handle, void *ctx);
     static void DetachHandler(PhidgetHandle input_handle, void *ctx);
 };

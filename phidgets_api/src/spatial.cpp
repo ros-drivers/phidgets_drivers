@@ -37,14 +37,16 @@
 
 namespace phidgets {
 
-Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
-                 std::function<void(const double[3], const double[3],
-                                    const double[3], double)>
-                     data_handler,
-                 std::function<void()> attach_handler,
-                 std::function<void()> detach_handler)
+Spatial::Spatial(
+    int32_t serial_number, int hub_port, bool is_hub_port_device,
+    std::function<void(const double[3], const double[3], const double[3],
+                       double)>
+        data_handler,
+    std::function<void(const double[4], double)> algorithm_data_handler,
+    std::function<void()> attach_handler, std::function<void()> detach_handler)
     : serial_number_(serial_number),
       data_handler_(std::move(data_handler)),
+      algorithm_data_handler_(std::move(algorithm_data_handler)),
       attach_handler_(std::move(attach_handler)),
       detach_handler_(std::move(detach_handler))
 {
@@ -63,6 +65,17 @@ Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set change handler for Spatial", ret);
+    }
+
+    if (algorithm_data_handler_ != nullptr)
+    {
+        ret = PhidgetSpatial_setOnAlgorithmDataHandler(
+            spatial_handle_, AlgorithmDataHandler, this);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to set algorithm handler for Spatial",
+                                 ret);
+        }
     }
 
     if (attach_handler_ != nullptr)
@@ -155,6 +168,12 @@ void Spatial::dataHandler(const double acceleration[3],
     data_handler_(acceleration, angular_rate, magnetic_field, timestamp);
 }
 
+void Spatial::algorithmDataHandler(const double quaternion[4],
+                                   double timestamp) const
+{
+    algorithm_data_handler_(quaternion, timestamp);
+}
+
 void Spatial::attachHandler()
 {
     attach_handler_();
@@ -172,6 +191,13 @@ void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void *ctx,
 {
     (reinterpret_cast<Spatial *>(ctx))
         ->dataHandler(acceleration, angular_rate, magnetic_field, timestamp);
+}
+
+void Spatial::AlgorithmDataHandler(PhidgetSpatialHandle /* input_handle */,
+                                   void *ctx, const double quaternion[4],
+                                   double timestamp)
+{
+    ((Spatial *)ctx)->algorithmDataHandler(quaternion, timestamp);
 }
 
 void Spatial::AttachHandler(PhidgetHandle /* input_handle */, void *ctx)
