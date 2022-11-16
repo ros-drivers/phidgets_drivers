@@ -497,6 +497,7 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
 void SpatialRosI::spatialAlgorithmDataCallback(const double quaternion[4],
                                                double timestamp)
 {
+    (void)timestamp;
     last_quat_w_ = quaternion[3];
     last_quat_x_ = quaternion[0];
     last_quat_y_ = quaternion[1];
