@@ -54,10 +54,58 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Spatial");
 
-    bool use_orientation;
-    if (!nh_private_.getParam("use_orientation", use_orientation))
+    bool use_orientation = this->declare_parameter(
+        "use_orientation",
+        false);  // default do not use the onboard orientation
+    std::string spatial_algorithm =
+        this->declare_parameter("spatial_algorithm", "ahrs");
+
+    double ahrsAngularVelocityThreshold;
+    double ahrsAngularVelocityDeltaThreshold;
+    double ahrsAccelerationThreshold;
+    double ahrsMagTime;
+    double ahrsAccelTime;
+    double ahrsBiasTime;
+
+    this->declare_parameter("ahrs_angular_velocity_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_angular_velocity_delta_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_acceleration_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_mag_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_accel_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_bias_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+
+    bool has_ahrs_params =
+        this->get_parameter("ahrs_angular_velocity_threshold",
+                            ahrsAngularVelocityThreshold) &&
+        this->get_parameter("ahrs_angular_velocity_delta_threshold",
+                            ahrsAngularVelocityDeltaThreshold) &&
+        this->get_parameter("ahrs_acceleration_threshold",
+                            ahrsAccelerationThreshold) &&
+        this->get_parameter("ahrs_mag_time", ahrsMagTime) &&
+        this->get_parameter("ahrs_accel_time", ahrsAccelTime) &&
+        this->get_parameter("ahrs_bias_time", ahrsBiasTime);
+
+    double algorithm_magnetometer_gain;
+    if (!this->get_parameter("algorithm_magnetometer_gain",
+                             algorithm_magnetometer_gain))
     {
-        use_orientation = false;  // default do not use the onboard orientation
+        algorithm_magnetometer_gain =
+            0.005;  // default to 0.005 (similar to phidgets api)
+    }
+
+    bool heating_enabled;
+    bool set_heating_enabled = true;
+    if (!this->get_parameter("heating_enabled", heating_enabled))
+    {
+        set_heating_enabled =
+            false;  // if parameter not set, do not call api (because this
+                    // function is just available from MOT0109 onwards)
     }
 
     int serial_num =
@@ -206,6 +254,22 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
 
         calibrate();
 
+        if (use_orientation)
+        {
+            spatial_->setSpatialAlgorithm(spatial_algorithm);
+
+            if (has_ahrs_params)
+            {
+                spatial_->setAHRSParameters(ahrsAngularVelocityThreshold,
+                                            ahrsAngularVelocityDeltaThreshold,
+                                            ahrsAccelerationThreshold,
+                                            ahrsMagTime, ahrsAccelTime,
+                                            ahrsBiasTime);
+            }
+
+            spatial_->setAlgorithmMagnetometerGain(algorithm_magnetometer_gain);
+        }
+
         if (has_compass_params)
         {
             spatial_->setCompassCorrectionParameters(
@@ -214,6 +278,11 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
         } else
         {
             RCLCPP_INFO(get_logger(), "No compass correction params found.");
+        }
+
+        if (set_heating_enabled)
+        {
+            spatial_->setHeatingEnabled(heating_enabled);
         }
     } catch (const Phidget22Error &err)
     {
