@@ -139,10 +139,10 @@ void Spatial::setSpatialAlgorithm(const std::string algorithm_name)
 
     if (algorithm_name.compare("none") == 0)
     {
-        algorithm = SPATIAL_ALGORITHM_AHRS;
+        algorithm = SPATIAL_ALGORITHM_NONE;
     } else if (algorithm_name.compare("ahrs") == 0)
     {
-        algorithm = SPATIAL_ALGORITHM_NONE;
+        algorithm = SPATIAL_ALGORITHM_AHRS;
     } else if (algorithm_name.compare("imu") == 0)
     {
         algorithm = SPATIAL_ALGORITHM_IMU;
