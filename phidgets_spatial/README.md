@@ -18,7 +18,16 @@ Parameters
 * `serial` (int) - The serial number of the phidgets spatial to connect to.  If -1 (the default), connects to any spatial phidget that can be found.
 * `hub_port` (int) - The phidgets VINT hub port to connect to.  Only used if the spatial phidget is connected to a VINT hub.  Defaults to 0.
 * `frame_id` (string) - The header frame ID to use when publishing the message.  Defaults to [REP-0145](http://www.ros.org/reps/rep-0145.html) compliant `imu_link`.
-* `use_orientation` (bool) - Use the phidget spatials onboard orientation estimation. Defaults to false.
+* `use_orientation` (bool) - Use the phidget spatials onboard orientation estimation; Just available on MOT0109 onwards. Set to false for older versions. Defaults to false.
+* `spatial_algorithm` (string) - Name of the spatial algorithm used for orientation estimation (one of "none", "ahrs", "imu"); Just used if `use_orientation` is set to true. Defaults to `ahrs`.
+* `ahrs_angular_velocity_threshold` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `ahrs_angular_velocity_delta_threshold` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `ahrs_acceleration_threshold` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `ahrs_mag_time` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `ahrs_accel_time` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `ahrs_bias_time` (double) - Parameter for AHRS orientation estimation; Just used if `use_orientation` is set to true.
+* `algorithm_magnetometer_gain` (double) - Gain of magnetometer in orientation estimation algorithm; Just used if `use_orientation` is set to true. Defaults to 0.005
+* `heating_enabled` (bool) - Use the internal heating element; Just available on MOT0109 onwards. Do not set this parameter for older versions.
 * `linear_acceleration_stdev` (double) - The standard deviation to use for the linear acceleration when publishing the message.  Defaults to 280 ug.
 * `angular_velocity_stdev` (double) - The standard deviation to use for the angular velocity when publishing the message.  Defaults to 0.095 deg/s.
 * `magnetic_field_stdev` (double) - The standard deviation to use for the magnetic field when publishing the message.  Defaults to 1.1 milligauss.

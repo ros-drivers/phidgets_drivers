@@ -62,6 +62,17 @@ class Spatial final
                                         double cc_T3, double cc_T4,
                                         double cc_T5);
 
+    void setSpatialAlgorithm(const std::string algorithm);
+
+    void setAHRSParameters(double angularVelocityThreshold,
+                           double angularVelocityDeltaThreshold,
+                           double accelerationThreshold, double magTime,
+                           double accelTime, double biasTime);
+
+    void setAlgorithmMagnetometerGain(double magnetometer_gain);
+
+    void setHeatingEnabled(bool heating_enabled);
+
     void setDataInterval(uint32_t interval_ms) const;
 
     void zero() const;

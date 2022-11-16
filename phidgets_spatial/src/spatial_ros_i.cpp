@@ -71,6 +71,47 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         use_orientation = false;  // default do not use the onboard orientation
     }
 
+    std::string spatial_algorithm;
+    if (!nh_private_.getParam("spatial_algorithm", spatial_algorithm))
+    {
+        spatial_algorithm = "ahrs";  // default use AHRS algorithm
+    }
+
+    double ahrsAngularVelocityThreshold;
+    double ahrsAngularVelocityDeltaThreshold;
+    double ahrsAccelerationThreshold;
+    double ahrsMagTime;
+    double ahrsAccelTime;
+    double ahrsBiasTime;
+
+    bool has_ahrs_params =
+        nh_private_.getParam("ahrs_angular_velocity_threshold",
+                             ahrsAngularVelocityThreshold) &&
+        nh_private_.getParam("ahrs_angular_velocity_delta_threshold",
+                             ahrsAngularVelocityDeltaThreshold) &&
+        nh_private_.getParam("ahrs_acceleration_threshold",
+                             ahrsAccelerationThreshold) &&
+        nh_private_.getParam("ahrs_mag_time", ahrsMagTime) &&
+        nh_private_.getParam("ahrs_accel_time", ahrsAccelTime) &&
+        nh_private_.getParam("ahrs_bias_time", ahrsBiasTime);
+
+    double algorithm_magnetometer_gain;
+    if (!nh_private_.getParam("algorithm_magnetometer_gain",
+                              algorithm_magnetometer_gain))
+    {
+        algorithm_magnetometer_gain =
+            0.005;  // default to 0.005 (similar to phidgets api)
+    }
+
+    bool heating_enabled;
+    bool set_heating_enabled = true;
+    if (!nh_private_.getParam("heating_enabled", heating_enabled))
+    {
+        set_heating_enabled =
+            false;  // if parameter not set, do not call api (because this
+                    // function is just available from MOT0109 onwards)
+    }
+
     double linear_acceleration_stdev;
     if (!nh_private_.getParam("linear_acceleration_stdev",
                               linear_acceleration_stdev))
@@ -218,6 +259,22 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
         calibrate();
 
+        if (use_orientation)
+        {
+            spatial_->setSpatialAlgorithm(spatial_algorithm);
+
+            if (has_ahrs_params)
+            {
+                spatial_->setAHRSParameters(ahrsAngularVelocityThreshold,
+                                            ahrsAngularVelocityDeltaThreshold,
+                                            ahrsAccelerationThreshold,
+                                            ahrsMagTime, ahrsAccelTime,
+                                            ahrsBiasTime);
+            }
+
+            spatial_->setAlgorithmMagnetometerGain(algorithm_magnetometer_gain);
+        }
+
         if (has_compass_params)
         {
             spatial_->setCompassCorrectionParameters(
@@ -226,6 +283,11 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         } else
         {
             ROS_INFO("No compass correction params found.");
+        }
+
+        if (set_heating_enabled)
+        {
+            spatial_->setHeatingEnabled(heating_enabled);
         }
     } catch (const Phidget22Error &err)
     {

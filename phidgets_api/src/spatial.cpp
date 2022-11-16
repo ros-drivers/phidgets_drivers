@@ -133,6 +133,67 @@ void Spatial::setCompassCorrectionParameters(
     }
 }
 
+void Spatial::setSpatialAlgorithm(const std::string algorithm_name)
+{
+    Phidget_SpatialAlgorithm algorithm;
+
+    if (algorithm_name.compare("none") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_AHRS;
+    } else if (algorithm_name.compare("ahrs") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_NONE;
+    } else if (algorithm_name.compare("imu") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_IMU;
+    } else
+    {
+        throw std::invalid_argument("Unknown spatial algorithm name");
+    }
+
+    PhidgetReturnCode ret =
+        PhidgetSpatial_setAlgorithm(spatial_handle_, algorithm);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set spatial algorithm", ret);
+    }
+}
+
+void Spatial::setAHRSParameters(double angularVelocityThreshold,
+                                double angularVelocityDeltaThreshold,
+                                double accelerationThreshold, double magTime,
+                                double accelTime, double biasTime)
+{
+    PhidgetReturnCode ret = PhidgetSpatial_setAHRSParameters(
+        spatial_handle_, angularVelocityThreshold,
+        angularVelocityDeltaThreshold, accelerationThreshold, magTime,
+        accelTime, biasTime);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set AHRS parameters", ret);
+    }
+}
+
+void Spatial::setAlgorithmMagnetometerGain(double magnetometer_gain)
+{
+    PhidgetReturnCode ret = PhidgetSpatial_setAlgorithmMagnetometerGain(
+        spatial_handle_, magnetometer_gain);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set algorithm magnetometer gain", ret);
+    }
+}
+
+void Spatial::setHeatingEnabled(bool heating_enabled)
+{
+    PhidgetReturnCode ret =
+        PhidgetSpatial_setHeatingEnabled(spatial_handle_, heating_enabled);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set heating flag", ret);
+    }
+}
+
 void Spatial::setDataInterval(uint32_t interval_ms) const
 {
     PhidgetReturnCode ret =
