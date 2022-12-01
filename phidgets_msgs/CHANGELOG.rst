@@ -2,6 +2,14 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#129 <https://github.com/ros-drivers/phidgets_drivers/issues/129>`_ from mintar/feat-pre-commit
+  Add pre-commit, move from travis to GitHub actions, fix style
+* Fix trailing whitespace
+* Don't modify CMAKE_CXX_FLAGS
+* Contributors: Martin Günther
+
 1.0.5 (2022-02-17)
 ------------------
 

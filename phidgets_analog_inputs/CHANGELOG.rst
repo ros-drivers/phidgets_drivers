@@ -2,6 +2,14 @@
 Changelog for package phidgets_analog_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#129 <https://github.com/ros-drivers/phidgets_drivers/issues/129>`_ from mintar/feat-pre-commit
+* Don't modify CMAKE_CXX_FLAGS
+* Fix clang-format
+* Add support for VINT networkhub (`#127 <https://github.com/ros-drivers/phidgets_drivers/issues/127>`_)
+* Contributors: James Haley, Martin Günther
+
 1.0.5 (2022-02-17)
 ------------------
 

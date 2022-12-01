@@ -2,6 +2,16 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#153 <https://github.com/ros-drivers/phidgets_drivers/issues/153>`_ from naturerobots/noetic
+  Add support for onboard orientation estimation and other new PhidgetSpatial features of MOT0109 and onwards
+* Support configuring encoder data interval and IO Mode (`#137 <https://github.com/ros-drivers/phidgets_drivers/issues/137>`_)
+* Merge pull request `#129 <https://github.com/ros-drivers/phidgets_drivers/issues/129>`_ from mintar/feat-pre-commit
+  Add pre-commit, move from travis to GitHub actions, fix style
+* Don't modify CMAKE_CXX_FLAGS
+* Contributors: Ben Schattinger, Malte kl. Piening, Martin Günther
+
 1.0.5 (2022-02-17)
 ------------------
 * spatial: Add attach + detach handlers

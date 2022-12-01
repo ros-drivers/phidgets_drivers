@@ -2,6 +2,9 @@
 Changelog for package phidgets_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.5 (2022-02-17)
 ------------------
 
