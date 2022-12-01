@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.6 (2022-12-01)
+------------------
 * Merge pull request `#153 <https://github.com/ros-drivers/phidgets_drivers/issues/153>`_ from naturerobots/noetic
   Add support for onboard orientation estimation and other new PhidgetSpatial features of MOT0109 and onwards
 * Support configuring encoder data interval and IO Mode (`#137 <https://github.com/ros-drivers/phidgets_drivers/issues/137>`_)

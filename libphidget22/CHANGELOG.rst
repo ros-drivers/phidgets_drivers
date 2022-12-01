@@ -2,8 +2,8 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.6 (2022-12-01)
+------------------
 * Merge pull request `#129 <https://github.com/ros-drivers/phidgets_drivers/issues/129>`_ from mintar/feat-pre-commit
   Add pre-commit, move from travis to GitHub actions, fix style
 * libphidget22: Use install FILES for libraries
