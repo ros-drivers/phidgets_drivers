@@ -37,13 +37,15 @@
 
 namespace phidgets {
 
-Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
-                 std::function<void(const double[3], const double[3],
-                                    const double[3], double)>
-                     data_handler,
-                 std::function<void()> attach_handler,
-                 std::function<void()> detach_handler)
+Spatial::Spatial(
+    int32_t serial_number, int hub_port, bool is_hub_port_device,
+    std::function<void(const double[3], const double[3], const double[3],
+                       double)>
+        data_handler,
+    std::function<void(const double[4], double)> algorithm_data_handler,
+    std::function<void()> attach_handler, std::function<void()> detach_handler)
     : data_handler_(std::move(data_handler)),
+      algorithm_data_handler_(std::move(algorithm_data_handler)),
       attach_handler_(std::move(attach_handler)),
       detach_handler_(std::move(detach_handler))
 {
@@ -62,6 +64,17 @@ Spatial::Spatial(int32_t serial_number, int hub_port, bool is_hub_port_device,
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set change handler for Spatial", ret);
+    }
+
+    if (algorithm_data_handler_ != nullptr)
+    {
+        ret = PhidgetSpatial_setOnAlgorithmDataHandler(
+            spatial_handle_, AlgorithmDataHandler, this);
+        if (ret != EPHIDGET_OK)
+        {
+            throw Phidget22Error("Failed to set algorithm handler for Spatial",
+                                 ret);
+        }
     }
 
     if (attach_handler_ != nullptr)
@@ -120,6 +133,67 @@ void Spatial::setCompassCorrectionParameters(
     }
 }
 
+void Spatial::setSpatialAlgorithm(const std::string algorithm_name)
+{
+    Phidget_SpatialAlgorithm algorithm;
+
+    if (algorithm_name.compare("none") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_NONE;
+    } else if (algorithm_name.compare("ahrs") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_AHRS;
+    } else if (algorithm_name.compare("imu") == 0)
+    {
+        algorithm = SPATIAL_ALGORITHM_IMU;
+    } else
+    {
+        throw std::invalid_argument("Unknown spatial algorithm name");
+    }
+
+    PhidgetReturnCode ret =
+        PhidgetSpatial_setAlgorithm(spatial_handle_, algorithm);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set spatial algorithm", ret);
+    }
+}
+
+void Spatial::setAHRSParameters(double angularVelocityThreshold,
+                                double angularVelocityDeltaThreshold,
+                                double accelerationThreshold, double magTime,
+                                double accelTime, double biasTime)
+{
+    PhidgetReturnCode ret = PhidgetSpatial_setAHRSParameters(
+        spatial_handle_, angularVelocityThreshold,
+        angularVelocityDeltaThreshold, accelerationThreshold, magTime,
+        accelTime, biasTime);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set AHRS parameters", ret);
+    }
+}
+
+void Spatial::setAlgorithmMagnetometerGain(double magnetometer_gain)
+{
+    PhidgetReturnCode ret = PhidgetSpatial_setAlgorithmMagnetometerGain(
+        spatial_handle_, magnetometer_gain);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set algorithm magnetometer gain", ret);
+    }
+}
+
+void Spatial::setHeatingEnabled(bool heating_enabled)
+{
+    PhidgetReturnCode ret =
+        PhidgetSpatial_setHeatingEnabled(spatial_handle_, heating_enabled);
+    if (ret != EPHIDGET_OK)
+    {
+        throw Phidget22Error("Failed to set heating flag", ret);
+    }
+}
+
 void Spatial::setDataInterval(uint32_t interval_ms) const
 {
     PhidgetReturnCode ret =
@@ -136,6 +210,12 @@ void Spatial::dataHandler(const double acceleration[3],
                           double timestamp) const
 {
     data_handler_(acceleration, angular_rate, magnetic_field, timestamp);
+}
+
+void Spatial::algorithmDataHandler(const double quaternion[4],
+                                   double timestamp) const
+{
+    algorithm_data_handler_(quaternion, timestamp);
 }
 
 void Spatial::attachHandler()
@@ -155,6 +235,13 @@ void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void *ctx,
 {
     ((Spatial *)ctx)
         ->dataHandler(acceleration, angular_rate, magnetic_field, timestamp);
+}
+
+void Spatial::AlgorithmDataHandler(PhidgetSpatialHandle /* input_handle */,
+                                   void *ctx, const double quaternion[4],
+                                   double timestamp)
+{
+    ((Spatial *)ctx)->algorithmDataHandler(quaternion, timestamp);
 }
 
 void Spatial::AttachHandler(PhidgetHandle /* input_handle */, void *ctx)

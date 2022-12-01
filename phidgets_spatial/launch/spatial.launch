@@ -24,6 +24,26 @@
     # optional param frame_id, default is "imu_link"
     <!-- <param name="frame_id" value="imu_link"/> -->
 
+    # optional param use_orientation, default is false
+    <!-- <param name="use_orientation" value="false"/> -->
+
+    # optional param spatial_algorithm, default is "ahrs"
+    <!-- <param name="spatial_algorithm" value="ahrs"/> -->
+
+    # optional ahrs parameters
+    <!-- <param name="ahrs_angular_velocity_threshold" value="1.0"/>
+         <param name="ahrs_angular_velocity_delta_threshold" value="0.1"/>
+         <param name="ahrs_acceleration_threshold" value="0.1"/>
+         <param name="ahrs_mag_time" value="10.0"/>
+         <param name="ahrs_accel_time" value="10.0"/>
+         <param name="ahrs_bias_time" value="1.25"/> -->
+
+    # optional param algorithm_magnetometer_gain, default is 0.005
+    <!-- <param name="algorithm_magnetometer_gain" value="0.005"/> -->
+
+    # optional param heating_enabled, not modified by default
+    <!-- <param name="heating_enabled" value="false"/> -->
+
     # optional param linear_acceleration_stdev, default is 280ug
     <!-- <param name="linear_acceleration_stdev" value="0.002745862"/> -->
 
