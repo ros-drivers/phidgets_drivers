@@ -230,7 +230,7 @@ void HighSpeedEncoderRosI::positionChangeHandler(int channel,
     {
         std::lock_guard<std::mutex> lock(encoder_mutex_);
 
-        double instantaneous_speed = position_change / (time * 1e-6);
+        double instantaneous_speed = position_change / (time * 1e-3);
         enc_data_to_pub_[channel].instantaneous_speed = instantaneous_speed;
         enc_data_to_pub_[channel].speeds_buffer.push_back(instantaneous_speed);
         enc_data_to_pub_[channel].speed_buffer_updated = true;
