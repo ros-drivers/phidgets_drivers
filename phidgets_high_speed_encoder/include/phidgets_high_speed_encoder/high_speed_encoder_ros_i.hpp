@@ -68,8 +68,8 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     /// (Default=10) Number of samples for the sliding window average filter of
     /// speeds.
     int speed_filter_samples_len_ = 10;
-    /// (Default=1) Number of "ITERATE" loops without any new encoder tick before
-    /// resetting the filtered average velocities.
+    /// (Default=1) Number of "ITERATE" loops without any new encoder tick
+    /// before resetting the filtered average velocities.
     int speed_filter_idle_iter_loops_before_reset_ = 1;
 
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr encoder_pub_;
