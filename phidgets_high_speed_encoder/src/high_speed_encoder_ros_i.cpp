@@ -214,7 +214,8 @@ void HighSpeedEncoderRosI::publishLatest()
 
     for (size_t encIdx = 0; encIdx < numEncoders; ++encIdx)
     {
-        int64_t absolute_position = encs_->getPosition(encIdx);
+        int64_t absolute_position =
+            encs_->getPosition(encIdx) - encs_->getIndexPosition(encIdx);
 
         js_msg.position[encIdx] =
             absolute_position * enc_data_to_pub_[encIdx].joint_tick2rad;
@@ -273,9 +274,10 @@ void HighSpeedEncoderRosI::timerCallback(const ros::TimerEvent& /* event */)
 void HighSpeedEncoderRosI::positionChangeHandler(int channel,
                                                  int position_change,
                                                  double time,
-                                                 int /* index_triggered */)
+                                                 int /*index_triggered*/)
 {
-    if (static_cast<int>(enc_data_to_pub_.size()) > channel)
+    if (channel >= static_cast<int>(enc_data_to_pub_.size())) return;
+
     {
         std::lock_guard<std::mutex> lock(encoder_mutex_);
 
