@@ -1,0 +1,618 @@
+diff -urp a/configure b/configure
+--- a/configure	2023-02-24 22:56:50.000000000 +0000
++++ b/configure	2023-02-28 15:22:23.214719947 +0000
+@@ -5681,7 +5681,7 @@ esac
+ fi
+ 
+ : ${AR=ar}
+-: ${AR_FLAGS=cru}
++: ${AR_FLAGS=cr}
+ 
+ 
+ 
+diff -urp a/src/class/generic.c b/src/class/generic.c
+--- a/src/class/generic.c	2023-02-24 22:56:35.000000000 +0000
++++ b/src/class/generic.c	2023-02-28 15:22:23.215719941 +0000
+@@ -41,11 +41,8 @@ PhidgetGeneric_setDefaults(PhidgetChanne
+ 
+ static PhidgetReturnCode
+ PhidgetGeneric_bridgeInput(PhidgetChannelHandle phid, BridgePacket *bp) {
+-	PhidgetGenericHandle ch;
+ 	PhidgetReturnCode res;
+ 
+-	ch = (PhidgetGenericHandle)phid;
+-
+ 	switch (bp->vpkt) {
+ 
+ 	default:
+diff -urp a/src/class/motorpositioncontroller.c b/src/class/motorpositioncontroller.c
+--- a/src/class/motorpositioncontroller.c	2023-02-24 22:56:35.000000000 +0000
++++ b/src/class/motorpositioncontroller.c	2023-02-28 15:22:23.216719935 +0000
+@@ -506,7 +506,7 @@ PhidgetMotorPositionController_setKd(Phi
+ 	default:
+ 		break;
+ 	}
+-#endif PHIDUID_DCC1004_SUPPORTED
++#endif /* PHIDUID_DCC1004_SUPPORTED */
+ 
+ 	return (bridgeSendToDevice((PhidgetChannelHandle)ch, BP_SETKD, NULL, NULL, 1, "%g", Kd));
+ }
+@@ -525,7 +525,7 @@ PhidgetMotorPositionController_getKd(Phi
+ 	case PHIDCHUID_DCC1004_MOTORPOSITIONCONTROLLER_100:
+ 		*Kd = ch->kd / fabs(ch->rescaleFactor);
+ 		break;
+-#endif PHIDUID_DCC1004_SUPPORTED
++#endif /* PHIDUID_DCC1004_SUPPORTED */
+ 	default:
+ 		*Kd = ch->kd;
+ 		break;
+diff -urp a/src/device/bridgedevice.c b/src/device/bridgedevice.c
+--- a/src/device/bridgedevice.c	2023-02-24 22:56:33.000000000 +0000
++++ b/src/device/bridgedevice.c	2023-02-28 15:22:23.216719935 +0000
+@@ -33,7 +33,9 @@
+ 
+ // === Internal Functions === //
+ static PhidgetReturnCode _sendpacket(mosiop_t iop, PhidgetBridgeDeviceHandle phid);
++#if PHIDUID_1046_1_SUPPORTED
+ static void PhidgetBridgeDevice_updateBridgeIntervals(PhidgetChannelHandle ch, PhidgetBridgeDeviceHandle phid, BridgePacket *bp);
++#endif /* PHIDUID_1046_1_SUPPORTED */
+ 
+ //initAfterOpen - sets up the initial state of an object, reading in packets from the device if needed
+ //				  used during attach initialization - on every attach
+@@ -293,7 +295,9 @@ PhidgetBridgeDevice_dataInput(PhidgetDev
+ static PhidgetReturnCode CCONV
+ PhidgetBridgeDevice_bridgeInput(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	PhidgetBridgeDeviceHandle phid = (PhidgetBridgeDeviceHandle)ch->parent;
++#if PHIDUID_1046_1_SUPPORTED
+ 	unsigned char buffer[MAX_OUT_PACKET_SIZE] = { 0 };
++#endif /* PHIDUID_1046_1_SUPPORTED */
+ 	PhidgetChannelHandle channel;
+ 	PhidgetReturnCode ret;
+ 	int i;
+@@ -419,6 +423,7 @@ PhidgetBridgeDevice_bridgeInput(PhidgetC
+ 	}
+ }
+ 
++#if PHIDUID_1046_1_SUPPORTED
+ static void PhidgetBridgeDevice_updateBridgeIntervals(PhidgetChannelHandle ch, PhidgetBridgeDeviceHandle phid, BridgePacket *bp)
+ {
+ 	uint8_t buffer[MAX_IN_PACKET_SIZE];
+@@ -470,6 +476,7 @@ static void PhidgetBridgeDevice_updateBr
+ 		}
+ 	}
+ }
++#endif /* PHIDUID_1046_1_SUPPORTED */
+ 
+ //makePacket - constructs a packet using current device state
+ static PhidgetReturnCode _sendpacket(mosiop_t iop, PhidgetBridgeDeviceHandle phid) {
+diff -urp a/src/device/dataadapterdevice.c b/src/device/dataadapterdevice.c
+--- a/src/device/dataadapterdevice.c	2023-02-24 22:56:34.000000000 +0000
++++ b/src/device/dataadapterdevice.c	2023-02-28 15:22:23.216719935 +0000
+@@ -39,7 +39,9 @@
+ //				  used during attach initialization - on every attach
+ static PhidgetReturnCode CCONV
+ PhidgetDataAdapterDevice_initAfterOpen(PhidgetDeviceHandle device) {
++#if (PHIDUID_ADP1001_USB_SUPPORTED || PHIDUID_ADP_RS485_422_USB_SUPPORTED || PHIDUID_ADP_SERIAL_USB_SUPPORTED)
+ 	PhidgetDataAdapterDeviceHandle phid = (PhidgetDataAdapterDeviceHandle)device;
++#endif
+ #if PHIDUID_ADP_SERIAL_USB_SUPPORTED
+ 	uint8_t buffer[MAX_IN_PACKET_SIZE];
+ 	PhidgetReturnCode ret;
+@@ -111,8 +113,8 @@ PhidgetReturnCode checkIOValid(PhidgetCh
+ //dataInput - parses device packets
+ static PhidgetReturnCode CCONV
+ PhidgetDataAdapterDevice_dataInput(PhidgetDeviceHandle device, uint8_t *buffer, size_t length) {
+-	PhidgetDataAdapterDeviceHandle phid = (PhidgetDataAdapterDeviceHandle)device;
+ #if (PHIDUID_ADP1001_USB_SUPPORTED || PHIDUID_ADP_RS485_422_USB_SUPPORTED || PHIDUID_ADP_SERIAL_USB_SUPPORTED)
++	PhidgetDataAdapterDeviceHandle phid = (PhidgetDataAdapterDeviceHandle)device;
+ 	PhidgetChannelHandle channel;
+ 	PhidgetReturnCode ret;
+ #if (PHIDUID_ADP1001_USB_SUPPORTED || PHIDUID_ADP_SERIAL_USB_SUPPORTED)
+diff -urp a/src/device/encoderdevice.c b/src/device/encoderdevice.c
+--- a/src/device/encoderdevice.c	2023-02-24 22:56:33.000000000 +0000
++++ b/src/device/encoderdevice.c	2023-02-28 15:22:23.216719935 +0000
+@@ -126,7 +126,7 @@ PhidgetEncoderDevice_initAfterOpen(Phidg
+ 	case PHIDUID_1047_2:
+ #if PHIDUID_1047_2_300_SUPPORTED
+ 	case PHIDUID_1047_2_300:
+-#endif PHIDUID_1047_2_300_SUPPORTED
++#endif /* PHIDUID_1047_2_300_SUPPORTED */
+ 		waitForReads((PhidgetDeviceHandle)phid, 1, 100);
+ 		break;
+ 	default:
+diff -urp a/src/device/hubdevice.c b/src/device/hubdevice.c
+--- a/src/device/hubdevice.c	2023-02-24 22:56:33.000000000 +0000
++++ b/src/device/hubdevice.c	2023-02-28 15:22:23.217719929 +0000
+@@ -284,6 +284,7 @@ PhidgetHubDevice_updatePortProperties(Ph
+ 	return (EPHIDGET_OK);
+ }
+ 
++#ifndef NDEBUG
+ static const char *
+ Phidget_strPhidgetHubDevice_HubPacketType(PhidgetHubDevice_HubPacketType packetType) {
+ 
+@@ -297,6 +298,7 @@ Phidget_strPhidgetHubDevice_HubPacketTyp
+ 		return ("");
+ 	}
+ }
++#endif /* NDEBUG */
+ 
+ static void
+ logTXBufferStatus(const char *file, int line, const char *func, Phidget_LogLevel level, const char *message,
+@@ -1277,4 +1279,4 @@ _setADCCalibrationValuesGainOffset(mosio
+ 	default:
+ 		return (EPHIDGET_UNSUPPORTED);
+ 	}
+-}
+\ No newline at end of file
++}
+diff -urp a/src/device/meshdongledevice.c b/src/device/meshdongledevice.c
+--- a/src/device/meshdongledevice.c	2023-02-24 22:56:33.000000000 +0000
++++ b/src/device/meshdongledevice.c	2023-02-28 15:22:23.217719929 +0000
+@@ -71,6 +71,7 @@ PhidgetMeshDongleDevice_initAfterOpen(Ph
+ 	return (EPHIDGET_OK);
+ }
+ 
++#if PHIDUID_MESHDONGLE_SUPPORTED
+ static void
+ readInTXBufferCounts(PhidgetMeshDongleDeviceHandle phid) {
+ 	PhidgetReturnCode ret;
+@@ -142,14 +143,15 @@ processPacket(PhidgetMeshDongleDeviceHan
+ 
+ 	return (ret);
+ }
++#endif /* PHIDUID_MESHDONGLE_SUPPORTED */
+ 
+ //dataInput - parses device packets
+ static PhidgetReturnCode CCONV
+ PhidgetMeshDongleDevice_dataInput(PhidgetDeviceHandle device, uint8_t *buffer, size_t length) {
+ 	PhidgetMeshDongleDeviceHandle phid = (PhidgetMeshDongleDeviceHandle)device;
+ 	PhidgetReturnCode ret;
+-	int readPtr;
+ #if PHIDUID_MESHDONGLE_SUPPORTED
++	int readPtr = 0;
+ 	PhidgetPacketTrackerHandle packetTracker;
+ 	VINTPacketStatusCode response;
+ 	int killOutstandingPackets;
+@@ -165,7 +167,6 @@ PhidgetMeshDongleDevice_dataInput(Phidge
+ 	assert(buffer);
+ 
+ 	ret = EPHIDGET_OK;
+-	readPtr = 0;
+ 
+ 	switch (phid->phid.deviceInfo.UDD->uid) {
+ #if PHIDUID_MESHDONGLE_SUPPORTED
+diff -urp a/src/device/rfiddevice.c b/src/device/rfiddevice.c
+--- a/src/device/rfiddevice.c	2023-02-24 22:56:34.000000000 +0000
++++ b/src/device/rfiddevice.c	2023-02-28 15:22:23.217719929 +0000
+@@ -415,9 +415,9 @@ PhidgetRFIDDevice_dataInput(PhidgetDevic
+ static PhidgetReturnCode CCONV
+ PhidgetRFIDDevice_bridgeInput(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	PhidgetRFIDDeviceHandle phid = (PhidgetRFIDDeviceHandle)ch->parent;
+-	unsigned char buffer[MAX_OUT_PACKET_SIZE] = { 0 };
+ 	double dutyCycle;
+ #if PHIDUID_1024_V2_USB_SUPPORTED
++	unsigned char buffer[MAX_OUT_PACKET_SIZE] = { 0 };
+ 	PhidgetRFID_Protocol protocol;
+ 	PhidgetChannelHandle channel;
+ 	PhidgetReturnCode ret;
+diff -urp a/src/ext/mos/sha2.c b/src/ext/mos/sha2.c
+--- a/src/ext/mos/sha2.c	2023-02-24 22:56:38.000000000 +0000
++++ b/src/ext/mos/sha2.c	2023-02-28 15:22:23.218719923 +0000
+@@ -518,7 +518,7 @@ mos_SHA256_Update(SHA256_CTX* context, c
+ 	usedspace = freespace = 0;
+ }
+ 
+-void mos_SHA256_Final(sha2_byte digest[], SHA256_CTX* context) {
++void mos_SHA256_Final(sha2_byte digest[SHA256_DIGEST_LENGTH], SHA256_CTX* context) {
+ 	sha2_word32	*d = (sha2_word32*)(void *)digest;
+ 	unsigned int	usedspace;
+ 	void *v;
+@@ -584,7 +584,7 @@ void mos_SHA256_Final(sha2_byte digest[]
+ 	usedspace = 0;
+ }
+ 
+-char *mos_SHA256_End(SHA256_CTX* context, char buffer[]) {
++char *mos_SHA256_End(SHA256_CTX* context, char buffer[SHA256_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA256_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+@@ -892,7 +892,7 @@ mos_SHA512_Last(SHA512_CTX* context) {
+ 	mos_SHA512_Transform(context, (sha2_word64*)(void *)context->buffer);
+ }
+ 
+-void mos_SHA512_Final(sha2_byte digest[], SHA512_CTX* context) {
++void mos_SHA512_Final(sha2_byte digest[SHA512_DIGEST_LENGTH], SHA512_CTX* context) {
+ 	sha2_word64	*d = (sha2_word64*)(void *)digest;
+ 
+ 	/* Sanity check: */
+@@ -921,7 +921,7 @@ void mos_SHA512_Final(sha2_byte digest[]
+ 	mos_bzero(context, sizeof(*context));
+ }
+ 
+-char *mos_SHA512_End(SHA512_CTX* context, char buffer[]) {
++char *mos_SHA512_End(SHA512_CTX* context, char buffer[SHA512_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA512_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+@@ -969,7 +969,7 @@ mos_SHA384_Update(SHA384_CTX* context, c
+ 	mos_SHA512_Update((SHA512_CTX*)context, data, len);
+ }
+ 
+-void mos_SHA384_Final(sha2_byte digest[], SHA384_CTX* context) {
++void mos_SHA384_Final(sha2_byte digest[SHA384_DIGEST_LENGTH], SHA384_CTX* context) {
+ 	sha2_word64	*d = (sha2_word64*)(void *)digest;
+ 
+ 	/* Sanity check: */
+@@ -998,7 +998,7 @@ void mos_SHA384_Final(sha2_byte digest[]
+ 	mos_bzero(context, sizeof(*context));
+ }
+ 
+-char *mos_SHA384_End(SHA384_CTX* context, char buffer[]) {
++char *mos_SHA384_End(SHA384_CTX* context, char buffer[SHA384_DIGEST_STRING_LENGTH]) {
+ 	sha2_byte	digest[SHA384_DIGEST_LENGTH], *d = digest;
+ 	int		i;
+ 
+diff -urp a/src/plat/linux/usblinux.c b/src/plat/linux/usblinux.c
+--- a/src/plat/linux/usblinux.c	2023-02-24 22:56:36.000000000 +0000
++++ b/src/plat/linux/usblinux.c	2023-02-28 15:22:23.218719923 +0000
+@@ -59,32 +59,6 @@ static libusb_context *libusb_ctx;
+ static void joinHandleEventsThread(void);
+ #endif
+ 
+-static void
+-logBuffer(unsigned char *data, int dataLen, const char *message) {
+-	Phidget_LogLevel ll;
+-	char str[2000];
+-	int i, j;
+-
+-	PhidgetLog_getSourceLevel("phidget22usb", &ll);
+-	if (ll != PHIDGET_LOG_VERBOSE)
+-		return;
+-
+-	str[0]='\0';
+-	if (dataLen > 0) {
+-		for (i = 0, j = 0; i < dataLen; i++, j += 6) {
+-			if (!(i % 8)) {
+-				str[j] = '\n';
+-				str[j + 1] = '\t';
+-				j += 2;
+-			}
+-			mos_snprintf(str + j, sizeof (str) - j, "0x%02x, ", data[i]);
+-		}
+-		str[j - 2] = '\0'; //delete last ','
+-	}
+-
+-	usblogdebug("%s%s", message, str);
+-}
+-
+ PhidgetReturnCode
+ PhidgetUSBCloseHandle(PhidgetUSBConnectionHandle conn) {
+ 	int ret;
+diff -urp a/src/util/dataadaptersupport.c b/src/util/dataadaptersupport.c
+--- a/src/util/dataadaptersupport.c	2023-02-24 22:56:32.000000000 +0000
++++ b/src/util/dataadaptersupport.c	2023-02-28 15:22:23.218719923 +0000
+@@ -44,6 +44,8 @@ SetNAK(PhidgetChannelHandle ch) {
+ 	return (EPHIDGET_OK);
+ }
+ 
++#if (PHIDUID_ADP1001_USB_SUPPORTED || PHIDUID_ADP1001_VINT_SUPPORTED || PHIDUID_ADP_RS485_422_USB_SUPPORTED \
++	|| PHIDUID_ADP_RS485_422_VINT_SUPPORTED || PHIDUID_ADP_SERIAL_USB_SUPPORTED || PHIDUID_ADP_SERIAL_VINT_SUPPORTED)
+ static PhidgetReturnCode
+ ClearNAK(PhidgetChannelHandle ch) {
+ 
+@@ -185,6 +187,7 @@ processDataPackets(PhidgetChannelHandle
+ 		MOS_PANIC("Unexpected packet type");
+ 	}
+ }
++#endif
+ 
+ //dataInput - parses device packets
+ PhidgetReturnCode CCONV
+@@ -231,15 +234,14 @@ PhidgetDataAdapterSupport_dataInput(Phid
+ 
+ PhidgetReturnCode CCONV
+ PhidgetDataAdapterSupport_bridgeInput(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	PhidgetDeviceHandle device = (PhidgetDeviceHandle)ch->parent;
+ #if (PHIDUID_ADP1001_USB_SUPPORTED || PHIDUID_ADP1001_VINT_SUPPORTED || PHIDUID_ADP_RS485_422_USB_SUPPORTED \
+ 	|| PHIDUID_ADP_RS485_422_VINT_SUPPORTED || PHIDUID_ADP_SERIAL_USB_SUPPORTED || PHIDUID_ADP_SERIAL_VINT_SUPPORTED)
++	PhidgetDeviceHandle device = (PhidgetDeviceHandle)ch->parent;
+ 	unsigned char buffer[MAX_OUT_PACKET_SIZE] = { 0 };
+ 	PhidgetReturnCode ret;
+ 	size_t len;
+-#endif
+-
+ 	PhidgetDataAdapterSupportHandle dataAdapterSupport = DATAADAPTER_SUPPORT(ch);
++#endif
+ 
+ 	switch (ch->UCD->uid) {
+ #if PHIDUID_ADP1001_USB_SUPPORTED
+diff -urp a/src/util/log.c b/src/util/log.c
+--- a/src/util/log.c	2023-02-24 22:56:32.000000000 +0000
++++ b/src/util/log.c	2023-02-28 15:23:50.493178619 +0000
+@@ -817,7 +817,7 @@ PhidgetLog_loge(const char *file, int li
+ //#define FLUSH_CNT 4		// 1 second
+ #define FLUSH_CNT (4*5)		// 5 seconds
+ void
+-PhidgetLog_flushDups() {
++PhidgetLog_flushDups(void) {
+ 	char mbuf[LOGMSG_MAX];
+ 	int len;
+ 	int err;
+diff -urp a/src/util/phidgetlog.h b/src/util/phidgetlog.h
+--- a/src/util/phidgetlog.h	2023-02-24 22:56:32.000000000 +0000
++++ b/src/util/phidgetlog.h	2023-02-28 15:23:42.861225955 +0000
+@@ -75,7 +75,7 @@ void PhidgetLogFini(void);
+ 
+ void logStackTrace(Phidget_LogLevel, const char *);
+ 
+-void PhidgetLog_flushDups();
++void PhidgetLog_flushDups(void);
+
+ /* logs to visual studio output... or info  */
+ #define logvs(...) \
+diff -urp a/src/vintpackets.c b/src/vintpackets.c
+--- a/src/vintpackets.c	2023-02-24 22:56:33.000000000 +0000
++++ b/src/vintpackets.c	2023-02-28 15:22:23.220719910 +0000
+@@ -436,7 +436,7 @@ recvFIRMWARE_UPGRADE_STM32F3(PhidgetChan
+ static PhidgetReturnCode
+ send1014_3_VINT(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	double dutyCycle;
+-	uint8_t buf[2];
++	uint8_t buf[2] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -495,7 +495,7 @@ recv1014_3_VINT(PhidgetChannelHandle ch,
+ static PhidgetReturnCode
+ send1017_2_VINT(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	double dutyCycle;
+-	uint8_t buf[2];
++	uint8_t buf[2] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -1747,7 +1747,7 @@ recvTMP1000(PhidgetChannelHandle ch, con
+ 
+ static PhidgetReturnCode
+ sendSTC1001(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -1838,7 +1838,7 @@ sendSTC1001_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendSTC1003(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -1929,7 +1929,7 @@ sendSTC1003_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendSTC1003_1(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -2126,7 +2126,7 @@ recvSTC1005_0(PhidgetChannelHandle ch, c
+ #if PHIDUID_STC1004_0_SUPPORTED
+ static PhidgetReturnCode
+ sendSTC1004_0(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -2222,7 +2222,7 @@ recvSTC1004_0(PhidgetChannelHandle ch, c
+ 
+ static PhidgetReturnCode
+ sendSTC1000(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -2312,7 +2312,7 @@ sendSTC1000_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendSTC1002(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -2814,7 +2814,7 @@ recvSND1000(PhidgetChannelHandle ch, con
+ static PhidgetReturnCode
+ sendSAF1000(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	int overVoltage_fixed;
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -2978,7 +2978,7 @@ recvSAF1000_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendREL1101(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[2];
++	uint8_t buf[2] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -3056,7 +3056,7 @@ recvREL1101_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendREL1101_1(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -3128,7 +3128,7 @@ recvREL1101_1(PhidgetChannelHandle ch, c
+ 
+ static PhidgetReturnCode
+ sendREL1100(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -3245,7 +3245,7 @@ recvREL1100_Failsafe_Frequency(PhidgetCh
+ 
+ static PhidgetReturnCode
+ sendREL1000(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[2];
++	uint8_t buf[2] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -3369,7 +3369,7 @@ recvREL1000_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendRCC1000(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -5935,7 +5935,7 @@ recvDST1002(PhidgetChannelHandle ch, con
+ 
+ static PhidgetReturnCode
+ sendDCC1100(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -6348,7 +6348,7 @@ sendDCC1000_POSITIONCONTROL(PhidgetChann
+ 
+ static PhidgetReturnCode
+ sendDCC1000_POSITIONCONTROL_FAILSAFE(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -6506,7 +6506,7 @@ sendDCC1000_POSITIONCONTROL_FAILSAFE(Phi
+ #if PHIDUID_DCC1004_SUPPORTED
+ static PhidgetReturnCode
+ sendDCC1004(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -6687,7 +6687,7 @@ sendDCC1004(PhidgetChannelHandle ch, Bri
+ #if PHIDUID_DCC1005_SUPPORTED
+ static PhidgetReturnCode
+ sendDCC1005(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -6943,7 +6943,7 @@ recvDCC1100_Failsafe(PhidgetChannelHandl
+ #if PHIDUID_DCC1101_SUPPORTED
+ static PhidgetReturnCode
+ sendDCC1101(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -7906,7 +7906,7 @@ recvDCC1005(PhidgetChannelHandle ch, con
+ 
+ static PhidgetReturnCode
+ sendDCC1001(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -8186,7 +8186,7 @@ recvDCC1001_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendDCC1002(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -8354,7 +8354,7 @@ sendDCC1002_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendDCC1003(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[8];
++	uint8_t buf[8] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -8695,18 +8695,6 @@ recvVCP1100(PhidgetChannelHandle ch, con
+ }
+ 
+ static PhidgetReturnCode
+-sendVCP1100_1_OLDPROTO(PhidgetChannelHandle ch, BridgePacket* bp) {
+-
+-	MOS_PANIC("Invalid Channel UID");
+-}
+-
+-static PhidgetReturnCode
+-recvVCP1100_1_OLDPROTO(PhidgetChannelHandle ch, const uint8_t* buf, size_t len) {
+-
+-	MOS_PANIC("Invalid Channel UID");
+-}
+-
+-static PhidgetReturnCode
+ sendDAQ1400(PhidgetChannelHandle ch, BridgePacket *bp) {
+ 	PhidgetVINTDeviceHandle phid = (PhidgetVINTDeviceHandle)ch->parent;
+ 	PhidgetReturnCode ret;
+@@ -8960,7 +8948,7 @@ recvDAQ1300(PhidgetChannelHandle ch, con
+ 
+ static PhidgetReturnCode
+ sendOUT1100(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -9104,7 +9092,7 @@ recvDAQ1200(PhidgetChannelHandle ch, con
+ 
+ static PhidgetReturnCode
+ sendOUT1002(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -9189,7 +9177,7 @@ recvOUT1002_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendOUT1001(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -9274,7 +9262,7 @@ recvOUT1001_Failsafe(PhidgetChannelHandl
+ 
+ static PhidgetReturnCode
+ sendOUT1000(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[4];
++	uint8_t buf[4] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
+@@ -9873,7 +9861,7 @@ recvVOLTAGEINPUT_PORT_V2(PhidgetChannelH
+ 
+ static PhidgetReturnCode
+ sendDIGITALOUTPUT_PORT(PhidgetChannelHandle ch, BridgePacket *bp) {
+-	uint8_t buf[2];
++	uint8_t buf[2] = { 0 };
+ 
+ 	assert(ch);
+ 	assert(bp);
