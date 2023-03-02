@@ -2,6 +2,12 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update to libphidget22 1.13. (`#161 <https://github.com/ros-drivers/phidgets_drivers/issues/161>`_)
+  Co-authored-by: Chris Lalancette <clalancette@gmail.com>
+* Contributors: Martin Günther
+
 1.0.6 (2022-12-01)
 ------------------
 * Merge pull request `#129 <https://github.com/ros-drivers/phidgets_drivers/issues/129>`_ from mintar/feat-pre-commit
