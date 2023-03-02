@@ -11,11 +11,11 @@ set(extra_c_flags "-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declar
 
 include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
-    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.7.20210816.tar.gz
-    URL_MD5 6eadbf23feeac246b5b687883d5f8d28
+    URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.13.20230224.tar.gz
+    URL_MD5 e34f6bf266562d1950a82067ab5beaa9
 
     CONFIGURE_COMMAND "./configure"
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidgets22-1.7.20210816-fix-warnings.patch
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidget22-1.13.20230224-fix-warnings.patch
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
     BUILD_IN_SOURCE 1
     BUILD_COMMAND make "CFLAGS=-g -O2 -Wno-incompatible-pointer-types -Wno-deprecated-declarations -Wno-format-truncation"
