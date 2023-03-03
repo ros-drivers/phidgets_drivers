@@ -2,6 +2,9 @@
 Changelog for package phidgets_spatial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.3.0 (2022-04-13)
 ------------------
 

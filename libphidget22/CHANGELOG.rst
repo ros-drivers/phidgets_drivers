@@ -2,6 +2,11 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update to libphidget22 1.13. (`#160 <https://github.com/ros-drivers/phidgets_drivers/issues/160>`_)
+* Contributors: Chris Lalancette
+
 2.3.0 (2022-04-13)
 ------------------
 * Update to libphidgets 20220203 (`#138 <https://github.com/ros-drivers/phidgets_drivers/issues/138>`_)

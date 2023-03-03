@@ -2,6 +2,9 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.3.0 (2022-04-13)
 ------------------
 * Merge pull request `#132 <https://github.com/ros-drivers/phidgets_drivers/issues/132>`_ from mintar/feat-pre-commit-ros2

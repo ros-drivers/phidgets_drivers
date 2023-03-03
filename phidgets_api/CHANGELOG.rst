@@ -2,6 +2,11 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* adding support for analog outputs for ROS2 (`#145 <https://github.com/ros-drivers/phidgets_drivers/issues/145>`_)
+* Contributors: Alexis Fetet
+
 2.3.0 (2022-04-13)
 ------------------
 

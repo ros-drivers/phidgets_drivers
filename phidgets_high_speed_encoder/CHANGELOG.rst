@@ -2,6 +2,15 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* BUGFIX: Z-channel index was not observed in reported positions (`#158 <https://github.com/ros-drivers/phidgets_drivers/issues/158>`_)
+  * fix doxygen format and ensure initial values
+  * BUGFIX: Encoder index was not used
+* BUGFIX: Wrong speed conversion factor (`#157 <https://github.com/ros-drivers/phidgets_drivers/issues/157>`_)
+  The current code assumed time intervals from the Phisgets API was microseconds, but it's actually milliseconds. Reported speeds are all wrong by a factor of 1e3.
+* Contributors: Jose Luis Blanco-Claraco, Martin Günther
+
 2.3.0 (2022-04-13)
 ------------------
 * Merge pull request `#132 <https://github.com/ros-drivers/phidgets_drivers/issues/132>`_ from mintar/feat-pre-commit-ros2
