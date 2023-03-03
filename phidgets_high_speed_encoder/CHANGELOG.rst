@@ -2,8 +2,8 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.1 (2023-03-03)
+------------------
 * BUGFIX: Z-channel index was not observed in reported positions (`#158 <https://github.com/ros-drivers/phidgets_drivers/issues/158>`_)
   * fix doxygen format and ensure initial values
   * BUGFIX: Encoder index was not used
