@@ -21,6 +21,29 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     """Generate launch description with multiple components."""
+
+    params = {
+        # optional param use_orientation, default is false
+        'use_orientation': False,
+
+        # optional param spatial_algorithm, default is 'ahrs'
+        'spatial_algorithm': 'ahrs',
+
+        # optional ahrs parameters
+        'ahrs_angular_velocity_threshold': 1.0,
+        'ahrs_angular_velocity_delta_threshold': 0.1,
+        'ahrs_acceleration_threshold': 0.1,
+        'ahrs_mag_time': 10.0,
+        'ahrs_accel_time': 10.0,
+        'ahrs_bias_time': 1.25,
+
+        # optional param algorithm_magnetometer_gain, default is 0.005
+        'algorithm_magnetometer_gain': 0.005,
+
+        # optional param heating_enabled, not modified by default
+        'heating_enabled': False,
+    }
+
     container = ComposableNodeContainer(
             name='phidget_container',
             namespace='',
@@ -30,7 +53,8 @@ def generate_launch_description():
                 ComposableNode(
                     package='phidgets_spatial',
                     plugin='phidgets::SpatialRosI',
-                    name='phidgets_spatial'),
+                    name='phidgets_spatial',
+                    parameters=[params]),
             ],
             output='both',
     )

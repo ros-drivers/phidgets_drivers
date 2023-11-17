@@ -54,6 +54,60 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Spatial");
 
+    bool use_orientation = this->declare_parameter(
+        "use_orientation",
+        false);  // default do not use the onboard orientation
+    std::string spatial_algorithm =
+        this->declare_parameter("spatial_algorithm", "ahrs");
+
+    double ahrsAngularVelocityThreshold;
+    double ahrsAngularVelocityDeltaThreshold;
+    double ahrsAccelerationThreshold;
+    double ahrsMagTime;
+    double ahrsAccelTime;
+    double ahrsBiasTime;
+
+    this->declare_parameter("ahrs_angular_velocity_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_angular_velocity_delta_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_acceleration_threshold",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_mag_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_accel_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+    this->declare_parameter("ahrs_bias_time",
+                            rclcpp::ParameterType::PARAMETER_DOUBLE);
+
+    bool has_ahrs_params =
+        this->get_parameter("ahrs_angular_velocity_threshold",
+                            ahrsAngularVelocityThreshold) &&
+        this->get_parameter("ahrs_angular_velocity_delta_threshold",
+                            ahrsAngularVelocityDeltaThreshold) &&
+        this->get_parameter("ahrs_acceleration_threshold",
+                            ahrsAccelerationThreshold) &&
+        this->get_parameter("ahrs_mag_time", ahrsMagTime) &&
+        this->get_parameter("ahrs_accel_time", ahrsAccelTime) &&
+        this->get_parameter("ahrs_bias_time", ahrsBiasTime);
+
+    double algorithm_magnetometer_gain;
+    if (!this->get_parameter("algorithm_magnetometer_gain",
+                             algorithm_magnetometer_gain))
+    {
+        algorithm_magnetometer_gain =
+            0.005;  // default to 0.005 (similar to phidgets api)
+    }
+
+    bool heating_enabled;
+    bool set_heating_enabled = true;
+    if (!this->get_parameter("heating_enabled", heating_enabled))
+    {
+        set_heating_enabled =
+            false;  // if parameter not set, do not call api (because this
+                    // function is just available from MOT0109 onwards)
+    }
+
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 
@@ -165,13 +219,28 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
     // finished setting up.
     std::lock_guard<std::mutex> lock(spatial_mutex_);
 
+    last_quat_w_ = 0.0;
+    last_quat_x_ = 0.0;
+    last_quat_y_ = 0.0;
+    last_quat_z_ = 0.0;
+
     try
     {
+        std::function<void(const double[4], double)> algorithm_data_handler =
+            nullptr;
+        if (use_orientation)
+        {
+            algorithm_data_handler =
+                std::bind(&SpatialRosI::spatialAlgorithmDataCallback, this,
+                          std::placeholders::_1, std::placeholders::_2);
+        }
+
         spatial_ = std::make_unique<Spatial>(
             serial_num, hub_port, false,
             std::bind(&SpatialRosI::spatialDataCallback, this,
                       std::placeholders::_1, std::placeholders::_2,
                       std::placeholders::_3, std::placeholders::_4),
+            algorithm_data_handler,
             std::bind(&SpatialRosI::attachCallback, this),
             std::bind(&SpatialRosI::detachCallback, this));
 
@@ -185,6 +254,22 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
 
         calibrate();
 
+        if (use_orientation)
+        {
+            spatial_->setSpatialAlgorithm(spatial_algorithm);
+
+            if (has_ahrs_params)
+            {
+                spatial_->setAHRSParameters(ahrsAngularVelocityThreshold,
+                                            ahrsAngularVelocityDeltaThreshold,
+                                            ahrsAccelerationThreshold,
+                                            ahrsMagTime, ahrsAccelTime,
+                                            ahrsBiasTime);
+            }
+
+            spatial_->setAlgorithmMagnetometerGain(algorithm_magnetometer_gain);
+        }
+
         if (has_compass_params)
         {
             spatial_->setCompassCorrectionParameters(
@@ -193,6 +278,11 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
         } else
         {
             RCLCPP_INFO(get_logger(), "No compass correction params found.");
+        }
+
+        if (set_heating_enabled)
+        {
+            spatial_->setHeatingEnabled(heating_enabled);
         }
     } catch (const Phidget22Error &err)
     {
@@ -302,6 +392,12 @@ void SpatialRosI::publishLatest()
     msg->angular_velocity.x = last_gyro_x_;
     msg->angular_velocity.y = last_gyro_y_;
     msg->angular_velocity.z = last_gyro_z_;
+
+    // set spatial algorithm orientation estimation
+    msg->orientation.w = last_quat_w_;
+    msg->orientation.x = last_quat_x_;
+    msg->orientation.y = last_quat_y_;
+    msg->orientation.z = last_quat_z_;
 
     imu_pub_->publish(std::move(msg));
 
@@ -465,6 +561,16 @@ void SpatialRosI::spatialDataCallback(const double acceleration[3],
     }
 
     last_cb_time_ = now;
+}
+
+void SpatialRosI::spatialAlgorithmDataCallback(const double quaternion[4],
+                                               double timestamp)
+{
+    (void)timestamp;
+    last_quat_w_ = quaternion[3];
+    last_quat_x_ = quaternion[0];
+    last_quat_y_ = quaternion[1];
+    last_quat_z_ = quaternion[2];
 }
 
 void SpatialRosI::attachCallback()
