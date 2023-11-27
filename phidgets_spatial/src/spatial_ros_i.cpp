@@ -96,11 +96,14 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
         nh_private_.getParam("ahrs_bias_time", ahrsBiasTime);
 
     double algorithm_magnetometer_gain;
+    bool set_algorithm_magnetometer_gain = true;
     if (!nh_private_.getParam("algorithm_magnetometer_gain",
                               algorithm_magnetometer_gain))
     {
-        algorithm_magnetometer_gain =
-            0.005;  // default to 0.005 (similar to phidgets api)
+        algorithm_magnetometer_gain = 0.0;
+        set_algorithm_magnetometer_gain =
+            false;  // if parameter not set, do not call api (because this
+                    // function is not available from MOT0110 onwards)
     }
 
     bool heating_enabled;
@@ -272,7 +275,9 @@ SpatialRosI::SpatialRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
                                             ahrsBiasTime);
             }
 
-            spatial_->setAlgorithmMagnetometerGain(algorithm_magnetometer_gain);
+            if (set_algorithm_magnetometer_gain)
+                spatial_->setAlgorithmMagnetometerGain(
+                    algorithm_magnetometer_gain);
         }
 
         if (has_compass_params)

@@ -39,6 +39,7 @@
          <param name="ahrs_bias_time" value="1.25"/> -->
 
     # optional param algorithm_magnetometer_gain, default is 0.005
+    # WARNING: do not set on PhidgetSpatial MOT0110 onwards (not supported)!
     <!-- <param name="algorithm_magnetometer_gain" value="0.005"/> -->
 
     # optional param heating_enabled, not modified by default
