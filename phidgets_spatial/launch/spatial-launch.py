@@ -38,7 +38,8 @@ def generate_launch_description():
         'ahrs_bias_time': 1.25,
 
         # optional param algorithm_magnetometer_gain, default is 0.005
-        'algorithm_magnetometer_gain': 0.005,
+        # WARNING: do not set on PhidgetSpatial MOT0110 onwards (not supported)!
+        # 'algorithm_magnetometer_gain': 0.005,
 
         # optional param heating_enabled, not modified by default
         'heating_enabled': False,
