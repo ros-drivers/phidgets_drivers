@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.2 (2023-11-27)
+------------------
 * added new parameters for spatial precision MOT0109 onwards
 * added support for phidget spatial onboard orientation estimation
 * Contributors: Malte kl. Piening, Martin Günther

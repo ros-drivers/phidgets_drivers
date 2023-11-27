@@ -2,8 +2,8 @@
 Changelog for package phidgets_spatial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.2 (2023-11-27)
+------------------
 * Only set magnetometer gain if param is set (`#169 <https://github.com/ros-drivers/phidgets_drivers/issues/169>`_)
 * added new parameters for spatial precision MOT0109 onwards
 * added support for phidget spatial onboard orientation estimation
