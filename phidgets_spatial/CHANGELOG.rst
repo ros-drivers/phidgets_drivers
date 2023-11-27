@@ -2,6 +2,11 @@
 Changelog for package phidgets_imu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Only set magnetometer gain if param is set (`#170 <https://github.com/ros-drivers/phidgets_drivers/issues/170>`_)
+* Contributors: Martin Günther
+
 1.0.7 (2023-03-02)
 ------------------
 

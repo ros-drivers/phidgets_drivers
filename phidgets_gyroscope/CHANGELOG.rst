@@ -2,6 +2,9 @@
 Changelog for package phidgets_gyroscope
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.7 (2023-03-02)
 ------------------
 
