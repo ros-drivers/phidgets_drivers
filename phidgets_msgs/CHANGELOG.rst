@@ -2,6 +2,9 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.3.1 (2023-03-03)
 ------------------
 * adding support for analog outputs for ROS2 (`#145 <https://github.com/ros-drivers/phidgets_drivers/issues/145>`_)

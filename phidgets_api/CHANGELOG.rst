@@ -2,6 +2,12 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added new parameters for spatial precision MOT0109 onwards
+* added support for phidget spatial onboard orientation estimation
+* Contributors: Malte kl. Piening, Martin Günther
+
 2.3.1 (2023-03-03)
 ------------------
 * adding support for analog outputs for ROS2 (`#145 <https://github.com/ros-drivers/phidgets_drivers/issues/145>`_)
