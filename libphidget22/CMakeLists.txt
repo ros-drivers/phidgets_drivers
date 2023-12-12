@@ -11,6 +11,7 @@ ExternalProject_Add(EP_${PROJECT_NAME}
     URL_MD5 e34f6bf266562d1950a82067ab5beaa9
 
     PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidget22-1.13.20230224-fix-warnings.patch
+    COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patch/libphidget22-1.13.20230224-fix-riscv64-build.patch
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
     CONFIGURE_COMMAND
       <SOURCE_DIR>/configure
