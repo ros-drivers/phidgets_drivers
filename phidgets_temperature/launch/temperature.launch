@@ -7,7 +7,7 @@
   <node pkg="nodelet" type="nodelet" name="temperature_manager"
     args="manager" output="screen" />
 
-  #### Gyroscope Driver #####################################################
+  #### Driver ###############################################################
 
   <node pkg="nodelet" type="nodelet" name="PhidgetsTemperatureNodelet"
     args="load phidgets_temperature/PhidgetsTemperatureNodelet temperature_manager"
@@ -21,11 +21,15 @@
     # optional param hub_port, used if connected to a VINT hub
     <!-- <param name="hub_port" value="0"/> -->
 
+    # optional param channel, defaults to 0, used if multiple reader ports are available
+    # Launch seperate nodelets for seperate channels 
+    <!-- <param name="channel" value="0"/> -->
+
     # optional param thermocouple_type, defaults is 0
     <!-- <param name="thermocouple_type" value="0" /> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
-    <param name="data_interval_ms" value="4"/>
+    <param name="data_interval_ms" value="250"/>
 
     # optional param publish_rate, defaults to 0
     <!-- <param name="publish_rate" value="0" /> -->

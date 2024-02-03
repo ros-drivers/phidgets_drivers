@@ -53,6 +53,7 @@ class TemperatureRosI final
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
     ros::Publisher temperature_pub_;
+    ros::Publisher temperature_sensor_pub_;
     void timerCallback(const ros::TimerEvent& event);
     ros::Timer timer_;
     int publish_rate_;
@@ -60,6 +61,7 @@ class TemperatureRosI final
     std::string server_ip_;
 
     void publishLatest();
+    void publishLatestTemperature();
 
     void temperatureChangeCallback(double temperature);
 };

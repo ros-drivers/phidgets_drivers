@@ -38,7 +38,7 @@
 namespace phidgets {
 
 Temperature::Temperature(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device,
+                         bool is_hub_port_device, int channel,
                          std::function<void(double)> temperature_handler)
     : temperature_handler_(temperature_handler)
 {
@@ -51,7 +51,7 @@ Temperature::Temperature(int32_t serial_number, int hub_port,
 
     helpers::openWaitForAttachment(
         reinterpret_cast<PhidgetHandle>(temperature_handle_), serial_number,
-        hub_port, is_hub_port_device, 0);
+        hub_port, is_hub_port_device, channel);
 
     ret = PhidgetTemperatureSensor_setOnTemperatureChangeHandler(
         temperature_handle_, TemperatureChangeHandler, this);
