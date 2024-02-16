@@ -76,6 +76,8 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
     double publish_rate_;
+    std::string server_name_;
+    std::string server_ip_;
 
     /// Publish the latest state for all encoder channels:
     void publishLatest();

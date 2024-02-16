@@ -68,6 +68,8 @@ class AnalogOutputsRosI final : public rclcpp::Node
     std::vector<std::unique_ptr<AnalogOutputSetter>> out_subs_;
 
     rclcpp::Service<phidgets_msgs::srv::SetAnalogOutput>::SharedPtr out_srv_;
+    std::string server_name_;
+    std::string server_ip_;
 
     bool setSrvCallback(
         const std::shared_ptr<phidgets_msgs::srv::SetAnalogOutput::Request> req,
