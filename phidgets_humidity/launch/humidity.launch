@@ -24,8 +24,8 @@
     # optional param  _type, defaults is 0
     <!-- <param name="thermocouple_type" value="0" /> -->
 
-    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
-    <param name="data_interval_ms" value="4"/>
+    # supported data rates: 50 ms - 60,000 ms
+    <param name="data_interval_ms" value="500"/>
 
     # optional param publish_rate, defaults to 0
     <!-- <param name="publish_rate" value="0" /> -->
