@@ -7,7 +7,7 @@
   <node pkg="nodelet" type="nodelet" name="humidity_manager"
     args="manager" output="screen" />
 
-  #### Gyroscope Driver #####################################################
+  #### Humidity Driver #####################################################
 
   <node pkg="nodelet" type="nodelet" name="PhidgetsHumidityNodelet"
     args="load phidgets_humidity/PhidgetsHumidityNodelet humidity_manager"
@@ -20,9 +20,6 @@
 
     # optional param hub_port, used if connected to a VINT hub
     <!-- <param name="hub_port" value="0"/> -->
-
-    # optional param  _type, defaults is 0
-    <!-- <param name="thermocouple_type" value="0" /> -->
 
     # supported data rates: 50 ms - 60,000 ms
     <param name="data_interval_ms" value="500"/>

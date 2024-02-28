@@ -9,7 +9,7 @@
 
   <license>BSD</license>
 
-  <author>Chris Lalancette</author>
+  <author>Gary Edwards</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
