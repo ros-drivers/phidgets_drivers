@@ -44,8 +44,8 @@ class Humidity final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Humidity)
 
     explicit Humidity(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device,
-                         std::function<void(double)> humidity_handler);
+                      bool is_hub_port_device,
+                      std::function<void(double)> humidity_handler);
 
     ~Humidity();
 

@@ -37,13 +37,11 @@
 
 namespace phidgets {
 
-Humidity::Humidity(int32_t serial_number, int hub_port,
-                         bool is_hub_port_device,
-                         std::function<void(double)> humidity_handler)
+Humidity::Humidity(int32_t serial_number, int hub_port, bool is_hub_port_device,
+                   std::function<void(double)> humidity_handler)
     : humidity_handler_(humidity_handler)
 {
-    PhidgetReturnCode ret =
-        PhidgetHumiditySensor_create(&humidity_handle_);
+    PhidgetReturnCode ret = PhidgetHumiditySensor_create(&humidity_handle_);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to create HumiditySensor handle", ret);
@@ -57,8 +55,7 @@ Humidity::Humidity(int32_t serial_number, int hub_port,
         humidity_handle_, HumidityChangeHandler, this);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to set change handler for Humidity",
-                             ret);
+        throw Phidget22Error("Failed to set change handler for Humidity", ret);
     }
 }
 
@@ -71,8 +68,8 @@ Humidity::~Humidity()
 double Humidity::getHumidity() const
 {
     double current_humidity;
-    PhidgetReturnCode ret = PhidgetHumiditySensor_getHumidity(
-        humidity_handle_, &current_humidity);
+    PhidgetReturnCode ret =
+        PhidgetHumiditySensor_getHumidity(humidity_handle_, &current_humidity);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to get humidity", ret);
@@ -82,8 +79,8 @@ double Humidity::getHumidity() const
 
 void Humidity::setDataInterval(uint32_t interval_ms) const
 {
-    PhidgetReturnCode ret = PhidgetHumiditySensor_setDataInterval(
-        humidity_handle_, interval_ms);
+    PhidgetReturnCode ret =
+        PhidgetHumiditySensor_setDataInterval(humidity_handle_, interval_ms);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to set data interval", ret);
