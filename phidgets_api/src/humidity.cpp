@@ -68,18 +68,6 @@ Humidity::~Humidity()
     helpers::closeAndDelete(&handle);
 }
 
-void Humidity::setThermocoupleType(ThermocoupleType type)
-{
-    PhidgetReturnCode ret = PhidgetHumiditySensor_setThermocoupleType(
-        humidity_handle_,
-        static_cast<PhidgetHumiditySensor_ThermocoupleType>(type));
-    if (ret != EPHIDGET_OK)
-    {
-        throw Phidget22Error("Failed to set Humidity thermocouple type",
-                             ret);
-    }
-}
-
 double Humidity::getHumidity() const
 {
     double current_humidity;

@@ -38,13 +38,6 @@
 
 namespace phidgets {
 
-enum class ThermocoupleType {
-    J_TYPE = 1,
-    K_TYPE = 2,
-    E_TYPE = 3,
-    T_TYPE = 4,
-};
-
 class Humidity final
 {
   public:
@@ -55,8 +48,6 @@ class Humidity final
                          std::function<void(double)> humidity_handler);
 
     ~Humidity();
-
-    void setThermocoupleType(ThermocoupleType type);
 
     double getHumidity() const;
 

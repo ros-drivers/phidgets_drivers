@@ -53,11 +53,6 @@ HumidityRosI::HumidityRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     {
         hub_port = 0;  // only used if the device is on a VINT hub_port
     }
-    int thermocouple_type;
-    if (!nh_private.getParam("thermocouple_type", thermocouple_type))
-    {
-        thermocouple_type = 0;
-    }
     int data_interval_ms;
     if (!nh_private.getParam("data_interval_ms", data_interval_ms))
     {
@@ -79,10 +74,8 @@ HumidityRosI::HumidityRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
     }
 
     ROS_INFO(
-        "Connecting to Phidgets Humidity serial %d, hub port %d, "
-        "thermocouple "
-        "type %d ...",
-        serial_num, hub_port, thermocouple_type);
+        "Connecting to Phidgets Humidity serial %d, hub port %d, ",
+        serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -100,11 +93,6 @@ HumidityRosI::HumidityRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
         humidity_->setDataInterval(data_interval_ms);
 
-        if (thermocouple_type != 0)
-        {
-            humidity_->setThermocoupleType(
-                static_cast<ThermocoupleType>(thermocouple_type));
-        }
     } catch (const Phidget22Error& err)
     {
         ROS_ERROR("Humidity: %s", err.what());
@@ -121,10 +109,7 @@ HumidityRosI::HumidityRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
                                  &HumidityRosI::timerCallback, this);
     } else
     {
-        // We'd like to get the humidity on startup here, but it can take
-        // some some time for the setThermocoupleType() call above to complete
-        // down on the sensor.  Instead, we wait for the first change callback
-        // before we start publishing.
+        // If we're not publishing at a fixed rate, publish the first data
     }
 }
 

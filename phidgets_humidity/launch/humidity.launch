@@ -21,7 +21,7 @@
     # optional param hub_port, used if connected to a VINT hub
     <!-- <param name="hub_port" value="0"/> -->
 
-    # optional param thermocouple_type, defaults is 0
+    # optional param  _type, defaults is 0
     <!-- <param name="thermocouple_type" value="0" /> -->
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
