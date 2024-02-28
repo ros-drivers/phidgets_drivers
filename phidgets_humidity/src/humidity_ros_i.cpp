@@ -73,9 +73,8 @@ HumidityRosI::HumidityRosI(ros::NodeHandle nh, ros::NodeHandle nh_private)
                  server_ip_.c_str());
     }
 
-    ROS_INFO(
-        "Connecting to Phidgets Humidity serial %d, hub port %d, ",
-        serial_num, hub_port);
+    ROS_INFO("Connecting to Phidgets Humidity serial %d, hub port %d, ",
+             serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
