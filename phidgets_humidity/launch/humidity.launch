@@ -1,0 +1,37 @@
+<!-- Phidgets Humidity launch file -->
+
+<launch>
+
+  #### Nodelet manager ######################################################
+
+  <node pkg="nodelet" type="nodelet" name="humidity_manager"
+    args="manager" output="screen" />
+
+  #### Humidity Driver #####################################################
+
+  <node pkg="nodelet" type="nodelet" name="PhidgetsHumidityNodelet"
+    args="load phidgets_humidity/PhidgetsHumidityNodelet humidity_manager"
+    output="screen">
+
+    # See README.md for more information on the parameters
+
+    # optional param serial, default is -1
+    <!-- <param name="serial" value="123456"/> -->
+
+    # optional param hub_port, used if connected to a VINT hub
+    <!-- <param name="hub_port" value="0"/> -->
+
+    # supported data rates: 50 ms - 60,000 ms
+    <param name="data_interval_ms" value="500"/>
+
+    # optional param publish_rate, defaults to 0
+    <!-- <param name="publish_rate" value="0" /> -->
+
+    # optional param server_name, required to locate remote network servers
+    <!-- <param name="server_name" value="myPhidgetServer" /> -->
+
+    # optional param server_ip, required to locate remote network servers
+    <!-- <param name="server_ip" value="0.0.0.0" /> -->
+  </node>
+
+</launch>

@@ -1,0 +1,9 @@
+<!-- Phidgets Humidity nodelet publisher -->
+<library path="lib/libphidgets_humidity_nodelet">
+  <class name="phidgets_humidity/PhidgetsHumidityNodelet" type="PhidgetsHumidityNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Humidity nodelet publisher.
+    </description>
+  </class>
+</library>
