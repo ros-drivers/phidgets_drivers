@@ -55,6 +55,8 @@ class TemperatureRosI final : public rclcpp::Node
     void timerCallback();
     rclcpp::TimerBase::SharedPtr timer_;
     double publish_rate_;
+    std::string server_name_;
+    std::string server_ip_;
 
     void publishLatest();
 

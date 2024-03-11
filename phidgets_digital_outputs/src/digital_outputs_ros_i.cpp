@@ -48,6 +48,20 @@ DigitalOutputsRosI::DigitalOutputsRosI(const rclcpp::NodeOptions& options)
 
     RCLCPP_INFO(get_logger(), "Starting Phidgets Digital Outputs");
 
+    this->declare_parameter("server_name",
+                            rclcpp::ParameterType::PARAMETER_STRING);
+    this->declare_parameter("server_ip",
+                            rclcpp::ParameterType::PARAMETER_STRING);
+    if (this->get_parameter("server_name", server_name_) &&
+        this->get_parameter("server_ip", server_ip_))
+    {
+        PhidgetNet_addServer(server_name_.c_str(), server_ip_.c_str(), 5661, "",
+                             0);
+
+        RCLCPP_INFO(get_logger(), "Using phidget server %s at IP %s",
+                    server_name_.c_str(), server_ip_.c_str());
+    }
+
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 

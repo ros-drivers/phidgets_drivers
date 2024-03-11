@@ -68,6 +68,8 @@ class DigitalOutputsRosI final : public rclcpp::Node
     std::vector<std::unique_ptr<DigitalOutputSetter>> out_subs_;
 
     rclcpp::Service<phidgets_msgs::srv::SetDigitalOutput>::SharedPtr out_srv_;
+    std::string server_name_;
+    std::string server_ip_;
 
     void setSrvCallback(
         const std::shared_ptr<phidgets_msgs::srv::SetDigitalOutput::Request>
