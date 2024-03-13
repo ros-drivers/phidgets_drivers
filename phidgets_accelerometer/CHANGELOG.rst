@@ -2,6 +2,13 @@
 Changelog for package phidgets_accelerometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add support for VINT networkhub (`#172 <https://github.com/ros-drivers/phidgets_drivers/issues/172>`_)
+  This is a port of `#127 <https://github.com/ros-drivers/phidgets_drivers/issues/127>`_ to ROS2.
+  Closes `#135 <https://github.com/ros-drivers/phidgets_drivers/issues/135>`_.
+* Contributors: Martin Günther
+
 2.3.2 (2023-11-27)
 ------------------
 
