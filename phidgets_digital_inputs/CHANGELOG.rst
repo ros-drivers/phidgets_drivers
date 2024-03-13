@@ -2,8 +2,8 @@
 Changelog for package phidgets_digital_inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.3 (2024-03-13)
+------------------
 * Add support for VINT networkhub (`#172 <https://github.com/ros-drivers/phidgets_drivers/issues/172>`_)
   This is a port of `#127 <https://github.com/ros-drivers/phidgets_drivers/issues/127>`_ to ROS2.
   Closes `#135 <https://github.com/ros-drivers/phidgets_drivers/issues/135>`_.

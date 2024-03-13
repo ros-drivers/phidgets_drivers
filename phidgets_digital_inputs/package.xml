@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>phidgets_digital_inputs</name>
-  <version>2.3.2</version>
+  <version>2.3.3</version>
   <description>Driver for the Phidgets Digital Input devices</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>

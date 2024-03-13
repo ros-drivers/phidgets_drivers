@@ -4,7 +4,7 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>libphidget22</name>
-  <version>2.3.2</version>
+  <version>2.3.3</version>
   <description>This package wraps the libphidget22 to use it as a ROS dependency</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
