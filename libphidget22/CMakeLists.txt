@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+cmake_policy(SET CMP0135 NEW)    # https://cmake.org/cmake/help/latest/policy/CMP0135.html
 project(libphidget22)
 
 find_package(ament_cmake REQUIRED)
