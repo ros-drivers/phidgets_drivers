@@ -36,6 +36,7 @@
 #include <vector>
 
 #include <rclcpp/rclcpp.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 
 #include "phidgets_api/stepper.hpp"
@@ -51,17 +52,25 @@ class StepperRosI final : public rclcpp::Node
     explicit StepperRosI(const rclcpp::NodeOptions& options);
 
   private:
+    bool ready;
     std::unique_ptr<Stepper> stepper_;
     std::mutex stepper_mutex_;
 
     void timerCallback();
     void configTimerCallback();
+    void failsafeTimerCallback();
     rclcpp::TimerBase::SharedPtr config_timer_;
+    rclcpp::TimerBase::SharedPtr failsafe_timer_;
     rclcpp::TimerBase::SharedPtr timer_;
     double publish_rate_;
     std::string server_name_;
     std::string server_ip_;
 
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr zero_service_;
+    void zeroCallback(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+          std::shared_ptr<std_srvs::srv::Trigger::Response>      response);
+
+    phidgets_msgs::msg::StepperCommand lastCommand;
     void commandCallback(const phidgets_msgs::msg::StepperCommand & msg);
 
     std::string base_frame_;

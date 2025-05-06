@@ -42,7 +42,7 @@
 namespace phidgets {
 
 StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
-    : rclcpp::Node("phidgets_stepper_node", options)
+    : rclcpp::Node("phidgets_stepper_node", options), ready(false)
 {
     setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
@@ -94,6 +94,16 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
                 "Connecting to Phidgets Stepper serial %d, hub port %d ...",
                 serial_num, hub_port);
 
+    lastCommand.mode = phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED;
+    lastCommand.target = 0;
+    lastCommand.velocity = 0;
+
+    config_pub_ = this->create_publisher<phidgets_msgs::msg::StepperConfig>("~/config",1);
+    state_pub_ = this->create_publisher<phidgets_msgs::msg::StepperState>("~/state",1);
+    joint_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("~/joint",1);
+    zero_service_ = this->create_service<std_srvs::srv::Trigger>("~/zero", 
+            std::bind(&StepperRosI::zeroCallback,this,std::placeholders::_1,std::placeholders::_2));
+
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
     // finished setting up.
@@ -116,6 +126,8 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
         failsafeTime_ = this->declare_parameter("failsafe_time_ms", 1000);
         positionOffset_ = this->declare_parameter("position_offset", 0.0);
         rescaleFactor_ = this->declare_parameter("rescale_factor", stepper_->getRescaleFactor());
+        stepper_->setRescaleFactor(rescaleFactor_);
+        RCLCPP_INFO(this->get_logger(),"Rescale factor: %f rad/tick", rescaleFactor_);
         acceleration_ = this->declare_parameter("acceleration", stepper_->getMaxAcceleration());
         velocityLimit_ = this->declare_parameter("velocity_limit", stepper_->getMaxVelocityLimit());
         currentLimit_ = this->declare_parameter("current_limit", stepper_->getMaxCurrentLimit());
@@ -137,9 +149,6 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    config_pub_ = this->create_publisher<phidgets_msgs::msg::StepperConfig>("~/config",1);
-    state_pub_ = this->create_publisher<phidgets_msgs::msg::StepperState>("~/state",1);
-    joint_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("~/joint",1);
     command_sub_ = this->create_subscription<phidgets_msgs::msg::StepperCommand>("~/command",1,
             std::bind(&StepperRosI::commandCallback,this,std::placeholders::_1));
 
@@ -147,6 +156,8 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     state_pub_->publish(state_);
     joint_pub_->publish(joint_);
 
+    failsafe_timer_ = this->create_wall_timer(
+        std::chrono::milliseconds(failsafeTime_/2), std::bind(&StepperRosI::failsafeTimerCallback, this));
     config_timer_ = this->create_wall_timer(
         std::chrono::seconds(1), std::bind(&StepperRosI::configTimerCallback, this));
 
@@ -158,12 +169,15 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
             std::bind(&StepperRosI::timerCallback, this));
     }
 
+    ready = true;
+
 }
 
 void StepperRosI::applyParameters() {
     stepper_->setDataInterval(dataInterval_);
     stepper_->setDataRate(dataRate_);
     stepper_->enableFailsafe(failsafeTime_);
+    stepper_->resetFailesafe();
     stepper_->addPositionOffset(positionOffset_);
     stepper_->setRescaleFactor(rescaleFactor_);
     stepper_->setAcceleration(acceleration_);
@@ -211,6 +225,12 @@ void StepperRosI::configTimerCallback()
     config_pub_->publish(config_);
 }
 
+void StepperRosI::failsafeTimerCallback()
+{
+    std::lock_guard<std::mutex> lock(stepper_mutex_);
+    stepper_->resetFailesafe();
+}
+
 void StepperRosI::timerCallback()
 {
     std::lock_guard<std::mutex> lock(stepper_mutex_);
@@ -222,34 +242,65 @@ void StepperRosI::timerCallback()
 
 void StepperRosI::positionChangeCallback(int /*channel*/, double position)
 {
-    joint_.position[0] = position;
-    joint_pub_->publish(joint_);
+    if (ready) {
+        joint_.position[0] = position;
+        joint_pub_->publish(joint_);
+    }
 }
 
 void StepperRosI::velocityChangeCallback(int /*channel*/, double velocity)
 {
-    joint_.velocity[0] = velocity;
-    joint_pub_->publish(joint_);
+    if (ready) {
+        joint_.velocity[0] = velocity;
+        joint_pub_->publish(joint_);
+    }
 }
 
 void StepperRosI::stoppedCallback(int /*channel*/)
 {
-    state_.is_moving = false;
-    state_pub_->publish(state_);
+    if (ready) {
+        state_.is_moving = false;
+        state_pub_->publish(state_);
+    }
 }
 
 void StepperRosI::commandCallback(const phidgets_msgs::msg::StepperCommand & msg) {
-    std::lock_guard<std::mutex> lock(stepper_mutex_);
-    if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STEP) { 
-        stepper_->setControlMode(CONTROL_MODE_STEP);
-        stepper_->setTargetPosition(msg.target);
-        stepper_->setEngaged(1);
-    } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_RUN) {
-        stepper_->setControlMode(CONTROL_MODE_RUN);
-        stepper_->setVelocityLimit(msg.velocity);
-        stepper_->setEngaged(1);
+    if (ready) {
+        std::lock_guard<std::mutex> lock(stepper_mutex_);
+        try {
+            if ((msg.mode != lastCommand.mode) || (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED)) {
+                stepper_->setEngaged(0);
+            }
+            if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STEP) { 
+                stepper_->setControlMode(CONTROL_MODE_STEP);
+                stepper_->setVelocityLimit(msg.velocity);
+                stepper_->setTargetPosition(msg.target);
+                stepper_->setEngaged(1);
+            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_RUN) {
+                stepper_->setControlMode(CONTROL_MODE_RUN);
+                stepper_->setVelocityLimit(msg.velocity);
+                stepper_->setEngaged(1);
+            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED) {
+                // Nothing to do
+            }
+            lastCommand = msg;
+        } catch (const Phidget22Error& err) {
+            RCLCPP_ERROR(get_logger(), "Stepper: %s", err.what());
+        }
     }
 }
+
+void StepperRosI::zeroCallback(const std::shared_ptr<std_srvs::srv::Trigger::Request> /*request*/,
+          std::shared_ptr<std_srvs::srv::Trigger::Response> response) {
+    if (ready) {
+        std::lock_guard<std::mutex> lock(stepper_mutex_);
+        stepper_->addPositionOffset(-stepper_->getPosition());
+        RCLCPP_INFO(this->get_logger(), "Stepper: set position to zero");
+        response->success = true;
+        response->message = "set current position to zero";
+    }
+}
+
 
 }  // namespace phidgets
 
