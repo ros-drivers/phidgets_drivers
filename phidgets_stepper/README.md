@@ -39,7 +39,7 @@ Parameters
 * `failsafe_time_ms` (double) - The failsafe time in ms, default to 1000
 * `position_offset` (double) - Position to start at, default to 0.0
 * `rescale_factor` (double) - Step multiplier applied to all the measurement.
-  For a stepper with 1.8 degree step and a reduction of 14:1, (1./16)*(1.8/14)*(2*pi/360) makes sure all the output are in radians.
+  For a stepper with 1.8 degree step and a reduction of 14:1, (1./16) * (1.8/14) * (2*pi/360) makes sure all the output are in radians.
 * `acceleration` (double) - Authorized acceleration, default to the max value supported by the driver.
 * `velocity_limit` (double) - The maximum velocity, will be overloaded by messages published on `~/command`.
 * `current_limit` (double) - Authorized current limit, default to the max value supported by the driver.
