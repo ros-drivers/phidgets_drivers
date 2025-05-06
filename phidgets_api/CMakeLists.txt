@@ -32,6 +32,7 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/magnetometer.cpp
                          src/motor.cpp
                          src/motors.cpp
+                         src/stepper.cpp
                          src/phidget22.cpp
                          src/spatial.cpp
                          src/temperature.cpp)
