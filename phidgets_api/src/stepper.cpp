@@ -144,6 +144,10 @@ GETTER(double,getMaxPosition);
 GETTER(double,getVelocity);
 GETTER(double,getAcceleration);
 SETTER(double,setAcceleration);
+GETTER(double,getMinAcceleration);
+GETTER(double,getMaxAcceleration);
+
+
 GETTER(double,getVelocityLimit);
 SETTER(double,setVelocityLimit);
 GETTER(double,getMinVelocityLimit);
