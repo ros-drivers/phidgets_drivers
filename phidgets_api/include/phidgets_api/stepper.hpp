@@ -74,9 +74,9 @@ class Stepper final
 
     double getVelocity() const;
     double getVelocityLimit() const;
+    void setVelocityLimit(double velocity) ;
     double getMinVelocityLimit() const;
     double getMaxVelocityLimit() const;
-    void setVelocityLimit(double velocity) ;
 
     double getAcceleration() const;
     void setAcceleration(double acceleration) ;

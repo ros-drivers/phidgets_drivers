@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_stepper</name>
+  <version>2.3.3</version>
+  <description>Driver for the Phidgets Stepper devices</description>
+
+  <maintainer email="cedric.pradalier@georgiatech-metz.fr">Cedric Pradalier</maintainer>
+
+  <license>BSD</license>
+
+  <author>Cedric Pradalier</author>
+
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
+
+  <depend>phidgets_api</depend>
+  <depend>phidgets_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <exec_depend>launch</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
