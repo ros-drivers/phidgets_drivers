@@ -276,6 +276,11 @@ void StepperRosI::commandCallback(const phidgets_msgs::msg::StepperCommand & msg
                 stepper_->setVelocityLimit(msg.velocity);
                 stepper_->setTargetPosition(msg.target);
                 stepper_->setEngaged(1);
+            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STOP) { 
+                stepper_->setControlMode(CONTROL_MODE_STEP);
+                stepper_->setVelocityLimit(msg.velocity);
+                stepper_->setTargetPosition(stepper_->getPosition());
+                stepper_->setEngaged(1);
             } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_RUN) {
                 stepper_->setControlMode(CONTROL_MODE_RUN);
                 stepper_->setVelocityLimit(msg.velocity);
