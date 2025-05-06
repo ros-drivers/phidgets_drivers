@@ -56,6 +56,11 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
 
     int hub_port = this->declare_parameter(
         "hub_port", 0);  // only used if the device is on a VINT hub_port
+                         
+    // only used if the device is on a VINT hub_port
+    bool is_hub_port_device =
+        this->declare_parameter("is_hub_port_device", false);
+
 
     base_frame_ = this->declare_parameter("base_frame", std::string("phidgets"));
     joint_.header.frame_id = base_frame_;
@@ -86,7 +91,7 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     }
 
     RCLCPP_INFO(get_logger(),
-                "Connecting to Phidgets Motors serial %d, hub port %d ...",
+                "Connecting to Phidgets Stepper serial %d, hub port %d ...",
                 serial_num, hub_port);
 
     // We take the mutex here and don't unlock until the end of the constructor
@@ -97,7 +102,7 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     try
     {
         stepper_ = std::make_unique<Stepper>(
-            serial_num, hub_port, false, channel_num,
+            serial_num, hub_port, is_hub_port_device, channel_num,
             std::bind(&StepperRosI::positionChangeCallback, this,
                       std::placeholders::_1, std::placeholders::_2),
             std::bind(&StepperRosI::velocityChangeCallback, this,
@@ -115,6 +120,9 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
         velocityLimit_ = this->declare_parameter("velocity_limit", stepper_->getMaxVelocityLimit());
         currentLimit_ = this->declare_parameter("current_limit", stepper_->getMaxCurrentLimit());
         holdingCurrentLimit_ = this->declare_parameter("holding_current_limit", stepper_->getMaxCurrentLimit());
+
+        // Initial value, just in case it gets engaged at the wrong moment
+        stepper_->setTargetPosition(stepper_->getPosition());
 
 
         applyParameters();
