@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        rosdistro: [rolling, humble, jazzy, kilted]
+        rosdistro: [humble, jazzy, rolling]
       fail-fast: false
     runs-on: ubuntu-latest
     container:
