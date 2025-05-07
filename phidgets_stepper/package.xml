@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>phidgets_stepper</name>
   <version>2.3.3</version>
   <description>Driver for the Phidgets Stepper devices</description>
 
-  <maintainer email="cedric.pradalier@georgiatech-metz.fr">Cedric Pradalier</maintainer>
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
 
   <license>BSD</license>
 
-  <author>Cedric Pradalier</author>
+  <author email="cedric.pradalier@georgiatech-metz.fr">Cedric Pradalier</author>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
