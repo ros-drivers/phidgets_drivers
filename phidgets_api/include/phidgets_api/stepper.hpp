@@ -43,18 +43,19 @@ class Stepper final
   public:
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Stepper)
 
-    explicit Stepper(int32_t serial_number, int hub_port, bool is_hub_port_device,
-                   int channel,
-                   std::function<void(int, double)> on_position_change_handler,
-                   std::function<void(int, double)> on_velocity_change_handler,
-                   std::function<void(int)> on_stoppped_handler);
+    explicit Stepper(
+        int32_t serial_number, int hub_port, bool is_hub_port_device,
+        int channel,
+        std::function<void(int, double)> on_position_change_handler,
+        std::function<void(int, double)> on_velocity_change_handler,
+        std::function<void(int)> on_stoppped_handler);
 
     ~Stepper();
 
     int32_t getSerialNumber() const noexcept;
 
     PhidgetStepper_ControlMode getControlMode() const;
-    void setControlMode( PhidgetStepper_ControlMode controlMode);
+    void setControlMode(PhidgetStepper_ControlMode controlMode);
 
     void enableFailsafe(uint32_t failsafeTime);
     void resetFailesafe();
@@ -65,7 +66,7 @@ class Stepper final
     int getEngaged() const;
     void setEngaged(int engaged);
 
-    void addPositionOffset(double offset) ;
+    void addPositionOffset(double offset);
     double getPosition() const;
     double getMinPosition() const;
     double getMaxPosition() const;
@@ -74,18 +75,18 @@ class Stepper final
 
     double getVelocity() const;
     double getVelocityLimit() const;
-    void setVelocityLimit(double velocity) ;
+    void setVelocityLimit(double velocity);
     double getMinVelocityLimit() const;
     double getMaxVelocityLimit() const;
 
     double getAcceleration() const;
-    void setAcceleration(double acceleration) ;
+    void setAcceleration(double acceleration);
 
     double getCurrentLimit() const;
-    void setCurrentLimit(double acceleration) ;
+    void setCurrentLimit(double acceleration);
 
     double getHoldingCurrentLimit() const;
-    void setHoldingCurrentLimit(double acceleration) ;
+    void setHoldingCurrentLimit(double acceleration);
 
     double getMinAcceleration() const;
     double getMaxAcceleration() const;
@@ -93,15 +94,15 @@ class Stepper final
     double getMinCurrentLimit() const;
     double getMaxCurrentLimit() const;
 
-    void setRescaleFactor(double factor) ;
+    void setRescaleFactor(double factor);
     double getRescaleFactor() const;
 
-    void setDataInterval(uint32_t data_interval_ms) ;
+    void setDataInterval(uint32_t data_interval_ms);
     uint32_t getDataInterval() const;
     uint32_t getMinDataInterval() const;
     uint32_t getMaxDataInterval() const;
 
-    void setDataRate(double data_rate) ;
+    void setDataRate(double data_rate);
     double getDataRate() const;
     double getMinDataRate() const;
     double getMaxDataRate() const;
@@ -119,11 +120,10 @@ class Stepper final
     void stoppedHandler();
 
     static void onPositionChangeHandler(PhidgetStepperHandle motor_handle,
-                                       void *ctx, double position);
+                                        void *ctx, double position);
     static void onVelocityChangeHandler(PhidgetStepperHandle motor_handle,
-                                     void *ctx, double velocity);
-    static void onStoppedHandler(PhidgetStepperHandle motor_handle,
-                                     void *ctx);
+                                        void *ctx, double velocity);
+    static void onStoppedHandler(PhidgetStepperHandle motor_handle, void *ctx);
 };
 
 }  // namespace phidgets

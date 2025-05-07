@@ -51,24 +51,24 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 
-    int channel_num =
-        this->declare_parameter("channel", 0);  // unused for now
+    int channel_num = this->declare_parameter("channel", 0);  // unused for now
 
     int hub_port = this->declare_parameter(
         "hub_port", 0);  // only used if the device is on a VINT hub_port
-                         
+
     // only used if the device is on a VINT hub_port
     bool is_hub_port_device =
         this->declare_parameter("is_hub_port_device", false);
 
-
-    base_frame_ = this->declare_parameter("base_frame", std::string("phidgets"));
+    base_frame_ =
+        this->declare_parameter("base_frame", std::string("phidgets"));
     joint_.header.frame_id = base_frame_;
     joint_.name.resize(1);
     joint_.position.resize(1);
     joint_.velocity.resize(1);
     joint_.effort.resize(1);
-    joint_.name[0] = this->declare_parameter("joint_name", std::string("stepper"));
+    joint_.name[0] =
+        this->declare_parameter("joint_name", std::string("stepper"));
 
     publish_rate_ = this->declare_parameter("publish_rate", 0.0);
     if (publish_rate_ > 1000.0)
@@ -94,15 +94,20 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
                 "Connecting to Phidgets Stepper serial %d, hub port %d ...",
                 serial_num, hub_port);
 
-    lastCommand.mode = phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED;
+    lastCommand.mode =
+        phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED;
     lastCommand.target = 0;
     lastCommand.velocity = 0;
 
-    config_pub_ = this->create_publisher<phidgets_msgs::msg::StepperConfig>("~/config",1);
-    state_pub_ = this->create_publisher<phidgets_msgs::msg::StepperState>("~/state",1);
-    joint_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("~/joint",1);
-    zero_service_ = this->create_service<std_srvs::srv::Trigger>("~/zero", 
-            std::bind(&StepperRosI::zeroCallback,this,std::placeholders::_1,std::placeholders::_2));
+    config_pub_ = this->create_publisher<phidgets_msgs::msg::StepperConfig>(
+        "~/config", 1);
+    state_pub_ =
+        this->create_publisher<phidgets_msgs::msg::StepperState>("~/state", 1);
+    joint_pub_ =
+        this->create_publisher<sensor_msgs::msg::JointState>("~/joint", 1);
+    zero_service_ = this->create_service<std_srvs::srv::Trigger>(
+        "~/zero", std::bind(&StepperRosI::zeroCallback, this,
+                            std::placeholders::_1, std::placeholders::_2));
 
     // We take the mutex here and don't unlock until the end of the constructor
     // to prevent a callback from trying to use the publisher before we are
@@ -125,23 +130,27 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
         dataRate_ = this->declare_parameter("data_rate", 4.0);
         failsafeTime_ = this->declare_parameter("failsafe_time_ms", 1000);
         positionOffset_ = this->declare_parameter("position_offset", 0.0);
-        rescaleFactor_ = this->declare_parameter("rescale_factor", stepper_->getRescaleFactor());
+        rescaleFactor_ = this->declare_parameter("rescale_factor",
+                                                 stepper_->getRescaleFactor());
         stepper_->setRescaleFactor(rescaleFactor_);
-        RCLCPP_INFO(this->get_logger(),"Rescale factor: %f rad/tick", rescaleFactor_);
-        acceleration_ = this->declare_parameter("acceleration", stepper_->getMaxAcceleration());
-        velocityLimit_ = this->declare_parameter("velocity_limit", stepper_->getMaxVelocityLimit());
-        currentLimit_ = this->declare_parameter("current_limit", stepper_->getMaxCurrentLimit());
-        holdingCurrentLimit_ = this->declare_parameter("holding_current_limit", stepper_->getMaxCurrentLimit());
+        RCLCPP_INFO(this->get_logger(), "Rescale factor: %f rad/tick",
+                    rescaleFactor_);
+        acceleration_ = this->declare_parameter("acceleration",
+                                                stepper_->getMaxAcceleration());
+        velocityLimit_ = this->declare_parameter(
+            "velocity_limit", stepper_->getMaxVelocityLimit());
+        currentLimit_ = this->declare_parameter("current_limit",
+                                                stepper_->getMaxCurrentLimit());
+        holdingCurrentLimit_ = this->declare_parameter(
+            "holding_current_limit", stepper_->getMaxCurrentLimit());
 
         // Initial value, just in case it gets engaged at the wrong moment
         stepper_->setTargetPosition(stepper_->getPosition());
-
 
         applyParameters();
         updateConfig();
         updateState();
         updateJoint();
-
 
     } catch (const Phidget22Error& err)
     {
@@ -149,17 +158,22 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
         throw;
     }
 
-    command_sub_ = this->create_subscription<phidgets_msgs::msg::StepperCommand>("~/command",1,
-            std::bind(&StepperRosI::commandCallback,this,std::placeholders::_1));
+    command_sub_ =
+        this->create_subscription<phidgets_msgs::msg::StepperCommand>(
+            "~/command", 1,
+            std::bind(&StepperRosI::commandCallback, this,
+                      std::placeholders::_1));
 
     config_pub_->publish(config_);
     state_pub_->publish(state_);
     joint_pub_->publish(joint_);
 
     failsafe_timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(failsafeTime_/2), std::bind(&StepperRosI::failsafeTimerCallback, this));
+        std::chrono::milliseconds(failsafeTime_ / 2),
+        std::bind(&StepperRosI::failsafeTimerCallback, this));
     config_timer_ = this->create_wall_timer(
-        std::chrono::seconds(1), std::bind(&StepperRosI::configTimerCallback, this));
+        std::chrono::seconds(1),
+        std::bind(&StepperRosI::configTimerCallback, this));
 
     if (publish_rate_ > 0.0)
     {
@@ -170,10 +184,10 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     }
 
     ready = true;
-
 }
 
-void StepperRosI::applyParameters() {
+void StepperRosI::applyParameters()
+{
     stepper_->setDataInterval(dataInterval_);
     stepper_->setDataRate(dataRate_);
     stepper_->enableFailsafe(failsafeTime_);
@@ -186,7 +200,8 @@ void StepperRosI::applyParameters() {
     stepper_->setHoldingCurrentLimit(holdingCurrentLimit_);
 }
 
-void StepperRosI::updateConfig() {
+void StepperRosI::updateConfig()
+{
     config_.min_failsafe_time = stepper_->getMinFailsafeTime();
     config_.max_failsafe_time = stepper_->getMaxFailsafeTime();
     config_.min_position = stepper_->getMinPosition();
@@ -203,20 +218,21 @@ void StepperRosI::updateConfig() {
     config_.max_data_rate = stepper_->getMaxDataRate();
 }
 
-void StepperRosI::updateState() {
+void StepperRosI::updateState()
+{
     state_.header.stamp = this->get_clock()->now();
     state_.is_moving = stepper_->getIsMoving();
     state_.is_engaged = stepper_->getEngaged();
     state_.target_position = stepper_->getTargetPosition();
 }
 
-void StepperRosI::updateJoint() {
+void StepperRosI::updateJoint()
+{
     joint_.header.stamp = this->get_clock()->now();
     joint_.position[0] = stepper_->getPosition();
     joint_.velocity[0] = stepper_->getVelocity();
-    joint_.effort[0] = 0.0; // Not available
+    joint_.effort[0] = 0.0;  // Not available
 }
-
 
 void StepperRosI::configTimerCallback()
 {
@@ -242,7 +258,8 @@ void StepperRosI::timerCallback()
 
 void StepperRosI::positionChangeCallback(int /*channel*/, double position)
 {
-    if (ready) {
+    if (ready)
+    {
         joint_.position[0] = position;
         joint_pub_->publish(joint_);
     }
@@ -250,7 +267,8 @@ void StepperRosI::positionChangeCallback(int /*channel*/, double position)
 
 void StepperRosI::velocityChangeCallback(int /*channel*/, double velocity)
 {
-    if (ready) {
+    if (ready)
+    {
         joint_.velocity[0] = velocity;
         joint_pub_->publish(joint_);
     }
@@ -258,46 +276,65 @@ void StepperRosI::velocityChangeCallback(int /*channel*/, double velocity)
 
 void StepperRosI::stoppedCallback(int /*channel*/)
 {
-    if (ready) {
+    if (ready)
+    {
         state_.is_moving = false;
         state_pub_->publish(state_);
     }
 }
 
-void StepperRosI::commandCallback(const phidgets_msgs::msg::StepperCommand & msg) {
-    if (ready) {
+void StepperRosI::commandCallback(const phidgets_msgs::msg::StepperCommand& msg)
+{
+    if (ready)
+    {
         std::lock_guard<std::mutex> lock(stepper_mutex_);
-        try {
-            if ((msg.mode != lastCommand.mode) || (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED)) {
+        try
+        {
+            if ((msg.mode != lastCommand.mode) ||
+                (msg.mode ==
+                 phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED))
+            {
                 stepper_->setEngaged(0);
             }
-            if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STEP) { 
+            if (msg.mode ==
+                phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STEP)
+            {
                 stepper_->setControlMode(CONTROL_MODE_STEP);
                 stepper_->setVelocityLimit(msg.velocity);
                 stepper_->setTargetPosition(msg.target);
                 stepper_->setEngaged(1);
-            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STOP) { 
+            } else if (msg.mode ==
+                       phidgets_msgs::msg::StepperCommand::CONTROL_MODE_STOP)
+            {
                 stepper_->setControlMode(CONTROL_MODE_STEP);
                 stepper_->setVelocityLimit(msg.velocity);
                 stepper_->setTargetPosition(stepper_->getPosition());
                 stepper_->setEngaged(1);
-            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_RUN) {
+            } else if (msg.mode ==
+                       phidgets_msgs::msg::StepperCommand::CONTROL_MODE_RUN)
+            {
                 stepper_->setControlMode(CONTROL_MODE_RUN);
                 stepper_->setVelocityLimit(msg.velocity);
                 stepper_->setEngaged(1);
-            } else if (msg.mode ==  phidgets_msgs::msg::StepperCommand::CONTROL_MODE_DISENGAGED) {
+            } else if (msg.mode == phidgets_msgs::msg::StepperCommand::
+                                       CONTROL_MODE_DISENGAGED)
+            {
                 // Nothing to do
             }
             lastCommand = msg;
-        } catch (const Phidget22Error& err) {
+        } catch (const Phidget22Error& err)
+        {
             RCLCPP_ERROR(get_logger(), "Stepper: %s", err.what());
         }
     }
 }
 
-void StepperRosI::zeroCallback(const std::shared_ptr<std_srvs::srv::Trigger::Request> /*request*/,
-          std::shared_ptr<std_srvs::srv::Trigger::Response> response) {
-    if (ready) {
+void StepperRosI::zeroCallback(
+    const std::shared_ptr<std_srvs::srv::Trigger::Request> /*request*/,
+    std::shared_ptr<std_srvs::srv::Trigger::Response> response)
+{
+    if (ready)
+    {
         std::lock_guard<std::mutex> lock(stepper_mutex_);
         stepper_->addPositionOffset(-stepper_->getPosition());
         RCLCPP_INFO(this->get_logger(), "Stepper: set position to zero");
@@ -305,7 +342,6 @@ void StepperRosI::zeroCallback(const std::shared_ptr<std_srvs::srv::Trigger::Req
         response->message = "set current position to zero";
     }
 }
-
 
 }  // namespace phidgets
 

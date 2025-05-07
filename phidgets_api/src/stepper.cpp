@@ -39,10 +39,11 @@
 namespace phidgets {
 
 Stepper::Stepper(int32_t serial_number, int hub_port, bool is_hub_port_device,
-        int channel,
-        std::function<void(int, double)> on_position_change_handler,
-        std::function<void(int, double)> on_velocity_change_handler,
-        std::function<void(int)> on_stoppped_handler)    : serial_number_(serial_number),
+                 int channel,
+                 std::function<void(int, double)> on_position_change_handler,
+                 std::function<void(int, double)> on_velocity_change_handler,
+                 std::function<void(int)> on_stoppped_handler)
+    : serial_number_(serial_number),
       channel_(channel),
       on_position_change_handler_(on_position_change_handler),
       on_velocity_change_handler_(on_velocity_change_handler),
@@ -57,8 +58,8 @@ Stepper::Stepper(int32_t serial_number, int hub_port, bool is_hub_port_device,
     }
 
     helpers::openWaitForAttachment(
-        reinterpret_cast<PhidgetHandle>(stepper_handle_), serial_number, hub_port,
-        is_hub_port_device, channel);
+        reinterpret_cast<PhidgetHandle>(stepper_handle_), serial_number,
+        hub_port, is_hub_port_device, channel);
 
     ret = PhidgetStepper_setOnVelocityChangeHandler(
         stepper_handle_, onVelocityChangeHandler, this);
@@ -80,8 +81,8 @@ Stepper::Stepper(int32_t serial_number, int hub_port, bool is_hub_port_device,
             ret);
     }
 
-    ret = PhidgetStepper_setOnStoppedHandler(
-        stepper_handle_, onStoppedHandler, this);
+    ret = PhidgetStepper_setOnStoppedHandler(stepper_handle_, onStoppedHandler,
+                                             this);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error(
@@ -115,76 +116,86 @@ int32_t Stepper::getSerialNumber() const noexcept
     return serial_number_;
 }
 
-#define GETTER(T,F) T Stepper::F() const {\
-    T val; \
-    PhidgetReturnCode ret = PhidgetStepper_##F(stepper_handle_, &val); \
-    if (ret != EPHIDGET_OK) { \
-        throw Phidget22Error("Stepper::"#F" failed for Stepper channel " + std::to_string(channel_), ret); \
-    } \
-    return val; \
-}
+#define GETTER(T, F)                                                       \
+    T Stepper::F() const                                                   \
+    {                                                                      \
+        T val;                                                             \
+        PhidgetReturnCode ret = PhidgetStepper_##F(stepper_handle_, &val); \
+        if (ret != EPHIDGET_OK)                                            \
+        {                                                                  \
+            throw Phidget22Error("Stepper::" #F                            \
+                                 " failed for Stepper channel " +          \
+                                     std::to_string(channel_),             \
+                                 ret);                                     \
+        }                                                                  \
+        return val;                                                        \
+    }
 
-#define SETTER(T,F) void Stepper::F(T value) {\
-    PhidgetReturnCode ret = PhidgetStepper_##F(stepper_handle_, value); \
-    if (ret != EPHIDGET_OK) { \
-        throw Phidget22Error("Stepper::"#F" failed for Stepper channel " + std::to_string(channel_), ret); \
-    } \
-}
+#define SETTER(T, F)                                                        \
+    void Stepper::F(T value)                                                \
+    {                                                                       \
+        PhidgetReturnCode ret = PhidgetStepper_##F(stepper_handle_, value); \
+        if (ret != EPHIDGET_OK)                                             \
+        {                                                                   \
+            throw Phidget22Error("Stepper::" #F                             \
+                                 " failed for Stepper channel " +           \
+                                     std::to_string(channel_),              \
+                                 ret);                                      \
+        }                                                                   \
+    }
 
-GETTER(PhidgetStepper_ControlMode,getControlMode);
-SETTER(PhidgetStepper_ControlMode,setControlMode);
-GETTER(double,getTargetPosition);
-SETTER(double,setTargetPosition);
+GETTER(PhidgetStepper_ControlMode, getControlMode);
+SETTER(PhidgetStepper_ControlMode, setControlMode);
+GETTER(double, getTargetPosition);
+SETTER(double, setTargetPosition);
 
-GETTER(double,getPosition);
-SETTER(double,addPositionOffset);
-GETTER(double,getMinPosition);
-GETTER(double,getMaxPosition);
+GETTER(double, getPosition);
+SETTER(double, addPositionOffset);
+GETTER(double, getMinPosition);
+GETTER(double, getMaxPosition);
 
-GETTER(double,getVelocity);
-GETTER(double,getAcceleration);
-SETTER(double,setAcceleration);
-GETTER(double,getMinAcceleration);
-GETTER(double,getMaxAcceleration);
+GETTER(double, getVelocity);
+GETTER(double, getAcceleration);
+SETTER(double, setAcceleration);
+GETTER(double, getMinAcceleration);
+GETTER(double, getMaxAcceleration);
 
+GETTER(double, getVelocityLimit);
+SETTER(double, setVelocityLimit);
+GETTER(double, getMinVelocityLimit);
+GETTER(double, getMaxVelocityLimit);
 
-GETTER(double,getVelocityLimit);
-SETTER(double,setVelocityLimit);
-GETTER(double,getMinVelocityLimit);
-GETTER(double,getMaxVelocityLimit);
+GETTER(double, getCurrentLimit);
+SETTER(double, setCurrentLimit);
+SETTER(double, setHoldingCurrentLimit);
+GETTER(double, getHoldingCurrentLimit);
+GETTER(double, getMinCurrentLimit);
+GETTER(double, getMaxCurrentLimit);
 
-GETTER(double,getCurrentLimit);
-SETTER(double,setCurrentLimit);
-SETTER(double,setHoldingCurrentLimit);
-GETTER(double,getHoldingCurrentLimit);
-GETTER(double,getMinCurrentLimit);
-GETTER(double,getMaxCurrentLimit);
+SETTER(double, setRescaleFactor);
+GETTER(double, getRescaleFactor);
 
-SETTER(double,setRescaleFactor);
-GETTER(double,getRescaleFactor);
+SETTER(double, setDataRate);
+GETTER(double, getDataRate);
+GETTER(double, getMinDataRate);
+GETTER(double, getMaxDataRate);
 
-SETTER(double,setDataRate);
-GETTER(double,getDataRate);
-GETTER(double,getMinDataRate);
-GETTER(double,getMaxDataRate);
+GETTER(uint32_t, getDataInterval);
+SETTER(uint32_t, setDataInterval);
+GETTER(uint32_t, getMinDataInterval);
+GETTER(uint32_t, getMaxDataInterval);
 
-GETTER(uint32_t,getDataInterval);
-SETTER(uint32_t,setDataInterval);
-GETTER(uint32_t,getMinDataInterval);
-GETTER(uint32_t,getMaxDataInterval);
+SETTER(uint32_t, enableFailsafe);
+GETTER(uint32_t, getMinFailsafeTime);
+GETTER(uint32_t, getMaxFailsafeTime);
 
-SETTER(uint32_t,enableFailsafe);
-GETTER(uint32_t,getMinFailsafeTime);
-GETTER(uint32_t,getMaxFailsafeTime);
+GETTER(int, getIsMoving);
+SETTER(int, setEngaged);
+GETTER(int, getEngaged);
 
-GETTER(int,getIsMoving);
-SETTER(int,setEngaged);
-GETTER(int,getEngaged);
-
-void Stepper::resetFailesafe() 
+void Stepper::resetFailesafe()
 {
-    PhidgetReturnCode ret =
-        PhidgetStepper_resetFailsafe(stepper_handle_);
+    PhidgetReturnCode ret = PhidgetStepper_resetFailsafe(stepper_handle_);
     if (ret != EPHIDGET_OK)
     {
         throw Phidget22Error("Failed to reset failsafe for Stepper channel " +
@@ -193,46 +204,51 @@ void Stepper::resetFailesafe()
     }
 }
 
-void Stepper::positionChangeHandler(double position) {
-    if (this->on_position_change_handler_) {
-        this->on_position_change_handler_(channel_,position);
+void Stepper::positionChangeHandler(double position)
+{
+    if (this->on_position_change_handler_)
+    {
+        this->on_position_change_handler_(channel_, position);
     }
 }
 
-void Stepper::velocityChangeHandler(double velocity) {
-    if (this->on_velocity_change_handler_) {
-        this->on_velocity_change_handler_(channel_,velocity);
+void Stepper::velocityChangeHandler(double velocity)
+{
+    if (this->on_velocity_change_handler_)
+    {
+        this->on_velocity_change_handler_(channel_, velocity);
     }
 }
 
-void Stepper::stoppedHandler() {
-    if (this->on_stoppped_handler_) {
+void Stepper::stoppedHandler()
+{
+    if (this->on_stoppped_handler_)
+    {
         this->on_stoppped_handler_(channel_);
     }
 }
 
-
 void Stepper::onPositionChangeHandler(PhidgetStepperHandle /* motor_handle */,
-                                   void *ctx, double position)
+                                      void *ctx, double position)
 {
-    Stepper * stepper = (reinterpret_cast<Stepper *>(ctx));
-    assert(stepper); 
+    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    assert(stepper);
     stepper->positionChangeHandler(position);
 }
 
 void Stepper::onVelocityChangeHandler(PhidgetStepperHandle /* motor_handle */,
-                                 void *ctx, double velocity)
+                                      void *ctx, double velocity)
 {
-    Stepper * stepper = (reinterpret_cast<Stepper *>(ctx));
-    assert(stepper); 
+    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    assert(stepper);
     stepper->velocityChangeHandler(velocity);
 }
 
 void Stepper::onStoppedHandler(PhidgetStepperHandle /* motor_handle */,
-                                 void *ctx)
+                               void *ctx)
 {
-    Stepper * stepper = (reinterpret_cast<Stepper *>(ctx));
-    assert(stepper); 
+    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    assert(stepper);
     stepper->stoppedHandler();
 }
 

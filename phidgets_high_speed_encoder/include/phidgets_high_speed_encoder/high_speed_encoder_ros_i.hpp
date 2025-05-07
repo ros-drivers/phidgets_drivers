@@ -75,9 +75,9 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     int speed_filter_idle_iter_loops_before_reset_ = 1;
 
     rclcpp::Service<phidgets_msgs::srv::Trigger>::SharedPtr zero_service_;
-    void zeroCallback(const std::shared_ptr<phidgets_msgs::srv::Trigger::Request> request,
-          std::shared_ptr<phidgets_msgs::srv::Trigger::Response>      response);
-
+    void zeroCallback(
+        const std::shared_ptr<phidgets_msgs::srv::Trigger::Request> request,
+        std::shared_ptr<phidgets_msgs::srv::Trigger::Response> response);
 
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr encoder_pub_;
     void timerCallback();

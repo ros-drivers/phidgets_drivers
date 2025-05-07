@@ -67,37 +67,39 @@ class StepperRosI final : public rclcpp::Node
     std::string server_ip_;
 
     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr zero_service_;
-    void zeroCallback(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
-          std::shared_ptr<std_srvs::srv::Trigger::Response>      response);
+    void zeroCallback(
+        const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+        std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
     phidgets_msgs::msg::StepperCommand lastCommand;
-    void commandCallback(const phidgets_msgs::msg::StepperCommand & msg);
+    void commandCallback(const phidgets_msgs::msg::StepperCommand& msg);
 
     std::string base_frame_;
     sensor_msgs::msg::JointState joint_;
     void updateJoint();
-    
+
     // All config variables handled trough the StepperConfig message
     phidgets_msgs::msg::StepperConfig config_;
     void updateConfig();
-    
+
     // All state variables handled trough the StepperState message
     phidgets_msgs::msg::StepperState state_;
     void updateState();
 
     // All config variables handled as ros param
-    uint32_t failsafeTime_; // RW
-    double positionOffset_; // WO
-    double acceleration_; // RW
-    double velocityLimit_; // RW
-    double currentLimit_; // RW
-    double holdingCurrentLimit_; // RW
-    double rescaleFactor_; // RW
-    uint32_t dataInterval_; // RW
-    double dataRate_; // RW
+    uint32_t failsafeTime_;       // RW
+    double positionOffset_;       // WO
+    double acceleration_;         // RW
+    double velocityLimit_;        // RW
+    double currentLimit_;         // RW
+    double holdingCurrentLimit_;  // RW
+    double rescaleFactor_;        // RW
+    uint32_t dataInterval_;       // RW
+    double dataRate_;             // RW
     void applyParameters();
 
-    rclcpp::Subscription<phidgets_msgs::msg::StepperCommand>::SharedPtr command_sub_;
+    rclcpp::Subscription<phidgets_msgs::msg::StepperCommand>::SharedPtr
+        command_sub_;
     rclcpp::Publisher<phidgets_msgs::msg::StepperConfig>::SharedPtr config_pub_;
     rclcpp::Publisher<phidgets_msgs::msg::StepperState>::SharedPtr state_pub_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_pub_;
