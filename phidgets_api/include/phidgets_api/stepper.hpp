@@ -83,10 +83,10 @@ class Stepper final
     void setAcceleration(double acceleration);
 
     double getCurrentLimit() const;
-    void setCurrentLimit(double acceleration);
+    void setCurrentLimit(double current_limit);
 
     double getHoldingCurrentLimit() const;
-    void setHoldingCurrentLimit(double acceleration);
+    void setHoldingCurrentLimit(double holding_current_limit);
 
     double getMinAcceleration() const;
     double getMaxAcceleration() const;
