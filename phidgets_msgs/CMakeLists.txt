@@ -24,7 +24,6 @@ set(msg_files
 set(srv_files
   "srv/SetAnalogOutput.srv"
   "srv/SetDigitalOutput.srv"
-  "srv/Trigger.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
