@@ -51,7 +51,7 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
     int serial_num =
         this->declare_parameter("serial", -1);  // default open any device
 
-    int channel_num = this->declare_parameter("channel", 0);  // unused for now
+    int channel_num = this->declare_parameter("channel", 0);
 
     int hub_port = this->declare_parameter(
         "hub_port", 0);  // only used if the device is on a VINT hub_port
