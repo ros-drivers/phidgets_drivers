@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PHIDGETS_STEPPER_MOTORS_ROS_I_HPP
-#define PHIDGETS_STEPPER_MOTORS_ROS_I_HPP
+#ifndef PHIDGETS_STEPPER_STEPPER_ROS_I_HPP
+#define PHIDGETS_STEPPER_STEPPER_ROS_I_HPP
 
 #include <memory>
 #include <mutex>
@@ -113,4 +113,4 @@ class StepperRosI final : public rclcpp::Node
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_STEPPER_MOTORS_ROS_I_HPP
+#endif  // PHIDGETS_STEPPER_STEPPER_ROS_I_HPP

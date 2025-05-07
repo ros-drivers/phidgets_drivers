@@ -128,4 +128,4 @@ class Stepper final
 
 }  // namespace phidgets
 
-#endif  // PHIDGETS_API_MOTOR_HPP
+#endif  // PHIDGETS_API_STEPPER_HPP
