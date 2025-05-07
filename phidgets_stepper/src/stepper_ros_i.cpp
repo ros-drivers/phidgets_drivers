@@ -127,7 +127,6 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
 
         // TODO: Add callback for parameter change
         dataInterval_ = this->declare_parameter("data_interval_ms", 250);
-        dataRate_ = this->declare_parameter("data_rate", 4.0);
         failsafeTime_ = this->declare_parameter("failsafe_time_ms", 1000);
         positionOffset_ = this->declare_parameter("position_offset", 0.0);
         rescaleFactor_ = this->declare_parameter("rescale_factor",
@@ -189,7 +188,6 @@ StepperRosI::StepperRosI(const rclcpp::NodeOptions& options)
 void StepperRosI::applyParameters()
 {
     stepper_->setDataInterval(dataInterval_);
-    stepper_->setDataRate(dataRate_);
     stepper_->enableFailsafe(failsafeTime_);
     stepper_->resetFailesafe();
     stepper_->addPositionOffset(positionOffset_);
@@ -214,8 +212,6 @@ void StepperRosI::updateConfig()
     config_.max_current_limit = stepper_->getMaxCurrentLimit();
     config_.min_data_interval = stepper_->getMinDataInterval();
     config_.max_data_interval = stepper_->getMaxDataInterval();
-    config_.min_data_rate = stepper_->getMinDataRate();
-    config_.max_data_rate = stepper_->getMaxDataRate();
 }
 
 void StepperRosI::updateState()

@@ -40,7 +40,6 @@ Parameters
 * `server_name` (string) - The name of the Phidgets network server to connect to. If specified along with `server_ip`, the driver will attempt to connect to a Phidgets device over the network.
 * `server_ip` (string) - The IP address of the Phidgets network server. Used in conjunction with `server_name`.
 * `data_interval_ms` (int) - The number of milliseconds between acquisitions of data on the device (allowed values are dependent on the device).  Defaults to 250 ms.
-* `data_rate` (double) - The rate of data acquisition. Seems redundant with data_interval_ms
 * `failsafe_time_ms` (int) - The failsafe time in ms, default to 1000.
 * `position_offset` (double) - Position to start at, default to 0.0
 * `rescale_factor` (double) - Step multiplier applied to all the measurement.

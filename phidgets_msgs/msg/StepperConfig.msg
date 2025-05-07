@@ -16,6 +16,3 @@ float64 max_current_limit
 
 int32 min_data_interval
 int32 max_data_interval
-
-float64 min_data_rate
-float64 max_data_rate
