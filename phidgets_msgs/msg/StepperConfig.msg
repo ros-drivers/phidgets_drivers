@@ -1,4 +1,3 @@
-
 int32 min_failsafe_time
 int32 max_failsafe_time
 

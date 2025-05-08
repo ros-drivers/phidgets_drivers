@@ -16,9 +16,9 @@ find_package(std_msgs REQUIRED)
 
 set(msg_files
   "msg/EncoderDecimatedSpeed.msg"
+  "msg/StepperCommand.msg"
   "msg/StepperConfig.msg"
   "msg/StepperState.msg"
-  "msg/StepperCommand.msg"
 )
 
 set(srv_files

@@ -17,9 +17,9 @@
   <depend>phidgets_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
-  <depend>sensor_msgs</depend>
 
   <exec_depend>launch</exec_depend>
 
