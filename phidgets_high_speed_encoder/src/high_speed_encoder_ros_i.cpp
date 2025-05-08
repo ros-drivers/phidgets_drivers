@@ -106,6 +106,7 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
         RCLCPP_INFO(get_logger(), "Connected to serial %d, %u encoders",
                     encs_->getSerialNumber(), n_encs);
         enc_data_to_pub_.resize(n_encs);
+        absolute_zero_.assign(n_encs, 0);
         for (uint32_t i = 0; i < n_encs; i++)
         {
             char str[100];
@@ -152,6 +153,10 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
         // once at the beginning to make sure there is *some* data.
         publishLatest();
     }
+
+    zero_service_ = this->create_service<phidgets_msgs::srv::Trigger>(
+        "~/zero", std::bind(&HighSpeedEncoderRosI::zeroCallback, this,
+                            std::placeholders::_1, std::placeholders::_2));
 }
 
 void HighSpeedEncoderRosI::publishLatest()
@@ -174,8 +179,9 @@ void HighSpeedEncoderRosI::publishLatest()
 
     for (size_t encIdx = 0; encIdx < numEncoders; ++encIdx)
     {
-        int64_t absolute_position =
-            encs_->getPosition(encIdx) - encs_->getIndexPosition(encIdx);
+        int64_t absolute_position = encs_->getPosition(encIdx) -
+                                    encs_->getIndexPosition(encIdx) -
+                                    absolute_zero_[encIdx];
 
         js_msg->position[encIdx] =
             absolute_position * enc_data_to_pub_[encIdx].joint_tick2rad;
@@ -234,6 +240,27 @@ void HighSpeedEncoderRosI::timerCallback()
 {
     std::lock_guard<std::mutex> lock(encoder_mutex_);
     publishLatest();
+}
+
+void HighSpeedEncoderRosI::zeroCallback(
+    const std::shared_ptr<phidgets_msgs::srv::Trigger::Request> request,
+    std::shared_ptr<phidgets_msgs::srv::Trigger::Response> response)
+{
+    std::lock_guard<std::mutex> lock(encoder_mutex_);
+    const auto numEncoders = enc_data_to_pub_.size();
+    if (request->channel >= numEncoders)
+    {
+        RCLCPP_ERROR(this->get_logger(),
+                     "Encoder: invalid channel selected in zeroing service");
+        response->success = false;
+        response->message = "invalid channel";
+        return;
+    }
+    absolute_zero_[request->channel] = encs_->getPosition(request->channel);
+    RCLCPP_INFO(this->get_logger(), "Encoder: channel %d set to zero (%ld)",
+                request->channel, absolute_zero_[request->channel]);
+    response->success = true;
+    response->message = "set current position to zero";
 }
 
 void HighSpeedEncoderRosI::positionChangeHandler(int channel,

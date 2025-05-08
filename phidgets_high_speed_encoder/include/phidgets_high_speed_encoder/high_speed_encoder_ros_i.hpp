@@ -36,6 +36,7 @@
 #include <vector>
 
 #include <rclcpp/rclcpp.hpp>
+#include <phidgets_msgs/srv/trigger.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 
 #include "phidgets_api/encoders.hpp"
@@ -64,6 +65,7 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     std::mutex encoder_mutex_;
     /// Size of this vector = number of found encoders.
     std::vector<EncoderDataToPub> enc_data_to_pub_;
+    std::vector<int64_t> absolute_zero_;
     std::string frame_id_;
     /// (Default=10) Number of samples for the sliding window average filter of
     /// speeds.
@@ -71,6 +73,11 @@ class HighSpeedEncoderRosI final : public rclcpp::Node
     /// (Default=1) Number of "ITERATE" loops without any new encoder tick
     /// before resetting the filtered average velocities.
     int speed_filter_idle_iter_loops_before_reset_ = 1;
+
+    rclcpp::Service<phidgets_msgs::srv::Trigger>::SharedPtr zero_service_;
+    void zeroCallback(
+        const std::shared_ptr<phidgets_msgs::srv::Trigger::Request> request,
+        std::shared_ptr<phidgets_msgs::srv::Trigger::Response> response);
 
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr encoder_pub_;
     void timerCallback();
