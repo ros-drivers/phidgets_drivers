@@ -17,6 +17,8 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin me
 
   * [`phidgets_analog_inputs`](phidgets_analog_inputs/README.md)
 
+  * [`phidgets_analog_outputs`](phidgets_analog_outputs/README.md)
+
   * [`phidgets_digital_inputs`](phidgets_digital_inputs/README.md)
 
   * [`phidgets_digital_outputs`](phidgets_digital_outputs/README.md)
@@ -24,6 +26,8 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin me
   * [`phidgets_gyroscope`](phidgets_gyroscope/README.md)
 
   * [`phidgets_high_speed_encoder`](phidgets_high_speed_encoder/README.md)
+
+  * [`phidgets_humidity`](phidgets_humidity/README.md)
 
   * [`phidgets_ik`](phidgets_ik/README.md)
 
