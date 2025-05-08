@@ -1,0 +1,17 @@
+int32 min_failsafe_time
+int32 max_failsafe_time
+
+float64 min_position
+float64 max_position
+
+float64 min_acceleration
+float64 max_acceleration
+
+float64 min_velocity_limit
+float64 max_velocity_limit
+
+float64 min_current_limit
+float64 max_current_limit
+
+int32 min_data_interval
+int32 max_data_interval

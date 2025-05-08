@@ -1,0 +1,8 @@
+uint8 CONTROL_MODE_DISENGAGED=255
+uint8 CONTROL_MODE_STEP=0
+uint8 CONTROL_MODE_RUN=1
+uint8 CONTROL_MODE_STOP=2
+
+uint8 mode
+float64 target
+float64 velocity
