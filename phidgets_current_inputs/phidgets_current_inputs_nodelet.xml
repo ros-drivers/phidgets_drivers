@@ -1,0 +1,9 @@
+<!-- Phidgets Current Inputs nodelet publisher -->
+<library path="lib/libphidgets_current_inputs_nodelet">
+  <class name="phidgets_current_inputs/PhidgetsCurrentInputsNodelet" type="PhidgetsCurrentInputsNodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets Current Inputs nodelet publisher.
+    </description>
+  </class>
+</library>

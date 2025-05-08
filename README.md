@@ -19,6 +19,8 @@ Drivers for various [Phidgets](https://www.phidgets.com) devices. This Catkin me
 
   * [`phidgets_analog_outputs`](phidgets_analog_outputs/README.md)
 
+  * [`phidgets_current_inputs`](phidgets_current_inputs/README.md)
+
   * [`phidgets_digital_inputs`](phidgets_digital_inputs/README.md)
 
   * [`phidgets_digital_outputs`](phidgets_digital_outputs/README.md)

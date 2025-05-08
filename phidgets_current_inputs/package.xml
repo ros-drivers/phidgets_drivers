@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_current_inputs</name>
+  <version>1.0.9</version>
+  <description>Driver for the Phidgets Current Input devices</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author>Martin Günther</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>nodelet</depend>
+  <depend>phidgets_api</depend>
+  <depend>roscpp</depend>
+  <depend>roslaunch</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_current_inputs_nodelet.xml" />
+  </export>
+</package>
