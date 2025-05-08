@@ -114,12 +114,12 @@ HighSpeedEncoderRosI::HighSpeedEncoderRosI(const rclcpp::NodeOptions& options)
             enc_data_to_pub_[i].joint_name =
                 this->declare_parameter(str, "joint" + std::to_string(i));
 
-            RCLCPP_INFO(get_logger(), "Channel %u: '%s'='%s'", i, str,
-                        enc_data_to_pub_[i].joint_name.c_str());
-
             sprintf(str, "joint%u_tick2rad", i);
             enc_data_to_pub_[i].joint_tick2rad =
                 this->declare_parameter(str, 1.0);
+
+            RCLCPP_INFO(get_logger(), "Channel %u: '%s'='%s'", i, str,
+                        enc_data_to_pub_[i].joint_name.c_str());
 
             char buf[100];
             sprintf(buf, "joint_states_ch%u_decim_speed", i);
