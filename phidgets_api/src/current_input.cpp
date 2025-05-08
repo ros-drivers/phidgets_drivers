@@ -81,7 +81,7 @@ double CurrentInput::getSensorValue() const
         PhidgetCurrentInput_getCurrent(ci_handle_, &sensor_value);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to get analog sensor value", ret);
+        throw Phidget22Error("Failed to get current sensor value", ret);
     }
 
     return sensor_value;
@@ -93,7 +93,7 @@ void CurrentInput::setDataInterval(uint32_t data_interval_ms) const
         PhidgetCurrentInput_setDataInterval(ci_handle_, data_interval_ms);
     if (ret != EPHIDGET_OK)
     {
-        throw Phidget22Error("Failed to set analog data interval", ret);
+        throw Phidget22Error("Failed to set current data interval", ret);
     }
 }
 
