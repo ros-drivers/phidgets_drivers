@@ -2,8 +2,8 @@
 Changelog for package phidgets_api
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.10 (2025-05-08)
+-------------------
 * Contributors: Martin Günther, Ben Schattinger
 
 1.0.9 (2024-03-13)
