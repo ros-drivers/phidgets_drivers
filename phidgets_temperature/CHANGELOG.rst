@@ -2,6 +2,9 @@
 Changelog for package phidgets_temperature
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.9 (2024-03-13)
 ------------------
 

@@ -2,6 +2,9 @@
 Changelog for package phidgets_humidity
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.9 (2024-03-13)
 ------------------
 * Add support for Phidgets Humidity sensors (`#173 <https://github.com/ros-drivers/phidgets_drivers/issues/173>`_)

@@ -2,6 +2,9 @@
 Changelog for package phidgets_analog_outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.9 (2024-03-13)
 ------------------
 
