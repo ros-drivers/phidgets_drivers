@@ -25,3 +25,5 @@ Parameters
 * `speed_filter_samples_len` (int) - The number of data points over which to average the speed.  Defaults to 10.
 * `speed_filter_idle_iter_loops_before_reset` (int) - The number of idle loops (loops with no data) before the average speed will be reset to 0.  Defaults to 1.
 * `publish_rate` (double) - How often the driver will publish data on the ROS topic.  If 0 (the default), it will publish every time there is an update from the device (so at the `data_interval_ms`).  If positive, it will publish the data at that rate regardless of the acquisition interval.
+* `joint{i}_name` (string) - name of the i-th joint in the JointState message
+* `joint{i}_tick2rad` (double) - Count multiplier applied to the i-th joint. For instance, with a 300 CPR encoder and a 14:1 reduction, one can use 2*pi/(14 * 300 * 4) to convert the ticks to radians, accounting for the quadrature cycles.
