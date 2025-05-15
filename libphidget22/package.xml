@@ -20,6 +20,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <build_depend>file</build_depend>
   <build_depend>libusb-1.0-dev</build_depend>
   <exec_depend>libusb-1.0</exec_depend>
 
