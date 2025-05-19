@@ -2,6 +2,11 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Upgrade to CMake 3.8, add file depend (`#189 <https://github.com/ros-drivers/phidgets_drivers/issues/189>`_)
+* Contributors: Martin Günther
+
 2.3.3 (2024-03-13)
 ------------------
 * Update to libphidget22 1.19 (`#176 <https://github.com/ros-drivers/phidgets_drivers/issues/176>`_)

@@ -2,6 +2,13 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Upgrade to CMake 3.8, add file depend (`#189 <https://github.com/ros-drivers/phidgets_drivers/issues/189>`_)
+* Add zeroing service to high_speed_encoders (`#188 <https://github.com/ros-drivers/phidgets_drivers/issues/188>`_)
+* Add stepper motor package for ROS2 (STC1005) (`#186 <https://github.com/ros-drivers/phidgets_drivers/issues/186>`_)
+* Contributors: Cedric Pradalier, Martin Günther
+
 2.3.3 (2024-03-13)
 ------------------
 

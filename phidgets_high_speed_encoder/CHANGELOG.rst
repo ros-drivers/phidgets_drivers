@@ -2,6 +2,12 @@
 Changelog for package phidgets_high_speed_encoder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Upgrade to CMake 3.8, add file depend (`#189 <https://github.com/ros-drivers/phidgets_drivers/issues/189>`_)
+* Add zeroing service to high_speed_encoders (`#188 <https://github.com/ros-drivers/phidgets_drivers/issues/188>`_)
+* Contributors: Cedric Pradalier, Martin Günther
+
 2.3.3 (2024-03-13)
 ------------------
 * Add support for VINT networkhub (`#172 <https://github.com/ros-drivers/phidgets_drivers/issues/172>`_)
