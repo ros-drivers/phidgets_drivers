@@ -21,13 +21,15 @@ find_package(std_srvs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_gyroscope SHARED src/gyroscope_ros_i.cpp)
-ament_target_dependencies(phidgets_gyroscope
-  phidgets_api
-  rclcpp
-  rclcpp_components
-  sensor_msgs
-  std_msgs
-  std_srvs
+target_link_libraries(phidgets_gyroscope PUBLIC
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_gyroscope

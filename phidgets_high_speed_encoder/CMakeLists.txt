@@ -20,12 +20,14 @@ find_package(sensor_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_high_speed_encoder SHARED src/high_speed_encoder_ros_i.cpp)
-ament_target_dependencies(phidgets_high_speed_encoder
-  phidgets_api
-  phidgets_msgs
-  rclcpp
-  rclcpp_components
-  sensor_msgs
+target_link_libraries(phidgets_high_speed_encoder PUBLIC
+  ${phidgets_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_high_speed_encoder

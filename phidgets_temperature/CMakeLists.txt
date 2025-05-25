@@ -19,11 +19,12 @@ find_package(std_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_temperature SHARED src/temperature_ros_i.cpp)
-ament_target_dependencies(phidgets_temperature
-  phidgets_api
-  rclcpp
-  rclcpp_components
-  std_msgs
+target_link_libraries(phidgets_temperature PUBLIC
+  ${std_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
 )
 
 rclcpp_components_register_nodes(phidgets_temperature

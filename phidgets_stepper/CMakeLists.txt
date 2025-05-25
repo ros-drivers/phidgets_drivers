@@ -22,14 +22,16 @@ find_package(std_srvs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_stepper SHARED src/stepper_ros_i.cpp)
-ament_target_dependencies(phidgets_stepper
-  phidgets_api
-  phidgets_msgs
-  rclcpp
-  rclcpp_components
-  sensor_msgs
-  std_msgs
-  std_srvs
+target_link_libraries(phidgets_stepper PUBLIC
+  ${phidgets_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_stepper

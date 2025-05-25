@@ -20,12 +20,13 @@ find_package(std_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_digital_outputs SHARED src/digital_outputs_ros_i.cpp)
-ament_target_dependencies(phidgets_digital_outputs
-  phidgets_api
-  phidgets_msgs
-  rclcpp
-  rclcpp_components
-  std_msgs
+target_link_libraries(phidgets_digital_outputs PUBLIC
+  ${phidgets_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
 )
 
 rclcpp_components_register_nodes(phidgets_digital_outputs

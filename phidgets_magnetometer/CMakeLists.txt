@@ -19,11 +19,13 @@ find_package(sensor_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_magnetometer SHARED src/magnetometer_ros_i.cpp)
-ament_target_dependencies(phidgets_magnetometer
-  phidgets_api
-  rclcpp
-  rclcpp_components
-  sensor_msgs
+target_link_libraries(phidgets_magnetometer PUBLIC
+  ${sensor_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_magnetometer
