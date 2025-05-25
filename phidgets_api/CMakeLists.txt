@@ -14,8 +14,6 @@ endif()
 find_package(ament_cmake_ros REQUIRED)
 find_package(libphidget22 REQUIRED)
 
-include_directories(include)
-
 add_library(phidgets_api SHARED
                          src/accelerometer.cpp
                          src/analog_input.cpp
@@ -38,12 +36,19 @@ add_library(phidgets_api SHARED
                          src/stepper.cpp
                          src/temperature.cpp)
 
-ament_target_dependencies(phidgets_api
-  libphidget22
+target_link_libraries(phidgets_api PUBLIC
+    ${libphidget22_LIBRARIES}
+)
+
+target_include_directories(phidgets_api PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${libphidget22_INCLUDE_DIRS}
 )
 
 install(
   TARGETS phidgets_api
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -60,5 +65,8 @@ ament_export_dependencies(
 )
 ament_export_include_directories(include)
 ament_export_libraries(phidgets_api)
+ament_export_targets(
+  export_${PROJECT_NAME}
+)
 
 ament_package()
