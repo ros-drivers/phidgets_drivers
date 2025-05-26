@@ -16,7 +16,8 @@ find_package(libphidget22 REQUIRED)
 
 include_directories(include)
 
-add_library(phidgets_api src/accelerometer.cpp
+add_library(phidgets_api SHARED
+                         src/accelerometer.cpp
                          src/analog_input.cpp
                          src/analog_inputs.cpp
                          src/analog_output.cpp
@@ -41,17 +42,22 @@ ament_target_dependencies(phidgets_api
   libphidget22
 )
 
-install(TARGETS phidgets_api
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+install(
+  TARGETS phidgets_api
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY include/
-    DESTINATION include
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
-ament_export_dependencies(ament_cmake libphidget22)
+ament_export_dependencies(
+  ament_cmake
+  libphidget22
+)
 ament_export_include_directories(include)
 ament_export_libraries(phidgets_api)
 
