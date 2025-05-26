@@ -3,7 +3,7 @@ project(phidgets_stepper)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -22,6 +22,7 @@ find_package(std_srvs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_stepper SHARED src/stepper_ros_i.cpp)
+target_compile_features(phidgets_stepper PUBLIC cxx_std_17)
 target_link_libraries(phidgets_stepper PUBLIC
   ${phidgets_msgs_TARGETS}
   ${sensor_msgs_TARGETS}

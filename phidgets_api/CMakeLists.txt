@@ -4,7 +4,7 @@ project(phidgets_api)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -35,6 +35,8 @@ add_library(phidgets_api SHARED
                          src/spatial.cpp
                          src/stepper.cpp
                          src/temperature.cpp)
+
+target_compile_features(phidgets_api PUBLIC cxx_std_17)
 
 target_link_libraries(phidgets_api PUBLIC
     ${libphidget22_LIBRARIES}

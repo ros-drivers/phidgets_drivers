@@ -3,7 +3,7 @@ project(phidgets_analog_outputs)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 # High level of warnings:
@@ -21,6 +21,7 @@ find_package(std_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_analog_outputs src/analog_outputs_ros_i.cpp)
+target_compile_features(phidgets_analog_outputs PUBLIC cxx_std_17)
 target_link_libraries(phidgets_analog_outputs PUBLIC
   ${phidgets_msgs_TARGETS}
   ${std_msgs_TARGETS}

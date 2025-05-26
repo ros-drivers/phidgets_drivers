@@ -3,7 +3,7 @@ project(phidgets_spatial)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -21,6 +21,7 @@ find_package(std_srvs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_spatial SHARED src/spatial_ros_i.cpp)
+target_compile_features(phidgets_spatial PUBLIC cxx_std_17)
 target_link_libraries(phidgets_spatial PUBLIC
   ${sensor_msgs_TARGETS}
   ${std_msgs_TARGETS}
