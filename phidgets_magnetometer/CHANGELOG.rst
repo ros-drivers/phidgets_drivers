@@ -2,8 +2,8 @@
 Changelog for package phidgets_magnetometer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.4.0 (2025-05-30)
+------------------
 * Merge pull request `#191 <https://github.com/ros-drivers/phidgets_drivers/issues/191>`_ from mintar/remove-ament-target-dependencies
   [kilted] Update deprecated call to ament_target_dependencies
 * Update to C++ standard 17
