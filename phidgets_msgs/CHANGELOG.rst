@@ -2,6 +2,13 @@
 Changelog for package phidgets_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#191 <https://github.com/ros-drivers/phidgets_drivers/issues/191>`_ from mintar/remove-ament-target-dependencies
+  [kilted] Update deprecated call to ament_target_dependencies
+* Update to C++ standard 17
+* Contributors: Martin Günther
+
 2.3.4 (2025-05-19)
 ------------------
 * Upgrade to CMake 3.8, add file depend (`#189 <https://github.com/ros-drivers/phidgets_drivers/issues/189>`_)

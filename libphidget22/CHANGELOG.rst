@@ -2,6 +2,13 @@
 Changelog for package libphidget22
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#191 <https://github.com/ros-drivers/phidgets_drivers/issues/191>`_ from mintar/remove-ament-target-dependencies
+  [kilted] Update deprecated call to ament_target_dependencies
+* libphidget22: Fix CMake warning (DOWNLOAD_EXTRACT_TIMESTAMP)
+* Contributors: Martin Günther
+
 2.3.4 (2025-05-19)
 ------------------
 * Upgrade to CMake 3.8, add file depend (`#189 <https://github.com/ros-drivers/phidgets_drivers/issues/189>`_)
