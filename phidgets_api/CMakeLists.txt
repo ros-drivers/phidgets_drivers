@@ -4,7 +4,7 @@ project(phidgets_api)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -14,9 +14,8 @@ endif()
 find_package(ament_cmake_ros REQUIRED)
 find_package(libphidget22 REQUIRED)
 
-include_directories(include)
-
-add_library(phidgets_api src/accelerometer.cpp
+add_library(phidgets_api SHARED
+                         src/accelerometer.cpp
                          src/analog_input.cpp
                          src/analog_inputs.cpp
                          src/analog_output.cpp
@@ -37,22 +36,39 @@ add_library(phidgets_api src/accelerometer.cpp
                          src/stepper.cpp
                          src/temperature.cpp)
 
-ament_target_dependencies(phidgets_api
+target_compile_features(phidgets_api PUBLIC cxx_std_17)
+
+target_link_libraries(phidgets_api PUBLIC
+    ${libphidget22_LIBRARIES}
+)
+
+target_include_directories(phidgets_api PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${libphidget22_INCLUDE_DIRS}
+)
+
+install(
+  TARGETS phidgets_api
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+ament_export_dependencies(
+  ament_cmake
   libphidget22
 )
-
-install(TARGETS phidgets_api
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-)
-
-install(DIRECTORY include/
-    DESTINATION include
-)
-
-ament_export_dependencies(ament_cmake libphidget22)
 ament_export_include_directories(include)
 ament_export_libraries(phidgets_api)
+ament_export_targets(
+  export_${PROJECT_NAME}
+)
 
 ament_package()

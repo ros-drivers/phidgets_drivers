@@ -3,7 +3,7 @@ project(phidgets_motors)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -20,12 +20,14 @@ find_package(std_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_motors SHARED src/motors_ros_i.cpp)
-ament_target_dependencies(phidgets_motors
-  phidgets_api
-  phidgets_msgs
-  rclcpp
-  rclcpp_components
-  std_msgs
+target_compile_features(phidgets_motors PUBLIC cxx_std_17)
+target_link_libraries(phidgets_motors PUBLIC
+  ${phidgets_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
 )
 
 rclcpp_components_register_nodes(phidgets_motors

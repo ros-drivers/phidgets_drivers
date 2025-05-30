@@ -3,7 +3,7 @@ project(phidgets_magnetometer)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -19,11 +19,14 @@ find_package(sensor_msgs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_magnetometer SHARED src/magnetometer_ros_i.cpp)
-ament_target_dependencies(phidgets_magnetometer
-  phidgets_api
-  rclcpp
-  rclcpp_components
-  sensor_msgs
+target_compile_features(phidgets_magnetometer PUBLIC cxx_std_17)
+target_link_libraries(phidgets_magnetometer PUBLIC
+  ${sensor_msgs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_magnetometer

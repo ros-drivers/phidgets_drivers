@@ -3,7 +3,7 @@ project(phidgets_gyroscope)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -21,13 +21,16 @@ find_package(std_srvs REQUIRED)
 include_directories(include)
 
 add_library(phidgets_gyroscope SHARED src/gyroscope_ros_i.cpp)
-ament_target_dependencies(phidgets_gyroscope
-  phidgets_api
-  rclcpp
-  rclcpp_components
-  sensor_msgs
-  std_msgs
-  std_srvs
+target_compile_features(phidgets_gyroscope PUBLIC cxx_std_17)
+target_link_libraries(phidgets_gyroscope PUBLIC
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  phidgets_api::phidgets_api
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  sensor_msgs::sensor_msgs_library
 )
 
 rclcpp_components_register_nodes(phidgets_gyroscope

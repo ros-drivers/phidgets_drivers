@@ -9,6 +9,7 @@ include(ExternalProject)
 ExternalProject_Add(EP_${PROJECT_NAME}
     URL https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22/libphidget22-1.19.20240304.tar.gz
     URL_MD5 9b059eaef8cb8ce70b8abd7e4d309d1d
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 
     SOURCE_DIR ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-src
     CONFIGURE_COMMAND
