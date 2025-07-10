@@ -27,7 +27,6 @@ target_link_libraries(phidgets_high_speed_encoder PUBLIC
   phidgets_api::phidgets_api
   rclcpp::rclcpp
   rclcpp_components::component
-  rclcpp_components::component_manager
   sensor_msgs::sensor_msgs_library
 )
 
