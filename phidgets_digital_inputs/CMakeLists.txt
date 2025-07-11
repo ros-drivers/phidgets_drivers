@@ -25,7 +25,6 @@ target_link_libraries(phidgets_digital_inputs PUBLIC
   phidgets_api::phidgets_api
   rclcpp::rclcpp
   rclcpp_components::component
-  rclcpp_components::component_manager
 )
 
 rclcpp_components_register_nodes(phidgets_digital_inputs
