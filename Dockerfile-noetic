@@ -21,7 +21,7 @@ COPY . /ws/src/phidgets_drivers
 WORKDIR /ws
 
 # Use rosdep to install all dependencies (including ROS itself)
-RUN rosdep init && rosdep update && apt-get update -qq && rosdep install --from-paths src -i -y --rosdistro noetic \
+RUN rosdep init && rosdep update --include-eol-distros && apt-get update -qq && rosdep install --from-paths src -i -y --rosdistro noetic \
     && rm -rf /var/lib/apt/lists/*
 
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && \
