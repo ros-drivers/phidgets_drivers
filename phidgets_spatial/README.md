@@ -58,3 +58,18 @@ Parameters
 * `cc_t3` (double) - T offset value 3; see device's user guide for information on how to calibrate.
 * `cc_t4` (double) - T offset value 4; see device's user guide for information on how to calibrate.
 * `cc_t5` (double) - T offset value 5; see device's user guide for information on how to calibrate.
+
+Using the IMU output with a state estimator
+-------------------------------------------
+
+The next step after this driver is typically to fuse the IMU data with wheel odometry and/or GPS into a full pose estimate (`odom` → `base_link`).
+
+The path depends on whether onboard orientation estimation is enabled:
+
+* **`use_orientation: true`** (MOT0109 and newer): the driver already publishes a filtered `sensor_msgs/Imu` with the `orientation` field populated. You can feed `/imu/data_raw` directly into a state estimator.
+* **`use_orientation: false`** (older devices, or if you prefer software filtering): pass `/imu/data_raw` through [imu_filter_madgwick](https://github.com/CCNYRoboticsLab/imu_tools) first to obtain an orientation estimate, then feed the filtered output to a state estimator.
+
+Two commonly used ROS 2 state estimators:
+
+* [robot_localization](https://github.com/cra-ros-pkg/robot_localization) — EKF/UKF, widely used, supports arbitrary sensor combinations via config
+* [FusionCore](https://github.com/manankharwar/fusioncore) — UKF with ECEF-native GPS handling, automatic IMU bias estimation, and chi-squared outlier rejection; available on apt (`ros-jazzy-fusioncore-ros`, `ros-humble-fusioncore-ros`)
