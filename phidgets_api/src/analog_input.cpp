@@ -134,9 +134,9 @@ void AnalogInput::voltageChangeHandler(double sensorValue) const
 }
 
 void AnalogInput::VoltageChangeHandler(
-    PhidgetVoltageInputHandle /* input_handle */, void *ctx, double sensorValue)
+    PhidgetVoltageInputHandle /* input_handle */, void* ctx, double sensorValue)
 {
-    (reinterpret_cast<AnalogInput *>(ctx))->voltageChangeHandler(sensorValue);
+    (reinterpret_cast<AnalogInput*>(ctx))->voltageChangeHandler(sensorValue);
 }
 
 }  // namespace phidgets

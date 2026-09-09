@@ -37,7 +37,7 @@
 namespace phidgets {
 
 IR::IR(int32_t serial_number,
-       std::function<void(const char *, uint32_t, int)> code_handler)
+       std::function<void(const char*, uint32_t, int)> code_handler)
     : serial_number_(serial_number), code_handler_(code_handler)
 {
     // create the handle
@@ -79,15 +79,15 @@ int32_t IR::getSerialNumber() const noexcept
     return serial_number_;
 }
 
-void IR::codeHandler(const char *code, uint32_t bit_count, int is_repeat) const
+void IR::codeHandler(const char* code, uint32_t bit_count, int is_repeat) const
 {
     code_handler_(code, bit_count, is_repeat);
 }
 
-void IR::CodeHandler(PhidgetIRHandle /* ir */, void *ctx, const char *code,
+void IR::CodeHandler(PhidgetIRHandle /* ir */, void* ctx, const char* code,
                      uint32_t bit_count, int is_repeat)
 {
-    (reinterpret_cast<IR *>(ctx))->codeHandler(code, bit_count, is_repeat);
+    (reinterpret_cast<IR*>(ctx))->codeHandler(code, bit_count, is_repeat);
 }
 
 }  // namespace phidgets

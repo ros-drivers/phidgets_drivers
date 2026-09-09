@@ -125,10 +125,10 @@ void Temperature::temperatureChangeHandler(double temperature) const
 }
 
 void Temperature::TemperatureChangeHandler(
-    PhidgetTemperatureSensorHandle /* temperature_handle */, void *ctx,
+    PhidgetTemperatureSensorHandle /* temperature_handle */, void* ctx,
     double temperature)
 {
-    (reinterpret_cast<Temperature *>(ctx))
+    (reinterpret_cast<Temperature*>(ctx))
         ->temperatureChangeHandler(temperature);
 }
 

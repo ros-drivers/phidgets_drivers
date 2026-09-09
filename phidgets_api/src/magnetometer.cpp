@@ -101,8 +101,8 @@ void Magnetometer::setCompassCorrectionParameters(
     }
 }
 
-void Magnetometer::getMagneticField(double &x, double &y, double &z,
-                                    double &timestamp) const
+void Magnetometer::getMagneticField(double& x, double& y, double& z,
+                                    double& timestamp) const
 {
     double mag_field[3];
     PhidgetReturnCode ret =
@@ -143,10 +143,10 @@ void Magnetometer::dataHandler(const double magnetic_field[3],
 }
 
 void Magnetometer::DataHandler(PhidgetMagnetometerHandle /* input_handle */,
-                               void *ctx, const double magnetic_field[3],
+                               void* ctx, const double magnetic_field[3],
                                double timestamp)
 {
-    (reinterpret_cast<Magnetometer *>(ctx))
+    (reinterpret_cast<Magnetometer*>(ctx))
         ->dataHandler(magnetic_field, timestamp);
 }
 

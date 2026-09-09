@@ -45,7 +45,7 @@
 
 namespace phidgets {
 
-GyroscopeRosI::GyroscopeRosI(const rclcpp::NodeOptions &options)
+GyroscopeRosI::GyroscopeRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_gyroscope_node", options)
 {
     setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
@@ -130,7 +130,7 @@ GyroscopeRosI::GyroscopeRosI(const rclcpp::NodeOptions &options)
             "imu/is_calibrated", rclcpp::SystemDefaultsQoS().transient_local());
 
         calibrate();
-    } catch (const Phidget22Error &err)
+    } catch (const Phidget22Error& err)
     {
         RCLCPP_ERROR(get_logger(), "Gyroscope: %s", err.what());
         throw;

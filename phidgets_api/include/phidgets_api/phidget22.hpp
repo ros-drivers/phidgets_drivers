@@ -36,19 +36,19 @@
 #include <libphidget22/phidget22.h>
 
 #define PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(Classname) \
-    Classname(const Classname &) = delete;             \
-    void operator=(const Classname &) = delete;        \
-    Classname(Classname &&) = delete;                  \
-    void operator=(Classname &&) = delete;
+    Classname(const Classname&) = delete;              \
+    void operator=(const Classname&) = delete;         \
+    Classname(Classname&&) = delete;                   \
+    void operator=(Classname&&) = delete;
 
 namespace phidgets {
 
 class Phidget22Error final : public std::exception
 {
   public:
-    explicit Phidget22Error(const std::string &msg, PhidgetReturnCode code);
+    explicit Phidget22Error(const std::string& msg, PhidgetReturnCode code);
 
-    const char *what() const noexcept override;
+    const char* what() const noexcept override;
 
   private:
     std::string msg_;
@@ -59,7 +59,7 @@ namespace helpers {
 void openWaitForAttachment(PhidgetHandle handle, int32_t serial_number,
                            int hub_port, bool is_hub_port_device, int channel);
 
-void closeAndDelete(PhidgetHandle *handle) noexcept;
+void closeAndDelete(PhidgetHandle* handle) noexcept;
 
 }  // namespace helpers
 }  // namespace phidgets

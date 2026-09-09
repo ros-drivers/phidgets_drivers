@@ -72,7 +72,7 @@ class Temperature final
     PhidgetTemperatureSensorHandle temperature_handle_{nullptr};
 
     static void TemperatureChangeHandler(
-        PhidgetTemperatureSensorHandle temperature_handle, void *ctx,
+        PhidgetTemperatureSensorHandle temperature_handle, void* ctx,
         double temperature);
 };
 

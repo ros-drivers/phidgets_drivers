@@ -110,9 +110,9 @@ void DigitalInput::stateChangeHandler(int state) const
 }
 
 void DigitalInput::StateChangeHandler(
-    PhidgetDigitalInputHandle /* input_handle */, void *ctx, int state)
+    PhidgetDigitalInputHandle /* input_handle */, void* ctx, int state)
 {
-    (reinterpret_cast<DigitalInput *>(ctx))->stateChangeHandler(state);
+    (reinterpret_cast<DigitalInput*>(ctx))->stateChangeHandler(state);
 }
 
 }  // namespace phidgets

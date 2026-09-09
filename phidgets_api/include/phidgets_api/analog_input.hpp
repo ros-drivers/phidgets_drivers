@@ -64,7 +64,7 @@ class AnalogInput final
     PhidgetVoltageInputHandle ai_handle_{nullptr};
 
     static void VoltageChangeHandler(PhidgetVoltageInputHandle input_handle,
-                                     void *ctx, double sensorValue);
+                                     void* ctx, double sensorValue);
 };
 
 }  // namespace phidgets
