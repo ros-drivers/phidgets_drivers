@@ -76,9 +76,9 @@ class Motor final
     bool back_emf_sensing_supported_;
 
     static void DutyCycleChangeHandler(PhidgetDCMotorHandle motor_handle,
-                                       void *ctx, double duty_cycle);
+                                       void* ctx, double duty_cycle);
     static void BackEMFChangeHandler(PhidgetDCMotorHandle motor_handle,
-                                     void *ctx, double back_emf);
+                                     void* ctx, double back_emf);
 };
 
 }  // namespace phidgets

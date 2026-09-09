@@ -245,30 +245,30 @@ void Spatial::detachHandler()
     detach_handler_();
 }
 
-void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void *ctx,
+void Spatial::DataHandler(PhidgetSpatialHandle /* input_handle */, void* ctx,
                           const double acceleration[3],
                           const double angular_rate[3],
                           const double magnetic_field[3], double timestamp)
 {
-    (reinterpret_cast<Spatial *>(ctx))
+    (reinterpret_cast<Spatial*>(ctx))
         ->dataHandler(acceleration, angular_rate, magnetic_field, timestamp);
 }
 
 void Spatial::AlgorithmDataHandler(PhidgetSpatialHandle /* input_handle */,
-                                   void *ctx, const double quaternion[4],
+                                   void* ctx, const double quaternion[4],
                                    double timestamp)
 {
-    ((Spatial *)ctx)->algorithmDataHandler(quaternion, timestamp);
+    ((Spatial*)ctx)->algorithmDataHandler(quaternion, timestamp);
 }
 
-void Spatial::AttachHandler(PhidgetHandle /* input_handle */, void *ctx)
+void Spatial::AttachHandler(PhidgetHandle /* input_handle */, void* ctx)
 {
-    ((Spatial *)ctx)->attachHandler();
+    ((Spatial*)ctx)->attachHandler();
 }
 
-void Spatial::DetachHandler(PhidgetHandle /* input_handle */, void *ctx)
+void Spatial::DetachHandler(PhidgetHandle /* input_handle */, void* ctx)
 {
-    ((Spatial *)ctx)->detachHandler();
+    ((Spatial*)ctx)->detachHandler();
 }
 
 }  // namespace phidgets

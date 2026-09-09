@@ -85,8 +85,8 @@ int32_t Accelerometer::getSerialNumber() const noexcept
     return serial_number_;
 }
 
-void Accelerometer::getAcceleration(double &x, double &y, double &z,
-                                    double &timestamp) const
+void Accelerometer::getAcceleration(double& x, double& y, double& z,
+                                    double& timestamp) const
 {
     double accel[3];
     PhidgetReturnCode ret =
@@ -127,10 +127,10 @@ void Accelerometer::dataHandler(const double acceleration[3],
 }
 
 void Accelerometer::DataHandler(PhidgetAccelerometerHandle /* input_handle */,
-                                void *ctx, const double acceleration[3],
+                                void* ctx, const double acceleration[3],
                                 double timestamp)
 {
-    (reinterpret_cast<Accelerometer *>(ctx))
+    (reinterpret_cast<Accelerometer*>(ctx))
         ->dataHandler(acceleration, timestamp);
 }
 
