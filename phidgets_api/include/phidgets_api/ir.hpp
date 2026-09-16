@@ -44,20 +44,20 @@ class IR final
     PHIDGET22_NO_COPY_NO_MOVE_NO_ASSIGN(IR)
 
     explicit IR(int32_t serial_number,
-                std::function<void(const char *, uint32_t, int)> code_handler);
+                std::function<void(const char*, uint32_t, int)> code_handler);
 
     ~IR();
 
     int32_t getSerialNumber() const noexcept;
 
-    void codeHandler(const char *code, uint32_t bit_count, int is_repeat) const;
+    void codeHandler(const char* code, uint32_t bit_count, int is_repeat) const;
 
   private:
     int32_t serial_number_;
-    std::function<void(const char *, uint32_t, int)> code_handler_;
+    std::function<void(const char*, uint32_t, int)> code_handler_;
     PhidgetIRHandle ir_handle_{nullptr};
 
-    static void CodeHandler(PhidgetIRHandle ir, void *ctx, const char *code,
+    static void CodeHandler(PhidgetIRHandle ir, void* ctx, const char* code,
                             uint32_t bit_count, int is_repeat);
 };
 

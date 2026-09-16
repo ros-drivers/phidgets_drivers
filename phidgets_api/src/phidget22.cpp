@@ -33,9 +33,9 @@
 
 namespace phidgets {
 
-Phidget22Error::Phidget22Error(const std::string &msg, PhidgetReturnCode code)
+Phidget22Error::Phidget22Error(const std::string& msg, PhidgetReturnCode code)
 {
-    const char *error_ptr;
+    const char* error_ptr;
     PhidgetReturnCode ret = Phidget_getErrorDescription(code, &error_ptr);
     if (ret == EPHIDGET_OK)
     {
@@ -46,7 +46,7 @@ Phidget22Error::Phidget22Error(const std::string &msg, PhidgetReturnCode code)
     }
 }
 
-const char *Phidget22Error::what() const noexcept
+const char* Phidget22Error::what() const noexcept
 {
     return msg_.c_str();
 }
@@ -89,7 +89,7 @@ void openWaitForAttachment(PhidgetHandle handle, int32_t serial_number,
     }
 }
 
-void closeAndDelete(PhidgetHandle *handle) noexcept
+void closeAndDelete(PhidgetHandle* handle) noexcept
 {
     Phidget_close(*handle);
     Phidget_delete(handle);

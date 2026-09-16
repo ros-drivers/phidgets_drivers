@@ -93,8 +93,8 @@ void Gyroscope::zero() const
     }
 }
 
-void Gyroscope::getAngularRate(double &x, double &y, double &z,
-                               double &timestamp) const
+void Gyroscope::getAngularRate(double& x, double& y, double& z,
+                               double& timestamp) const
 {
     double angular_rate[3];
     PhidgetReturnCode ret =
@@ -135,10 +135,10 @@ void Gyroscope::dataHandler(const double angular_rate[3],
 }
 
 void Gyroscope::DataHandler(PhidgetGyroscopeHandle /* input_handle */,
-                            void *ctx, const double angular_rate[3],
+                            void* ctx, const double angular_rate[3],
                             double timestamp)
 {
-    (reinterpret_cast<Gyroscope *>(ctx))->dataHandler(angular_rate, timestamp);
+    (reinterpret_cast<Gyroscope*>(ctx))->dataHandler(angular_rate, timestamp);
 }
 
 }  // namespace phidgets

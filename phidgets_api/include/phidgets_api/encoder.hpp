@@ -87,7 +87,7 @@ class Encoder final
     std::function<void(int, int, double, int)> position_change_handler_;
     PhidgetEncoderHandle encoder_handle_{nullptr};
 
-    static void PositionChangeHandler(PhidgetEncoderHandle phid, void *ctx,
+    static void PositionChangeHandler(PhidgetEncoderHandle phid, void* ctx,
                                       int position_change, double time,
                                       int index_triggered);
 };

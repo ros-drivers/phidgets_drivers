@@ -120,10 +120,10 @@ class Stepper final
     void stoppedHandler();
 
     static void onPositionChangeHandler(PhidgetStepperHandle motor_handle,
-                                        void *ctx, double position);
+                                        void* ctx, double position);
     static void onVelocityChangeHandler(PhidgetStepperHandle motor_handle,
-                                        void *ctx, double velocity);
-    static void onStoppedHandler(PhidgetStepperHandle motor_handle, void *ctx);
+                                        void* ctx, double velocity);
+    static void onStoppedHandler(PhidgetStepperHandle motor_handle, void* ctx);
 };
 
 }  // namespace phidgets

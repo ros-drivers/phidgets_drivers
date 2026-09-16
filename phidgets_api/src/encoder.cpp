@@ -165,11 +165,11 @@ void Encoder::positionChangeHandler(int position_change, double time,
     position_change_handler_(channel_, position_change, time, index_triggered);
 }
 
-void Encoder::PositionChangeHandler(PhidgetEncoderHandle /* phid */, void *ctx,
+void Encoder::PositionChangeHandler(PhidgetEncoderHandle /* phid */, void* ctx,
                                     int position_change, double time,
                                     int index_triggered)
 {
-    (reinterpret_cast<Encoder *>(ctx))
+    (reinterpret_cast<Encoder*>(ctx))
         ->positionChangeHandler(position_change, time, index_triggered);
 }
 

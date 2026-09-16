@@ -62,7 +62,7 @@ class DigitalInput
     PhidgetDigitalInputHandle di_handle_{nullptr};
 
     static void StateChangeHandler(PhidgetDigitalInputHandle input_handle,
-                                   void *ctx, int state);
+                                   void* ctx, int state);
 };
 
 }  // namespace phidgets

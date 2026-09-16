@@ -51,8 +51,8 @@ class Gyroscope final
 
     int32_t getSerialNumber() const noexcept;
 
-    void getAngularRate(double &x, double &y, double &z,
-                        double &timestamp) const;
+    void getAngularRate(double& x, double& y, double& z,
+                        double& timestamp) const;
 
     void setDataInterval(uint32_t interval_ms) const;
 
@@ -65,7 +65,7 @@ class Gyroscope final
     std::function<void(const double[3], double)> data_handler_;
     PhidgetGyroscopeHandle gyro_handle_{nullptr};
 
-    static void DataHandler(PhidgetGyroscopeHandle input_handle, void *ctx,
+    static void DataHandler(PhidgetGyroscopeHandle input_handle, void* ctx,
                             const double angular_rate[3], double timestamp);
 };
 

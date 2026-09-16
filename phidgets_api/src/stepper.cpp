@@ -229,25 +229,25 @@ void Stepper::stoppedHandler()
 }
 
 void Stepper::onPositionChangeHandler(PhidgetStepperHandle /* motor_handle */,
-                                      void *ctx, double position)
+                                      void* ctx, double position)
 {
-    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    Stepper* stepper = (reinterpret_cast<Stepper*>(ctx));
     assert(stepper);
     stepper->positionChangeHandler(position);
 }
 
 void Stepper::onVelocityChangeHandler(PhidgetStepperHandle /* motor_handle */,
-                                      void *ctx, double velocity)
+                                      void* ctx, double velocity)
 {
-    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    Stepper* stepper = (reinterpret_cast<Stepper*>(ctx));
     assert(stepper);
     stepper->velocityChangeHandler(velocity);
 }
 
 void Stepper::onStoppedHandler(PhidgetStepperHandle /* motor_handle */,
-                               void *ctx)
+                               void* ctx)
 {
-    Stepper *stepper = (reinterpret_cast<Stepper *>(ctx));
+    Stepper* stepper = (reinterpret_cast<Stepper*>(ctx));
     assert(stepper);
     stepper->stoppedHandler();
 }

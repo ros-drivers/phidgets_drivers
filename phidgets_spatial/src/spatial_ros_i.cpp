@@ -47,7 +47,7 @@
 
 namespace phidgets {
 
-SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
+SpatialRosI::SpatialRosI(const rclcpp::NodeOptions& options)
     : rclcpp::Node("phidgets_spatial_node", options)
 {
     setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
@@ -223,7 +223,7 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
         cc_T4 = this->get_parameter("cc_t4").get_value<double>();
         cc_T5 = this->get_parameter("cc_t5").get_value<double>();
         has_compass_params = true;
-    } catch (const rclcpp::exceptions::ParameterUninitializedException &)
+    } catch (const rclcpp::exceptions::ParameterUninitializedException&)
     {
     }
 
@@ -303,7 +303,7 @@ SpatialRosI::SpatialRosI(const rclcpp::NodeOptions &options)
         {
             spatial_->setHeatingEnabled(heating_enabled);
         }
-    } catch (const Phidget22Error &err)
+    } catch (const Phidget22Error& err)
     {
         RCLCPP_ERROR(get_logger(), "Spatial: %s", err.what());
         throw;

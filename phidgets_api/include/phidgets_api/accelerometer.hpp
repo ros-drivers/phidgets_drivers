@@ -51,8 +51,8 @@ class Accelerometer final
 
     int32_t getSerialNumber() const noexcept;
 
-    void getAcceleration(double &x, double &y, double &z,
-                         double &timestamp) const;
+    void getAcceleration(double& x, double& y, double& z,
+                         double& timestamp) const;
 
     void setDataInterval(uint32_t interval_ms) const;
 
@@ -63,7 +63,7 @@ class Accelerometer final
     std::function<void(const double[3], double)> data_handler_;
     PhidgetAccelerometerHandle accel_handle_{nullptr};
 
-    static void DataHandler(PhidgetAccelerometerHandle input_handle, void *ctx,
+    static void DataHandler(PhidgetAccelerometerHandle input_handle, void* ctx,
                             const double acceleration[3], double timestamp);
 };
 

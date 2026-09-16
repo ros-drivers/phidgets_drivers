@@ -59,8 +59,8 @@ class Magnetometer final
                                         double cc_T3, double cc_T4,
                                         double cc_T5);
 
-    void getMagneticField(double &x, double &y, double &z,
-                          double &timestamp) const;
+    void getMagneticField(double& x, double& y, double& z,
+                          double& timestamp) const;
 
     void setDataInterval(uint32_t interval_ms) const;
 
@@ -71,7 +71,7 @@ class Magnetometer final
     std::function<void(const double[3], double)> data_handler_;
     PhidgetMagnetometerHandle mag_handle_{nullptr};
 
-    static void DataHandler(PhidgetMagnetometerHandle input_handle, void *ctx,
+    static void DataHandler(PhidgetMagnetometerHandle input_handle, void* ctx,
                             const double magnetic_field[3], double timestamp);
 };
 

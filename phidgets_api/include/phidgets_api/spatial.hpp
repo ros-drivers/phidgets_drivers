@@ -102,15 +102,15 @@ class Spatial final
 
     PhidgetSpatialHandle spatial_handle_{nullptr};
 
-    static void DataHandler(PhidgetSpatialHandle input_handle, void *ctx,
+    static void DataHandler(PhidgetSpatialHandle input_handle, void* ctx,
                             const double acceleration[3],
                             const double angular_rate[3],
                             const double magnetic_field[3], double timestamp);
     static void AlgorithmDataHandler(PhidgetSpatialHandle input_handle,
-                                     void *ctx, const double quaternion[4],
+                                     void* ctx, const double quaternion[4],
                                      double timestamp);
-    static void AttachHandler(PhidgetHandle input_handle, void *ctx);
-    static void DetachHandler(PhidgetHandle input_handle, void *ctx);
+    static void AttachHandler(PhidgetHandle input_handle, void* ctx);
+    static void DetachHandler(PhidgetHandle input_handle, void* ctx);
 };
 
 }  // namespace phidgets
