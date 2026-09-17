@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        rosdistro: [jazzy, kilted, rolling]
+        rosdistro: [jazzy, kilted, lyrical, rolling]
       fail-fast: false
     runs-on: ubuntu-latest
     container:
